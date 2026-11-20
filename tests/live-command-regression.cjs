@@ -11,6 +11,7 @@ check('faction locked',()=>F.join(f,'viewerPA','!estado SP').reason==='faction-l
 check('invalid username',()=>!F.join(f,'','!estado PA').ok);
 const civic=C.create(),economy=C.economyCreate(),delivery=D.create();
 for(const action of ['build','trade','defend'])check('collective '+action,()=>{const r=C.economyAct(economy,civic,f,'viewerPA',action);return r.ok&&D.enqueue(delivery,r.event).ok});
+check('USA civic action persists',()=>{const r=C.economyAct(economy,civic,f,'visitor4','build');return r.ok&&r.event.faction==='EXT-ESTADOS_UNIDOS'&&!!C.restore(JSON.stringify(civic));});
 check('not member',()=>!C.economyAct(economy,civic,f,'intruder','build').ok);
 check('invalid action',()=>!C.economyAct(economy,civic,f,'viewerPA','roubar').ok);
 for(let i=0;i<13;i++)D.step(delivery);
