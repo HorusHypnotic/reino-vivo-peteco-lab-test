@@ -56,7 +56,7 @@ function sector(x,y,label,color){rect(x-49,y-25,98,58,color);rect(x-47,y-23,94,5
 function sectorLabel(x,y,label,stock){const top=y-47;rect(x-49,top,98,20,'#20383a');g.fillStyle='#f8e5ba';g.font='bold 10px system-ui';g.textAlign='left';g.fillText(label,x-45,top+13);g.textAlign='right';g.fillText(String(stock),x+44,top+13);g.textAlign='left'}
 function wagon(){if(!s.auto||s.phase!=='vila')return;const route=[[83,275,180,326],[278,275,180,326],[74,420,180,355],[283,420,180,355]];const i=Math.floor(s.t/100)%4;const p=(s.t%100)/100;const [x1,y1,x2,y2]=route[i];const x=x1+(x2-x1)*p,y=y1+(y2-y1)*p;rect(x-8,y-5,17,11,'#9c7246');rect(x-5,y-10,12,7,['#b18a53','#c7a35e','#a1a3a0','#d1aa75'][i]);circ(x-5,y+7,3,'#2f3331');circ(x+6,y+7,3,'#2f3331')}
 function worker(x,y,col,phase=0){const bob=Math.sin(s.t/12+phase)*2;actor(x+Math.sin(s.t/35+phase)*12,y+bob,col)}
-function featuredVisitor(){if(!document.body.classList.contains('viewer')||!s.court.length)return;const m=s.court[s.court.length-1],job=m.job||'Aprendiz',colors={'Caçador':'#487c54','Pescador':'#417fa5','Agricultor':'#8b9b48','Construtor':'#b98750','Guarda':'#6573a4','Aprendiz':'#986ca4'},tools={'Caçador':'🏹','Pescador':'🎣','Agricultor':'🌾','Construtor':'🔨','Guarda':'🛡️','Aprendiz':'📜'};const t=s.t/40,px=180+Math.sin(t)*33,py=275+Math.cos(t*.7)*9;circ(px,py+18,17,'#3d5a4a');actor(px,py,colors[job]||colors.Aprendiz);g.font='18px system-ui';g.fillText(tools[job]||'📜',px+10,py-1);rect(122,py-55,116,24,'#1b323a');g.fillStyle='#ffe0a0';g.font='bold 11px system-ui';g.fillText(('★ '+m.name).slice(0,18),128,py-39);g.fillStyle='#fff1cf';g.font='10px system-ui';g.fillText(job,145,py-26);if(s.t%120<4)burst(px,py,3,'#f6d58e')}
+function featuredVisitor(){if(!document.body.classList.contains('viewer')||!s.court.length)return;const m=s.court[s.court.length-1],job=m.job||'Aprendiz',colors={'Caçador':'#487c54','Pescador':'#417fa5','Agricultor':'#8b9b48','Construtor':'#b98750','Guarda':'#6573a4','Aprendiz':'#986ca4'},tools={'Caçador':'🏹','Pescador':'🎣','Agricultor':'🌾','Construtor':'🔨','Guarda':'🛡️','Aprendiz':'📜'};const t=s.t/70,px=180+Math.sin(t)*22,py=275+Math.cos(t*.7)*6;circ(px,py+12,12,'#3d5a4a');g.save();g.translate(px,py);g.scale(.72,.72);actor(0,0,colors[job]||colors.Aprendiz);g.restore();g.font='18px system-ui';g.fillText(tools[job]||'📜',px+10,py-1);rect(123,py-63,114,22,'#1b323a');g.fillStyle='#ffe0a0';g.font='bold 11px system-ui';g.fillText(('★ '+m.name).slice(0,16),128,py-48,103);g.fillStyle='#fff1cf';g.font='10px system-ui';g.fillText(job,145,py-33,95);if(s.t%120<4)burst(px,py,3,'#f6d58e')}
 function seasonEffects(){const season=seasonIndex();if(season===3){for(let i=0;i<21;i++){const x=(i*83+s.t*(.25+(i%3)*.1))%360,y=(i*57+s.t*(.35+(i%4)*.08))%470;rect(x,y,2,2,'#eaf0e9')}}else if(season===2){for(let i=0;i<10;i++){const x=(i*63+s.t*.35)%360,y=185+(i*37+s.t*.2)%285;rect(x,y,3,2,'#d5ad66')}}}
 function territory(){
 const season=seasonIndex(),sky=['#7fb6b3','#93bdb2','#a7a49c','#819aaf'][season],ground=['#638b59','#76965a','#9b9364','#788c80'][season];rect(0,0,360,480,sky);circ(290,65,season===3?19:27,season===3?'#e4e5df':'#f5d785');for(let i=0;i<6;i++){g.fillStyle=i%2?'#638c87':'#6f9993';g.beginPath();g.moveTo(i*72-40,174);g.lineTo(i*72+12,92);g.lineTo(i*72+80,174);g.fill()}rect(0,175,360,305,ground);for(let i=0;i<16;i++)rect((i*73)%350,183+(i*43)%280,4,4,'#719b62');
@@ -183,14 +183,14 @@ const unlocked=Math.max(1,Math.min(5,1+Math.floor((s.level-1)/7)));
 const mode=cameraMode;
 const active=director.auto&&director.focus&&s.t<director.until?director.focus:null;
 const collective=director.auto&&collectiveCue&&s.t<collectiveCue.until?settlementStops.find(stop=>stop.id===collectiveCue.id):null;
-const sweep=Math.floor(s.t/480)%(unlocked*2); // V11.6: eight seconds per settlement at 60fps
+const sweep=Math.floor(s.t/720)%(unlocked*2); // V16.4: twelve seconds per settlement, steadier viewing
 const stop=settlementStops[sweep];
 const targetX=active?active.x:(collective?collective.x:(director.auto?stop.x:[720,stop.x,720][mode]));
 const targetY=active?active.y:(collective?collective.y:(director.auto?stop.y:485));
 const targetZoom=director.auto?(active?.priority===3?.68:active?.priority===2?.57:collective?.79:.72):[.34,.72,.94][mode];
-director.x+=(targetX-director.x)*.065;
-director.y+=(targetY-director.y)*.065;
-director.zoom+=(targetZoom-director.zoom)*.065;
+director.x+=(targetX-director.x)*.028;
+director.y+=(targetY-director.y)*.028;
+director.zoom+=(targetZoom-director.zoom)*.028;
 const center=[director.x,director.y],zoom=director.zoom;
 g.save();rect(0,0,360,480,'#1b3a4c');g.beginPath();g.rect(0,30,360,450);g.clip();
 g.translate(180,250);g.scale(zoom,zoom);g.translate(-center[0],-center[1]);
