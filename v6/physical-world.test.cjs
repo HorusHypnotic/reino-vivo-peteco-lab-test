@@ -1,0 +1,7 @@
+const assert=require('node:assert/strict');const t=require('node:test');const W=require('./physical-world.js');
+const memory=()=>{const m=new Map();return {getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v)}};
+t('deterministic migration from legacy level',()=>assert.deepEqual(W.seedWorld(34),W.seedWorld(34)));
+t('unique ids and bounded coordinates',()=>{const w=W.seedWorld(34);assert.equal(new Set(w.buildings.map(x=>x.id)).size,w.buildings.length);assert.ok(w.buildings.every(W.valid));});
+t('same house survives damage repair and reload',()=>{const db=memory(),w=W.seedWorld(34),id=w.buildings[0].id,pos=[w.buildings[0].x,w.buildings[0].y];assert.ok(W.change(w,id,'damage',80));assert.equal(w.buildings[0].hp,20);assert.ok(W.save(db,w));const restored=W.load(db,1);assert.deepEqual([restored.buildings[0].x,restored.buildings[0].y],pos);assert.equal(restored.buildings[0].hp,20);assert.ok(W.change(restored,id,'repair',80));assert.equal(restored.buildings[0].hp,100);assert.equal(restored.buildings[0].history.length,2);});
+t('invalid and corrupted save falls back safely',()=>{const db=memory();db.setItem(W.KEY,'{broken');assert.ok(W.load(db,5).buildings.length>0);db.setItem(W.KEY,JSON.stringify({version:1,buildings:[{id:'bad'}]}));assert.ok(W.load(db,5).buildings.length>0)});
+t('invalid actions do not mutate revision',()=>{const w=W.seedWorld(3);assert.equal(W.change(w,'unknown','damage'),false);assert.equal(w.revision,0)});
