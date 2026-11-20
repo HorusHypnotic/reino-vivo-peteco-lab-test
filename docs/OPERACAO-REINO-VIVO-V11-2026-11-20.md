@@ -97,3 +97,10 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Não adiciona recursos, eventos ou casas fictícias, nem modifica chaves de persistência. Efeito visual deriva do estado existente.
 - Script principal: sintaxe PASS. QA visual e verificação HTTP no Android ainda pendentes.
 - Próximo P0: destaque de ação coletiva no mapa, hierarquia de avisos da câmera e verificação visual sem obstruir o cenário.
+
+## V12.1 | Câmera contextual para ações coletivas
+- Commit `53c22022`, exclusivamente `gh-pages/index.html`.
+- Reutiliza `collectiveAction` bem-sucedida para criar cue transitório de 240 frames com facção, tipo (construir/comerciar/defender) e participante; câmera AUTO enquadra a vila alvo e mostra legenda curta na faixa inferior.
+- O cue é somente memória transitória, sem novas chaves localStorage, sem modificar estoque, pontuação ou cadastro. Direção prioritária `director.focus` continua prevalecendo; fora de AUTO não força câmera.
+- Script principal: sintaxe PASS. Sem QA Android da cena nem teste de integração de navegador; duração em frames depende do FPS.
+- Próximo: validar legibilidade e ausência de colisão de legendas no Android; considerar agendamento de cues se eventos ocorrerem em sequência.
