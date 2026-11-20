@@ -135,3 +135,10 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Copiado sem reconstrução para `v7/reino-sound.js` (commit `0c105187`) e integrado a `gh-pages/index.html` (commit `b6ee0b86`). Substituiu o experimento WAV/Web Audio anterior no caminho ativo. O controle do usuário chama `Sound.unlock()` no gesto e o status informa `locked/suspended/running`; os volumes controlam os buses reais.
 - Eventos coletivos de construção/comércio/defesa e anomalias usam efeitos do motor original. O Arauto `speechSynthesis` permanece separado. Sem TikTok, Node, Supabase, GitHub Actions, serviço pago ou mudança na main.
 - Verificação de sintaxe do script principal PASS. **QA Android pendente**; o usuário já reprovou V12.3-V12.5, e esta integração não deve ser declarada audível antes da confirmação.
+
+## V12.7 | QA de comandos da plateia e áudio contextual
+- Inspeção direta de `index.html`, `v7/factions.js`, `v7/civic.js`, `v7/delivery.js` e `public/sound.js` do Reino Vivo VS Code.
+- Primeira rodada 47/48: falha na restauração de facção `!pais EUA` (ID com espaço). Corrigido em `v7/factions.js` para `EXT-ESTADOS_UNIDOS` (commit `29ef67ec`). Regressão após correção: **48/48 PASS**, incluindo 27 UFs, 5 países, 5 comandos inválidos, duplicata, bloqueio de troca, nome inválido, 3 ações coletivas, ações rejeitadas, ciclo de entrega, ranking e restauração. Teste permanente `tests/live-command-regression.cjs` (commit `2900509c`).
+- Commit `25f2c29c`: corrige silêncio do Arauto após primeira fala em eventos de plateia, narrando entrada em facção, simulação de 100 espectadores, primeira ação coletiva da rodada e comércio confirmado. Preserva intervalo de 11 s para evitar sobreposição; efeitos de teste agora sequenciais e não simultâneos.
+- Escopo verdadeiro: comandos de chat disponíveis no Lab são `!estado UF` e `!pais país`; construir/comerciar/defender são ações simuladas por botões e não comandos TikTok reais.
+- **Limitação de QA**: 48/48 são testes de lógica JavaScript, não áudio físico nem reprodução Android. Música, saída de som e eventos visuais ao vivo ainda aguardam teste no dispositivo do usuário.
