@@ -6,9 +6,9 @@ const fakeNames=['Guardiao77','PescadoraBR','Ferreiro21','Viajante09'];let fakeS
 document.querySelectorAll('[data-fake]').forEach(b=>b.addEventListener('click',()=>fakeEvent(b.dataset.fake)));
 function burst(x,y,n,col){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=Math.random()*3+1;s.particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:30,col})}}
 function action(a){if(a==='reset'){epoch++;Object.assign(s,{joined:false,phase:'vila',wood:0,hp:100,x:180,target:180,busy:false,auto:false,particles:[]});say('Reino reiniciado.');return}
-if(a==='enter'){if(s.joined&&s.phase==='vila'){say('Você já está na vila. Escolha uma atividade.');return}epoch++;s.joined=true;s.busy=false;s.phase='vila';s.target=180;say('Você chegou à vila.');burst(180,335,16,'#f6e5bc');return}
+if(a==='enter'){if(s.joined){say(s.phase==='vila'?'Você já está na vila. Escolha uma atividade.':'Você já participa do Reino. Aguarde o resultado da batalha.');return}epoch++;s.joined=true;s.busy=false;s.phase='vila';s.target=180;say('Você chegou à vila.');burst(180,335,16,'#f6e5bc');return}
 if(!s.joined){say('Primeiro entre no Reino.');return}
-if(a==='auto'&&s.phase==='vila'){s.auto=!s.auto;say(s.auto?'Produção automática ativada: a vila coleta madeira sozinha.':'Produção automática pausada.');if(s.auto&&!s.busy)harvest();return}
+if(a==='auto'&&s.phase==='vila'){s.auto=!s.auto;if(!s.auto){epoch++;s.busy=false;s.target=180;say('Produção automática pausada. Madeira: '+s.wood)}else{say('Produção automática ativada.');if(!s.busy)harvest()}return}
 if(a==='work'&&s.phase==='vila'&&!s.busy){harvest();return}
 function harvest(){const run=++epoch;s.busy=true;s.target=72;say('Caminhando para colher madeira...');setTimeout(()=>{if(run!==epoch||!s.busy||s.phase!=='vila')return;s.wood++;s.busy=false;burst(72,350,25,'#f3d37c');say('Trabalho concluído! Madeira: '+s.wood);if(s.auto&&s.phase==='vila')harvest()},1400)}
 if(a==='defend'&&s.phase==='vila'){epoch++;s.busy=false;s.auto=false;s.phase='batalha';s.hp=100;burst(255,170,30,'#f38c65');say('O dragão apareceu! Prepare a defesa.');return}
