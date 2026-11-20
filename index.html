@@ -107,7 +107,7 @@ else region=Math.max(0,Math.min(4,Math.floor((s.level-1)/7)));
 const priority=/ataque|invas|incêndio|destru|batalha|chefe|derrota/.test(t)?3:/conclu|constru|muralha|repar|vitória|fundad/.test(t)?2:/colheit|produção|mercado|comércio/.test(t)?1:0;
 if(!priority||!director.auto)return;
 if(director.focus&&s.t<director.until&&priority<director.focus.priority)return;
-director.focus={region,priority,label:String(message).slice(0,65)};
+director.focus={region,priority,label:String(message).slice(0,65),x:30+region*390+180+Math.sin(s.cycles*.37)*85,y:430+Math.cos(s.cycles*.21)*120};
 director.until=s.t+(priority===3?540:360);
 }
 document.querySelector('#map-toggle').addEventListener('click',()=>{
@@ -120,9 +120,9 @@ const unlocked=Math.max(1,Math.min(5,1+Math.floor((s.level-1)/7)));
 const mode=cameraMode;
 const active=director.auto&&director.focus&&s.t<director.until?director.focus:null;
 const sweep=Math.floor(s.t/300)%unlocked;
-const targetX=active?225+active.region*390:(director.auto?225+sweep*390:[720,270+Math.floor(s.t/900)%5*390,720][mode]);
-const targetY=active?465:490;
-const targetZoom=director.auto?(active?.priority===3?.61:active?.priority===2?.52:.42):[.34,.64,.94][mode];
+const targetX=active?active.x:(director.auto?210+sweep*390:[720,270+Math.floor(s.t/900)%5*390,720][mode]);
+const targetY=active?active.y:485;
+const targetZoom=director.auto?(active?.priority===3?.68:active?.priority===2?.57:.64):[.34,.64,.94][mode];
 director.x+=(targetX-director.x)*.065;
 director.y+=(targetY-director.y)*.065;
 director.zoom+=(targetZoom-director.zoom)*.065;
@@ -138,7 +138,7 @@ g.restore();rect(x+8,y+8,w-16,58,'#172e36e8');g.fillStyle='#fff2ce';g.font='bold
 }
 g.strokeStyle='#f0d69b';g.lineWidth=13;g.setLineDash([28,18]);g.beginPath();g.moveTo(100,550);for(let i=1;i<5;i++)g.lineTo(100+i*390,550+(i%2)*75);g.stroke();g.setLineDash([]);g.restore();
 rect(5,34,350,48,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 14px system-ui';g.fillText('🎥 '+cameraNames[mode]+' · '+unlocked+'/5 regiões',13,52);g.font='11px system-ui';g.fillText('🏰 '+s.level+'  👥 '+s.people+'  🏠 bairros em expansão',13,70);
-rect(5,443,350,32,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 11px system-ui';g.fillText(director.auto?'AUTO · '+(active?active.label:'Região '+(sweep+1)):'Mapa 1950 × 970 · câmera '+cameraNames[mode],12,462);
+rect(5,443,350,32,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 11px system-ui';g.fillText(director.auto?'AUTO · '+(active?active.label:'Explorando região '+(sweep+1)):'Mapa 1950 × 970 · câmera '+cameraNames[mode],12,462);
 }
 function frame(){s.t++;g.save();const cinematic=document.body.classList.contains('viewer')&&s.phase==='batalha';if(cinematic){const shake=Math.sin(s.t*.7)*Math.min(2.2,Math.max(.4,s.hp/(s.maxHp||150)*2));g.translate(shake,Math.cos(s.t*.8)*.7)}if(s.phase==='vila'){if(document.body.classList.contains('viewer')&&worldMapEnabled)worldCamera();else territory()}else battleScene();g.restore();for(const p of s.particles){rect(p.x,p.y,4,4,p.col);p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.life--}s.particles=s.particles.filter(p=>p.life>0);if(!(document.body.classList.contains('viewer')&&worldMapEnabled&&s.phase==='vila')){sceneProgress();stageOverlay();drawSpotlight();}rect(0,0,360,30,'#1c2934');g.fillStyle='#f6e5bc';g.font='bold 13px system-ui';g.fillText(s.phase.toUpperCase()+' · Ciclo '+s.cycles+' · Moradores '+s.people,10,20);document.querySelector('[data-a=work]').disabled=s.busy||s.auto;document.querySelector('[data-a=auto]').textContent=s.auto?'Pausar vila':'Retomar vila';requestAnimationFrame(frame)}const restored=restore();director.auto=true;worldMapEnabled=true;cameraMode=0;document.querySelector('#map-toggle').textContent='🎥 AUTO';updateWorld();s.auto=true;chronicle(restored?'Vila restaurada no aparelho. A produção foi retomada.':'O Reino despertou: setores em produção, mesmo sem espectadores.');harvest();
 frame();
