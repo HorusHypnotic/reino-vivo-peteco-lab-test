@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');const {test}=require('node:test');const life=require('./life.js');
+test('three persistent unique NPCs',()=>{const w=life.create();assert.deepEqual(w.agents.map(a=>a.id),['npc-1','npc-2','npc-3']);});
+test('wood conservation across 100 cycles',()=>{const w=life.create();for(let i=0;i<100;i++){life.step(w);assert.equal(life.validate(w),true);}});
+test('house progresses and is occupied',()=>{const w=life.create();for(let i=0;i<30;i++)life.step(w);assert.equal(w.home.stage,3);assert.equal(w.home.occupied,true);});
+test('deterministic replay',()=>{const a=life.create(17),b=life.create(17);for(let i=0;i<100;i++){life.step(a);life.step(b);}assert.deepEqual(a,b);});
+test('save and restore retains identity, stock and history',()=>{const w=life.create();for(let i=0;i<40;i++)life.step(w);assert.deepEqual(life.restore(JSON.stringify(w)),w);});
+test('invalid saves rejected',()=>{assert.equal(life.restore('{'),null);const w=life.create();w.stock.wood=-1;assert.equal(life.restore(w),null);});
+
+test('logistics requires confirmed delivery before construction',()=>{const w=life.create();let firstBuild=-1,confirmed=-1;for(let i=0;i<40;i++){life.step(w);if(confirmed<0&&w.events.some(e=>e.kind==='delivery-confirmed'))confirmed=w.tick;if(firstBuild<0&&w.home.stage>0)firstBuild=w.tick;assert.equal(life.validate(w),true);}assert.ok(confirmed>0);assert.ok(firstBuild>=confirmed);assert.equal(w.home.stage,3);assert.equal(w.logistics.trips,6);});
+test('materials are conserved across stock, transit and worksite',()=>{const w=life.create();for(let i=0;i<1000;i++){life.step(w);assert.equal(life.validate(w),true);}assert.ok(w.spent>=12);assert.equal((w.spent-12)%2,0);assert.equal(w.logistics.delivered,12);assert.ok(w.home.repairs>0);});
+test('logistics rejects invalid orders',()=>{const w=life.create();assert.throws(()=>life.request(w,'wood',-1,'home-1'));assert.throws(()=>life.request(w,'stone',3,'home-1'));});
+test('pre-logistics experimental saves migrate',()=>{const w=life.create();for(let i=0;i<30;i++)life.step(w);delete w.logistics;assert.ok(life.restore(JSON.stringify(w)));});
+
+test('road closure delays dispatch',()=>{const w=life.create();life.blockRoad(w,8);for(let i=0;i<7;i++){life.step(w);assert.equal(w.logistics.trips,0);assert.equal(w.logistics.trip,null);assert.equal(life.validate(w),true);}for(let i=0;i<100;i++)life.step(w);assert.equal(w.home.occupied,true);});
+test('transport capacity and travel time enforced',()=>{const w=life.create();for(let i=0;i<100;i++){life.step(w);assert.equal(life.validate(w),true);if(w.logistics.trip){assert.ok(w.logistics.trip.quantity<=w.logistics.capacity);assert.ok(w.logistics.trip.eta>=w.tick);}}assert.equal(w.logistics.trips,6);assert.equal(w.logistics.delivered,12);});
+test('invalid road closure rejected',()=>{assert.throws(()=>life.blockRoad(life.create(),0));});
+
+test('storm damage and material-backed repairs preserve ledger',()=>{const w=life.create();let damage=false,repair=false;for(let i=0;i<415;i++){life.step(w);assert.equal(life.validate(w),true);damage ||= w.events.some(e=>e.kind==='house-damaged');repair ||= w.events.some(e=>e.kind==='repair');}assert.equal(damage,true);assert.equal(repair,true);assert.ok(w.home.damage>=0&&w.home.damage<=100);});
+test('older saves migrate damage fields',()=>{const w=life.create();delete w.home.damage;delete w.home.repairs;const restored=life.restore(JSON.stringify(w));assert.ok(restored);assert.equal(restored.home.damage,0);assert.equal(restored.home.repairs,0);});
+
+test('storm injuries suspend builder and treatment restores work',()=>{const w=life.create();let injury=false,care=false,recovered=false,paused=false;for(let i=0;i<350;i++){life.step(w);const e=w.events.filter(e=>e.tick===w.tick);injury ||= e.some(x=>x.kind==='injury');care ||= e.some(x=>x.kind==='care');recovered ||= e.some(x=>x.kind==='recovered');if(w.agents[1].health<100){paused ||= w.agents[1].task==='injured'||w.agents[1].task==='care';assert.notEqual(w.agents[1].task,'repair');}assert.equal(life.validate(w),true);}assert.ok(injury&&care&&recovered&&paused);});
+test('old saves migrate individual health',()=>{const w=life.create();for(const a of w.agents){delete a.health;delete a.illUntil;delete a.care;}const restored=life.restore(JSON.stringify(w));assert.ok(restored);assert.ok(restored.agents.every(a=>a.health===100&&a.illUntil===0&&a.care===0));});
+
+test('care consumes real supplies and shortages delay recovery',()=>{const w=life.create();for(let i=0;i<300;i++){life.step(w);assert.equal(life.validate(w),true);}assert.ok(w.careStats.medicineUsed>0);assert.ok(w.careStats.waiting>0);assert.ok(w.careStats.waiting>0);});
+test('older saves migrate medicine and care counters',()=>{const w=life.create();delete w.stock.medicine;delete w.careStats;const x=life.restore(JSON.stringify(w));assert.ok(x);assert.equal(x.stock.medicine,3);assert.equal(x.careStats.treated,0);});
