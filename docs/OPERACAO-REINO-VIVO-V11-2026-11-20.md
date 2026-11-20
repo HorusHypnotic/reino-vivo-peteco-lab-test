@@ -104,3 +104,9 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - O cue é somente memória transitória, sem novas chaves localStorage, sem modificar estoque, pontuação ou cadastro. Direção prioritária `director.focus` continua prevalecendo; fora de AUTO não força câmera.
 - Script principal: sintaxe PASS. Sem QA Android da cena nem teste de integração de navegador; duração em frames depende do FPS.
 - Próximo: validar legibilidade e ausência de colisão de legendas no Android; considerar agendamento de cues se eventos ocorrerem em sequência.
+
+## V12.2 | Primeiro áudio do Arauto (opt-in)
+- Commit `7e88fd34` em `gh-pages/index.html`: botões para ativar/desligar áudio e testar narração. Sem alteração de main ou armazenamento.
+- SpeechSynthesis em `pt-BR` com preferência por voz brasileira do dispositivo; som curto via Web Audio API (oscilador e ganho baixo). Sem arquivos de áudio, serviços pagos ou backend.
+- Eventos importantes do `say` narrados com intervalo de 11 s, máximo 170 caracteres; teste manual ignora intervalo. Inicialmente desligado, requer gesto do usuário; desligar cancela a fala.
+- Sintaxe PASS. QA Android pendente; voz instalada, permissão de áudio e qualidade variam por aparelho/navegador. Não equivale à voz natural do estúdio VS Code.
