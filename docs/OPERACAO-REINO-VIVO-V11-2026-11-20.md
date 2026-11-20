@@ -129,3 +129,9 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Commit `bb8bcb40`: efeitos/ambiente passam a gerar WAV PCM mono 16 kHz em memória e tocar com `HTMLAudioElement`, sem depender de `AudioContext` para esses canais. Preserva `speechSynthesis` do Arauto.
 - Botão de teste inicia WAV simples e registra falha de `play()` com nome do erro no status; os eventos mantêm efeitos próprios e volumes. Limpa mídias ao desligar/ocultar página. Nenhum novo arquivo, serviço pago, alteração em main ou mudança de saves.
 - JS sintaxe PASS. **Não homologado no Android**: o mecanismo de mídia pode sofrer bloqueio por política de autoplay, mesmo com toque inicial. Ainda não reproduz o pipeline audiovisual do projeto VS Code; requer inspeção e adaptação de componentes específicos.
+
+## V12.6 | Portabilidade real do áudio do VS Code
+- Origem verificada: `HorusHypnotic/reino-em-construcao`, branch `experiment/reino-vivo-v5-jornada`, arquivo `public/sound.js`. O módulo original gera música em ré dórico em buffer de 32 segundos, efeitos proceduralmente, compressor, mixer com buses separados e análise RMS.
+- Copiado sem reconstrução para `v7/reino-sound.js` (commit `0c105187`) e integrado a `gh-pages/index.html` (commit `b6ee0b86`). Substituiu o experimento WAV/Web Audio anterior no caminho ativo. O controle do usuário chama `Sound.unlock()` no gesto e o status informa `locked/suspended/running`; os volumes controlam os buses reais.
+- Eventos coletivos de construção/comércio/defesa e anomalias usam efeitos do motor original. O Arauto `speechSynthesis` permanece separado. Sem TikTok, Node, Supabase, GitHub Actions, serviço pago ou mudança na main.
+- Verificação de sintaxe do script principal PASS. **QA Android pendente**; o usuário já reprovou V12.3-V12.5, e esta integração não deve ser declarada audível antes da confirmação.
