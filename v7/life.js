@@ -10,7 +10,7 @@ function climateStep(w){const v=w.climate;if(v.condition==='storm'&&w.tick>=v.un
 function move(a,x,y){a.fromX=a.x;a.fromY=a.y;a.toX=x;a.toY=y;a.x=x;a.y=y;}
 function step(w){if(!w||w.version!==1||!Array.isArray(w.agents))throw Error('Invalid life state');w.tick++;climateStep(w);const [l,b,m]=w.agents;for(const a of w.agents){a.energy=Math.max(0,a.energy-1);if(a.energy<15){a.energy=Math.min(100,a.energy+24);a.task='rest';continue;}}
 for(const a of w.agents){if(a.health<100){if(w.tick>=a.illUntil&&w.stock.medicine>0&&w.stock.food>0){w.stock.medicine--;w.stock.food--;w.careStats.medicineUsed++;w.careStats.treated++;a.health=Math.min(100,a.health+20);a.care++;a.task='care';event(w,a.id,'care','Atendimento e recuperação: '+a.health+'%');if(a.health===100)event(w,a.id,'recovered','Morador retornou ao trabalho');}else{a.task='injured';if(w.tick>=a.illUntil){w.careStats.waiting++;if(w.tick===a.illUntil)event(w,a.id,'care-shortage','Enfermaria sem remédios ou alimentos');}}}}
-if(l.health<100){l.task='injured';}else if(l.task==='rest')l.task='idle';
+if(w.tick%12===0){w.stock.food+=3;event(w,'farm','harvest','Colheita de 3 alimentos');}if(w.tick%90===0){w.stock.medicine+=1;event(w,'infirmary','medicine-stocked','Enfermaria recebeu 1 remédio');}if(l.health<100){l.task='injured';}else if(l.task==='rest')l.task='idle';
 if(l.health===100&&l.inventory.wood===0){l.inventory.wood=2;w.gathered+=2;l.task='gather';move(l,65,250);event(w,l.id,'gather','2 wood');}
 else if(l.health===100){w.stock.wood+=l.inventory.wood;w.delivered+=l.inventory.wood;l.inventory.wood=0;l.task='deliver';move(l,180,300);event(w,l.id,'deliver','2 wood to depot');}
 if(m.health===100&&m.task==='rest')m.task='idle';
