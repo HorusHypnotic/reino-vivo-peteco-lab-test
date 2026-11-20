@@ -110,3 +110,10 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - SpeechSynthesis em `pt-BR` com preferência por voz brasileira do dispositivo; som curto via Web Audio API (oscilador e ganho baixo). Sem arquivos de áudio, serviços pagos ou backend.
 - Eventos importantes do `say` narrados com intervalo de 11 s, máximo 170 caracteres; teste manual ignora intervalo. Inicialmente desligado, requer gesto do usuário; desligar cancela a fala.
 - Sintaxe PASS. QA Android pendente; voz instalada, permissão de áudio e qualidade variam por aparelho/navegador. Não equivale à voz natural do estúdio VS Code.
+
+## V12.3 | Paisagem sonora procedural
+- Commit `ab79d628` na página principal `gh-pages/index.html`; nenhuma alteração em main, Supabase, TikTok ou serviços externos.
+- Dois controles de volume separados para ambiente e efeitos. Ambiente original gerado por Web Audio (drones harmônicos, raízes alternadas), ativado somente após toque explícito e desligado com o áudio.
+- Efeitos distintos para ações coletivas de construção/comércio/defesa, conclusão real de casa pelo trabalho autônomo e fase de acontecimento de anomalias. Limitador de 1,8 s entre efeitos para evitar excesso.
+- Suspende áudio e cancela fala ao ocultar a página, retoma ambiente ao retornar se habilitado. Nenhuma alteração nos saldos, salvamentos ou mecânica.
+- Sintaxe JavaScript PASS. Android visual/sonoro da V12.3 ainda não testado; qualidade e suporte variam conforme navegador e dispositivo.
