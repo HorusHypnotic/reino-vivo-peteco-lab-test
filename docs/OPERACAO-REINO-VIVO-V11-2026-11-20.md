@@ -90,3 +90,10 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Atualização da versão visível para V11.9 na rota principal; sem novas rotas públicas e sem alteração das chaves localStorage.
 - Sintaxe do script principal PASS. QA visual em Android e resposta HTTPS da raiz ainda pendentes de confirmação do usuário.
 - Próximos lotes: ações com impacto visível e duração limitada; destaque contextual de construções; prioridades de câmera sem sobreposição; eventual ponte de eventos em módulo independente, sem serviços pagos.
+
+## V12.0 | Consequência visual de construções
+- Commit `901e3df0` na página principal `gh-pages/index.html`. Nenhuma alteração na main.
+- Reutiliza `laborState.events` para detectar a última construção `action:'home'` em cada vila. A casa mais recente recebe contorno dourado e indicador de construção durante dois ciclos de trabalho; texto contextual `NOVA CASA` substitui temporariamente o status profissional.
+- Não adiciona recursos, eventos ou casas fictícias, nem modifica chaves de persistência. Efeito visual deriva do estado existente.
+- Script principal: sintaxe PASS. QA visual e verificação HTTP no Android ainda pendentes.
+- Próximo P0: destaque de ação coletiva no mapa, hierarquia de avisos da câmera e verificação visual sem obstruir o cenário.
