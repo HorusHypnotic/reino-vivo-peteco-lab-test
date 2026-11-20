@@ -108,7 +108,7 @@ const priority=/ataque|invas|incêndio|destru|batalha|chefe|derrota/.test(t)?3:/
 if(!priority||!director.auto||s.phase!=='vila')return;
 if(director.focus&&s.t<director.until&&priority<director.focus.priority)return;
 director.focus={region,priority,label:String(message).slice(0,65)};
-director.until=s.t+(priority===3?480:300);
+director.until=s.t+(priority===3?540:360);
 }
 document.querySelector('#map-toggle').addEventListener('click',()=>{
 if(!director.auto){director.auto=true;cameraMode=0;worldMapEnabled=true;}
@@ -119,13 +119,13 @@ function worldCamera(){
 const unlocked=Math.max(1,Math.min(5,1+Math.floor((s.level-1)/7)));
 const mode=cameraMode;
 const active=director.auto&&director.focus&&s.t<director.until?director.focus:null;
-const sweep=Math.floor(s.t/1200)%unlocked;
+const sweep=Math.floor(s.t/360)%unlocked;
 const targetX=active?225+active.region*390:(director.auto?225+sweep*390:[720,270+Math.floor(s.t/900)%5*390,720][mode]);
 const targetY=active?465:490;
 const targetZoom=director.auto?(active?.priority===3?.61:active?.priority===2?.52:.42):[.34,.64,.94][mode];
-director.x+=(targetX-director.x)*.025;
-director.y+=(targetY-director.y)*.025;
-director.zoom+=(targetZoom-director.zoom)*.025;
+director.x+=(targetX-director.x)*.045;
+director.y+=(targetY-director.y)*.045;
+director.zoom+=(targetZoom-director.zoom)*.045;
 const center=[director.x,director.y],zoom=director.zoom;
 g.save();rect(0,0,360,480,'#1b3a4c');g.beginPath();g.rect(0,30,360,450);g.clip();
 g.translate(180,250);g.scale(zoom,zoom);g.translate(-center[0],-center[1]);
