@@ -47,3 +47,9 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 2. Estruturas econômicas aparecem por limiar de estoque, mas não representam obras concluídas por facção.
 3. Não foi executado smoke visual Android nem teste de 30 minutos.
 4. Validar comportamento do checkpoint com interrupção de navegador e recuperação do estado.
+
+## Atualização V11.1 | 2026-11-20
+- Commit `774bc210`: `PetecoTrade.sync` aceita assentamentos explícitos, mantendo compatibilidade com chamadas antigas e sem sobrescrever estoque salvo.
+- Commit `d048958e`: dez facções recebem economia inicial independentemente de cadastro da plateia; três pontos de sincronização atualizados; ocupação econômica e alerta de escassez visíveis no assentamento.
+- Testes executados em JavaScript isolado: 10 vilas sem jogadores PASS; estoque previamente salvo preservado PASS; restore de dez vilas PASS; sintaxe do script principal PASS.
+- Limite: ocupação é derivada do estoque e a animação é decorativa; ainda não existe motor de profissões ou movimentação de trabalhadores por tarefas. QA Android e estabilidade prolongada continuam pendentes.
