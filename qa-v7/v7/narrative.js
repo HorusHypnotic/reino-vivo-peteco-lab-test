@@ -2,6 +2,9 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PetecoNarrative=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
 const META={
+'care-shortage':[5,'A enfermaria precisa de remédios e alimentos para atender os feridos.'],
+harvest:[2,'Os campos produziram alimentos para a vila.'],
+'medicine-stocked':[3,'A enfermaria recebeu novos remédios.'],
 injury:[5,'Um construtor se feriu. A obra vai esperar pelo atendimento.'],
 care:[2,'O morador recebeu atendimento e está se recuperando.'],
 recovered:[4,'O construtor se recuperou e pode voltar ao trabalho.'],
