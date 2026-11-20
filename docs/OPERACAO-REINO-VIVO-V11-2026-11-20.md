@@ -74,3 +74,11 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 - Sintaxe do script principal PASS; nenhum save key alterado.
 - Limites: o tempo depende da taxa de quadros, sem cronômetro real; não foi realizado QA visual em Android nem medida de FPS.
 - Próximo P0: verificar com capturas reais a passagem por dez vilas, evitar mudança de câmera durante evento prioritário e medir estabilidade.
+
+## V11.7 | Diagnóstico de entrega GitHub Pages
+- Evidência do usuário: Chrome Android ainda mostra V11.1 no cabeçalho e V11.0 no admin, embora o `gh-pages/index.html` do GitHub esteja em V11.6.
+- Inspeção de repositório: `main/index.html` inexistente; `gh-pages/index.html` contém V11.6 e `.nojekyll` existe. Configuração efetiva de Pages não verificável com as ferramentas disponíveis.
+- Commit `121f0e58`: cópia versionada `release-v11-7/index.html` com 12 caminhos relativos de módulos corrigidos; preserva origem, chaves localStorage e jogo original. URL de diagnóstico: https://horushypnotic.github.io/reino-vivo-peteco-lab-test/release-v11-7/
+- Sintaxe JS da rota versionada: PASS. Acesso HTTPS externo: bloqueado por falha DNS neste ambiente. Não declarar URL funcional até teste HTTP real.
+- Interpretação: se a rota nova abrir com V11.7, a distribuição de arquivos novos funciona e o problema provável é cache/navegação na rota raiz. Se retornar 404, investigar origem do Pages/deploy da branch gh-pages; se abrir versão antiga, investigar cache do navegador/proxy ou redirecionamento.
+- Sem resets, GitHub Actions, alteração da main, Supabase ou TikTok real.
