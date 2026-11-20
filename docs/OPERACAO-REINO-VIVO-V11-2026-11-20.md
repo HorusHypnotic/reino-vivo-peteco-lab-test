@@ -82,3 +82,11 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 - Sintaxe JS da rota versionada: PASS. Acesso HTTPS externo: bloqueado por falha DNS neste ambiente. Não declarar URL funcional até teste HTTP real.
 - Interpretação: se a rota nova abrir com V11.7, a distribuição de arquivos novos funciona e o problema provável é cache/navegação na rota raiz. Se retornar 404, investigar origem do Pages/deploy da branch gh-pages; se abrir versão antiga, investigar cache do navegador/proxy ou redirecionamento.
 - Sem resets, GitHub Actions, alteração da main, Supabase ou TikTok real.
+
+## V11.9 | Convergência incremental com Reino Vivo (VS Code)
+Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/reino-vivo-v5-jornada`, `package.json` e `README.md`. Padrões aproveitados: impacto legível, HUD menos invasivo e consequência visual da simulação. Nenhum código de servidor Node, OBS ou TikTok foi copiado.
+- Commit `67095dfc` no `gh-pages/index.html`: quando estoque alimentar de uma vila experimental fica abaixo de 10, o mercado aparece fechado. É visual, não muda saldo.
+- Aviso de anomalia deslocado da região central (y=99) para faixa inferior (y=405), preservando espaço de casas.
+- Atualização da versão visível para V11.9 na rota principal; sem novas rotas públicas e sem alteração das chaves localStorage.
+- Sintaxe do script principal PASS. QA visual em Android e resposta HTTPS da raiz ainda pendentes de confirmação do usuário.
+- Próximos lotes: ações com impacto visível e duração limitada; destaque contextual de construções; prioridades de câmera sem sobreposição; eventual ponte de eventos em módulo independente, sem serviços pagos.
