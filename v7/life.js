@@ -8,16 +8,16 @@ function move(a,x,y){a.fromX=a.x;a.fromY=a.y;a.toX=x;a.toY=y;a.x=x;a.y=y;}
 function step(w){if(!w||w.version!==1||!Array.isArray(w.agents))throw Error('Invalid life state');w.tick++;const [l,b,m]=w.agents;for(const a of w.agents){a.energy=Math.max(0,a.energy-1);if(a.energy<15){a.energy=Math.min(100,a.energy+24);a.task='rest';continue;}}
 if(l.task==='rest')l.task='idle';
 if(l.inventory.wood===0){l.inventory.wood=2;w.gathered+=2;l.task='gather';move(l,65,250);event(w,l.id,'gather','2 wood');}
-else {w.stock.wood+=l.inventory.wood;l.inventory.wood=0;l.task='deliver';move(l,180,300);event(w,l.id,'deliver','2 wood to depot');}
+else {w.stock.wood+=l.inventory.wood;w.delivered+=l.inventory.wood;l.inventory.wood=0;l.task='deliver';move(l,180,300);event(w,l.id,'deliver','2 wood to depot');}
 if(m.task==='rest')m.task='idle';
-if(w.stock.food>0&&w.tick%4===0){w.stock.food--;m.task='trade';event(w,m.id,'trade','1 food consumed');}
-else m.task='market';
+if(w.stock.food>0&&w.tick%4===0){w.stock.food--;m.task='trade';move(m,220,305);event(w,m.id,'trade','1 food consumed');}
+else {m.task='market';move(m,275,385);}
 if(b.task==='rest')b.task='idle';
 if(!w.home.occupied&&w.stock.wood>=4){w.stock.wood-=4;w.spent+=4;w.home.progress++;w.home.stage=Math.min(3,w.home.progress);b.task='build';move(b,w.home.x,w.home.y);event(w,b.id,'build','home-1 stage '+w.home.stage);if(w.home.stage===3){w.home.occupied=true;event(w,b.id,'occupy','home-1 occupied');}}
-else b.task=w.home.occupied?'maintenance':'waiting-materials';
+else {b.task=w.home.occupied?'maintenance':'waiting-materials';if(!w.home.occupied)move(b,220,305);}
 for(const a of w.agents){a.history.push({tick:w.tick,task:a.task});if(a.history.length>24)a.history.shift();}
 return w;}
-function validate(w){if(w.stock.wood<0||w.spent<0||w.agents.some(a=>a.inventory.wood<0))return false;return w.gathered===w.stock.wood+w.spent+w.agents.reduce((n,a)=>n+a.inventory.wood,0);}
+function validate(w){if(!w||!w.stock||!Array.isArray(w.agents)||w.agents.length!==3||!Number.isSafeInteger(w.gathered)||!Number.isSafeInteger(w.delivered)||!Number.isSafeInteger(w.spent)||w.delivered<0||w.delivered>w.gathered)return false;if(w.stock.wood<0||w.spent<0||w.agents.some(a=>a.inventory.wood<0))return false;return w.gathered===w.stock.wood+w.spent+w.agents.reduce((n,a)=>n+a.inventory.wood,0)&&w.delivered===w.stock.wood+w.spent;}
 function restore(data){try{const w=typeof data==='string'?JSON.parse(data):data;if(!w||w.version!==1||!Array.isArray(w.agents)||w.agents.length!==3||!w.home||!w.stock||!Number.isSafeInteger(w.tick)||w.tick<0||!validate(w))return null;return w;}catch{return null;}}
 return {create,step,validate,restore};
 });
