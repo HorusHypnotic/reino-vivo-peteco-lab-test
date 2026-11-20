@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const src=fs.readFileSync(path.join(__dirname,'../v7/art-direction-v17.js'),'utf8');
+const sandbox={};vm.runInNewContext(src,sandbox);
+const art=sandbox.PetecoArtV17;assert.equal(typeof art.draw,'function');
+const calls=[];const ctx={save(){},restore(){},clearRect(){},fillRect(...a){calls.push(a)},beginPath(){},moveTo(){},lineTo(){},closePath(){},fill(){},arc(){},ellipse(){},translate(){},scale(){},fillText(){}};
+const s={level:30,people:79,damage:24};const before=JSON.stringify(s);
+art.draw(ctx,s,500);assert.equal(JSON.stringify(s),before);assert.ok(calls.length>40);
+assert.ok(calls.length<400,'bounded scene');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.match(html,/v7\/art-direction-v17\.js/);
+assert.match(html,/get\('v17'\)==='1'/,'experimental opt-in required');
+assert.match(html,/peteco-lab-vila-v2/,'preserve legacy save key');
+console.log('PASS V17 static integration and pure rendering');
