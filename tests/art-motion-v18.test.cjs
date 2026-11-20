@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const base=path.join(__dirname,'../v18');
+const ctx={};for(const name of ['actor-state-machine.js','art-motion.js'])vm.runInNewContext(fs.readFileSync(path.join(base,name),'utf8'),ctx);
+const draws=[],g=new Proxy({save(){},restore(){},translate(){},rotate(){},fillRect(){},strokeRect(){},beginPath(){},ellipse(){},arc(){},fill(){},stroke(){},fillText(){}},{set(o,k,v){draws.push([k,v]);o[k]=v;return true}});
+const art={construction:{progress:1},workers:[{x:30,y:100,job:'woodcut',phase:'idle'},{x:80,y:160,job:'build',phase:'working'},{x:110,y:200,job:'carry',phase:'transport'}]};
+ctx.PetecoArtMotionV18.draw(g,art,120);
+assert.equal(art.workers[0].phase,'idle');
+assert.equal(art.workers[1].phase,'working');
+assert.equal(art.workers[2].phase,'transport');
+assert.ok(draws.length>10,'visual operations expected');
+const source=fs.readFileSync(path.join(base,'art-motion.js'),'utf8');
+assert.doesNotMatch(source,/Math\.floor\(t\/180\+w\.x\)/,'do not fabricate job phases from time');
+assert.match(source,/w\.phase\|\|'idle'/,'default actors must idle without explicit state');
+console.log('PASS V18 renderer states and no fabricated work cycles');
