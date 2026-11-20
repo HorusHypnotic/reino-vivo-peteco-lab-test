@@ -1,24 +1,24 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#17130e">
-  <title>Reino Vivo Peteco Lab — teste</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; background: #17130e; color: #f6efdc; font-family: system-ui, sans-serif; }
-    main { position: fixed; inset: 0; }
-    iframe { display: block; width: 100%; height: 100%; border: 0; background: #17130e; }
-    .open { position: fixed; z-index: 2; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); padding: 10px 14px; border: 1px solid #d6c49c; border-radius: 999px; background: #17130e; color: #f6efdc; text-decoration: none; font-size: 13px; box-shadow: 0 4px 18px #0008; }
-    .open:focus-visible { outline: 3px solid #f2ca70; outline-offset: 3px; }
-  </style>
-</head>
-<body>
-  <main>
-    <iframe src="https://reino-vivo-peteco-lab.lovable.app/" title="Reino Vivo Peteco Lab" loading="eager" referrerpolicy="no-referrer"></iframe>
-    <a class="open" href="https://reino-vivo-peteco-lab.lovable.app/" target="_blank" rel="noopener noreferrer">Abrir o Peteco Lab</a>
-  </main>
-</body>
-</html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Peteco Lab | Experimento isolado</title><style>*{box-sizing:border-box}body{margin:0;background:#101723;color:#f6e5bc;font:15px system-ui;display:grid;place-items:center;min-height:100dvh}main{width:min(100%,440px);padding:16px}h1{font-size:21px;margin:0 0 8px}.sub{color:#b7c5c9;font-size:12px}canvas{display:block;width:100%;aspect-ratio:9/12;border:2px solid #a88b50;border-radius:12px;image-rendering:pixelated;background:#779fa3}nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}button{padding:12px 4px;border-radius:8px;background:#2c4650;color:#fff2c8;border:1px solid #a88b50;font-weight:700}button:disabled{opacity:.4}.fake{border:1px solid #7d6b4c;border-radius:10px;padding:10px;margin:12px 0;background:#17232e}.fake strong{font-size:14px}.fakebuttons{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.fakebuttons button{font-size:11px;padding:10px 2px}.fake #feed{font-size:12px;min-height:34px;color:#d8cfb2;padding-top:8px}#log{background:#1c2c38;padding:12px;min-height:50px;border-radius:8px}small{color:#b7c5c9}</style></head><body><main><h1>⚔️ Peteco Lab · Vila Viva</h1><p class="sub">Experimento independente, sem TikTok, login, Supabase ou publicação.</p><canvas id="game" width="360" height="480"></canvas><nav><button data-a="enter">Entrar</button><button data-a="work">Trabalhar</button><button data-a="auto">Produção automática</button><button data-a="defend">Defender</button><button data-a="attack">Atacar</button><button data-a="return">Voltar</button><button data-a="reset">Reiniciar</button></nav><section class="fake" aria-label="TikTok Fake"><strong>📡 TikTok Fake · simulação</strong><p class="sub">Perfis fictícios. Nenhum evento real, nenhum dado enviado.</p><div class="fakebuttons"><button data-fake="join">👤 Entrar</button><button data-fake="gift">🌹 Rosa</button><button data-fake="raid">💬 Defesa</button><button data-fake="burst">⚡ Rajada</button></div><div id="feed" aria-live="polite">Aguardando eventos simulados.</div></section><div id="log" role="status" aria-live="polite">Arauto: Bem-vindo ao laboratório.</div><p><small>Simulação local. Arte geométrica original. Nenhum dado é enviado.</small></p></main><script type="module">
+const c=document.querySelector('#game'),g=c.getContext('2d'),log=document.querySelector('#log');let epoch=0;
+const s={joined:false,phase:'vila',wood:0,hp:100,x:180,target:180,busy:false,auto:false,t:0,particles:[]};
+const say=t=>log.textContent='Arauto: '+t;
+const fakeNames=['Guardiao77','PescadoraBR','Ferreiro21','Viajante09'];let fakeSequence=0;function fakeEvent(type){const name=fakeNames[fakeSequence++%fakeNames.length];const feed=document.querySelector('#feed');if(type==='join'){feed.textContent=name+': !entrar';action('enter')}else if(type==='gift'){feed.textContent=name+' enviou 🌹 Rosa (SIMULADO)';burst(180,330,24,'#f59cb7');say('Rosa fictícia recebida. Nenhum saldo real foi alterado.')}else if(type==='raid'){feed.textContent=name+': !defender';action('defend')}else if(type==='burst'){feed.textContent='10 comentários fictícios de defesa';if(s.joined&&s.phase==='vila')action('defend');if(s.phase==='batalha')burst(250,170,40,'#f6c77c')}}
+document.querySelectorAll('[data-fake]').forEach(b=>b.addEventListener('click',()=>fakeEvent(b.dataset.fake)));
+function burst(x,y,n,col){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=Math.random()*3+1;s.particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:30,col})}}
+function action(a){if(a==='reset'){epoch++;Object.assign(s,{joined:false,phase:'vila',wood:0,hp:100,x:180,target:180,busy:false,auto:false,particles:[]});say('Reino reiniciado.');return}
+if(a==='enter'){epoch++;s.joined=true;s.busy=false;s.phase='vila';s.target=180;say('Você chegou à vila.');burst(180,335,16,'#f6e5bc');return}
+if(!s.joined){say('Primeiro entre no Reino.');return}
+if(a==='auto'&&s.phase==='vila'){s.auto=!s.auto;say(s.auto?'Produção automática ativada: a vila coleta madeira sozinha.':'Produção automática pausada.');if(s.auto&&!s.busy)harvest();return}
+if(a==='work'&&s.phase==='vila'&&!s.busy){harvest();return}
+function harvest(){const run=++epoch;s.busy=true;s.target=72;say('Caminhando para colher madeira...');setTimeout(()=>{if(run!==epoch||!s.busy||s.phase!=='vila')return;s.wood++;s.busy=false;burst(72,350,25,'#f3d37c');say('Trabalho concluído! Madeira: '+s.wood);if(s.auto&&s.phase==='vila')harvest()},1400)}
+if(a==='defend'&&s.phase==='vila'){epoch++;s.busy=false;s.auto=false;s.phase='batalha';s.hp=100;burst(255,170,30,'#f38c65');say('O dragão apareceu! Prepare a defesa.');return}
+if(a==='attack'&&s.phase==='batalha'){s.hp=Math.max(0,s.hp-25);burst(250,175,28,'#ffd37b');if(s.hp===0){s.phase='vitoria';say('Vitória! O dragão foi derrotado.')}else say('Ataque confirmado. Dragão: '+s.hp+'%.');return}
+if(a==='return'&&s.phase==='vitoria'){epoch++;s.phase='vila';s.auto=false;s.target=180;say('De volta à vila. Madeira preservada: '+s.wood);return}
+say('Comando indisponível nesta fase.')}
+document.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>action(b.dataset.a)));
+function rect(x,y,w,h,col){g.fillStyle=col;g.fillRect(x,y,w,h)}function circ(x,y,r,col){g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fillStyle=col;g.fill()}
+function tree(x,y){rect(x-5,y,10,35,'#6c4d30');circ(x,y-10,23,'#2c6948');circ(x+9,y-20,15,'#367f52')}
+function actor(x,y,col){rect(x-8,y-18,16,17,'#e4b88c');rect(x-11,y,22,24,col);rect(x-8,y+24,6,12,'#283b49');rect(x+3,y+24,6,12,'#283b49')}
+function frame(){s.t++;const battle=s.phase!=='vila';rect(0,0,360,480,battle?'#353046':'#7bb5be');circ(290,75,30,battle?'#d77e60':'#f6d889');for(let i=0;i<5;i++){g.fillStyle=battle?'#484157':'#67938d';g.beginPath();g.moveTo(i*90-55,280);g.lineTo(i*90+25,140);g.lineTo(i*90+110,280);g.fill()}rect(0,280,360,200,battle?'#59515d':'#578257');if(!battle){tree(65,300);tree(305,310);rect(132,260,95,75,'#b9946b');g.fillStyle='#784b40';g.beginPath();g.moveTo(119,265);g.lineTo(180,210);g.lineTo(240,265);g.fill();rect(170,298,20,37,'#47392e');actor(255+Math.sin(s.t/50)*26,370,'#ae804a');actor(105+Math.cos(s.t/60)*17,405,'#7767aa')}else{const y=165+Math.sin(s.t/20)*7;g.fillStyle='#8f3946';g.beginPath();g.moveTo(250,y);g.lineTo(185,y-48);g.lineTo(205,y+30);g.fill();g.beginPath();g.moveTo(270,y);g.lineTo(330,y-48);g.lineTo(315,y+30);g.fill();circ(260,y,32,'#bd6554');circ(260,y-25,22,'#d57c59');circ(250,y-30,4,'#ffdc70');circ(270,y-30,4,'#ffdc70');rect(208,238,104,9,'#3c3643');rect(210,240,s.hp,5,'#ed9863')}
+s.x+=(s.target-s.x)*.07;actor(s.x,358+Math.sin(s.t/9)*2,'#466ca0');if(s.busy&&s.t%12===0)burst(75,350,3,'#eac88b');for(const p of s.particles){rect(p.x,p.y,4,4,p.col);p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.life--}s.particles=s.particles.filter(p=>p.life>0);rect(0,0,360,30,'#1c2934');g.fillStyle='#f6e5bc';g.font='bold 14px system-ui';g.fillText(s.phase.toUpperCase()+' · Madeira '+s.wood,12,20);document.querySelector('[data-a=work]').disabled=s.busy||s.auto;requestAnimationFrame(frame)}frame();
+</script></body></html>
