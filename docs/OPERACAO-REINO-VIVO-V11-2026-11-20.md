@@ -53,3 +53,10 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 - Commit `d048958e`: dez facções recebem economia inicial independentemente de cadastro da plateia; três pontos de sincronização atualizados; ocupação econômica e alerta de escassez visíveis no assentamento.
 - Testes executados em JavaScript isolado: 10 vilas sem jogadores PASS; estoque previamente salvo preservado PASS; restore de dez vilas PASS; sintaxe do script principal PASS.
 - Limite: ocupação é derivada do estoque e a animação é decorativa; ainda não existe motor de profissões ou movimentação de trabalhadores por tarefas. QA Android e estabilidade prolongada continuam pendentes.
+
+## Atualização V11.2 | Trabalho autônomo e construções
+- Commit `f45224ac`: novo módulo `v7/labor.js`, com dez vilas, ciclos determinísticos de produção/consumo, custo de casas, eventos e restauração validada.
+- Commit `b3c08170`: integração a cada 900 frames, checkpoint conjunto `peteco-lab-labor-trade-v1` (comércio + trabalho), rollback em falha de armazenamento, casas concluídas representadas no mapa.
+- Evidência: sete verificações PASS (10 vilas, produção, construção, restore, JSON inválido, estoques não negativos em 80 ciclos, sintaxe do script principal).
+- Limites: ciclo depende de frames com a página aberta, não de relógio real; moradores ainda não possuem rotas individuais; o checkpoint de comércio e trabalho não unifica o checkpoint cívico; sem QA visual Android.
+- Próximos P0: testar recarregamento com checkpoint, resolver coexistência de snapshots do comércio após ações manuais, validar a câmera e estabilidade no Chrome Android.
