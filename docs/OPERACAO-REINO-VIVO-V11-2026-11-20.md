@@ -67,3 +67,10 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 - Sintaxe do script principal: PASS; verificação da posição BR-PE/BR-RS: PASS.
 - Verificação remota HTTPS pelo ambiente de execução: **BLOQUEADA** (falha de resolução de DNS); não confundir commit GitHub com confirmação de carregamento no Android.
 - P0 pendente: smoke real no navegador Android; teste de armazenamento cheio e recarga real; eventual reconciliação do relatório comercial com ciclos de produção independentes.
+
+## Atualização V11.6 | Direção de câmera do espectador
+- Commit `e198e8c8`: AUTO alterna a cada 480 frames (~8s a 60 FPS), em vez de 900; zoom nominal de 0,64 para 0,72.
+- Redução de casas decorativas de até 42 para até 13 por bioma. Construções persistentes das dez vilas continuam desenhadas separadamente.
+- Sintaxe do script principal PASS; nenhum save key alterado.
+- Limites: o tempo depende da taxa de quadros, sem cronômetro real; não foi realizado QA visual em Android nem medida de FPS.
+- Próximo P0: verificar com capturas reais a passagem por dez vilas, evitar mudança de câmera durante evento prioritário e medir estabilidade.
