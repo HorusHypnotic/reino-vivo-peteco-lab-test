@@ -1,0 +1,21 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const director = require('../v7/war-director.js');
+const html = fs.readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
+
+const savedBattle = { a: 'BR-PA', b: 'BR-PE', hpA: 63, hpB: 28, round: 7 };
+const resumed = director.restore(savedBattle, 418);
+assert.equal(resumed.phase, 'alert');
+assert.equal(resumed.since, 418);
+assert.match(resumed.headline, /BR-PA contra BR-PE/);
+assert.equal(resumed.event, null);
+assert.equal(director.advance(resumed, 598), 'approach');
+assert.match(resumed.headline, /Tropas se aproximam/);
+assert.equal(director.advance(resumed, 778), 'combat');
+assert.equal(resumed.headline, 'O cerco começou');
+assert.equal(director.restore(null).phase, 'idle');
+assert.match(html, /PetecoWarDirector\.restore\(warState\.active,s\.t\)/);
+assert.match(html, /PetecoWarDirector\.advance\(warDirector,s\.t\)/);
+assert.match(html, /warVisualPhase\(\)!=='combat'\)return/);
+console.log('PASS guerra persistida retoma a sequência cinematográfica e pode avançar até combate');
