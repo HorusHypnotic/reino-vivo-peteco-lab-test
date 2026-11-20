@@ -18,6 +18,6 @@ else {b.task=w.home.occupied?'maintenance':'waiting-materials';if(!w.home.occupi
 for(const a of w.agents){a.history.push({tick:w.tick,task:a.task});if(a.history.length>24)a.history.shift();}
 return w;}
 function validate(w){if(!w||!w.stock||!Array.isArray(w.agents)||w.agents.length!==3||!Number.isSafeInteger(w.gathered)||!Number.isSafeInteger(w.delivered)||!Number.isSafeInteger(w.spent)||w.delivered<0||w.delivered>w.gathered)return false;if(w.stock.wood<0||w.spent<0||w.agents.some(a=>a.inventory.wood<0))return false;return w.gathered===w.stock.wood+w.spent+w.agents.reduce((n,a)=>n+a.inventory.wood,0)&&w.delivered===w.stock.wood+w.spent;}
-function restore(data){try{const w=typeof data==='string'?JSON.parse(data):data;if(!w||w.version!==1||!Array.isArray(w.agents)||w.agents.length!==3||!w.home||!w.stock||!Number.isSafeInteger(w.tick)||w.tick<0||!validate(w))return null;return w;}catch{return null;}}
+function restore(data){try{const w=typeof data==='string'?JSON.parse(data):data;if(!w||w.version!==1||!Array.isArray(w.agents)||w.agents.length!==3||!w.home||!w.stock||!Number.isSafeInteger(w.tick)||w.tick<0)return null;if(w.delivered===0&&w.gathered>0&&w.stock.wood+w.spent>0&&w.gathered===w.stock.wood+w.spent+w.agents.reduce((n,a)=>n+a.inventory.wood,0))w.delivered=w.stock.wood+w.spent; if(!validate(w))return null;return w;}catch{return null;}}
 return {create,step,validate,restore};
 });
