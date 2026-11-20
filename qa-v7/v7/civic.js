@@ -1,0 +1,9 @@
+/* Faction civic actions: isolated simulation, no alteration to original V5.4 economy. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PetecoCivic=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){'use strict';
+const ACTIONS={build:{label:'Construção',cost:2},trade:{label:'Comércio',cost:1},defend:{label:'Defesa',cost:2}};
+function create(){return {version:1,points:{},events:[],seq:0};}
+function act(s,factions,user,action){const id=String(user||'').trim().replace(/^@/,'').toLowerCase(),p=factions?.players?.[id],rule=ACTIONS[action];if(!p)return {ok:false,reason:'not-member'};if(!rule)return {ok:false,reason:'invalid-action'};const f=p.faction,points=s.points[f]||{build:0,trade:0,defend:0};points[action]++;s.points[f]=points;s.seq++;const event={seq:s.seq,user:id,faction:f,action,score:points[action]};s.events.push(event);if(s.events.length>100)s.events.shift();return {ok:true,event};}
+function ranking(s){return Object.entries(s.points||{}).map(([faction,p])=>({faction,build:p.build||0,trade:p.trade||0,defend:p.defend||0,total:(p.build||0)*2+(p.trade||0)+(p.defend||0)*2})).sort((a,b)=>b.total-a.total||a.faction.localeCompare(b.faction));}
+function restore(raw){try{const s=typeof raw==='string'?JSON.parse(raw):raw;if(!s||s.version!==1||!s.points||Array.isArray(s.points)||!Array.isArray(s.events)||!Number.isSafeInteger(s.seq)||s.seq<0)return null;const n=create();for(const [k,v] of Object.entries(s.points)){if(!/^(BR-[A-Z]{2}|EXT-[A-Z]+)$/.test(k)||!v||!['build','trade','defend'].every(x=>Number.isSafeInteger(v[x])&&v[x]>=0))return null;n.points[k]={build:v.build,trade:v.trade,defend:v.defend};}n.events=s.events.slice(-100);n.seq=s.seq;return n;}catch{return null;}}
+return {create,act,ranking,restore};
+});
