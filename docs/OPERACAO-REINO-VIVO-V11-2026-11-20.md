@@ -117,3 +117,9 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Efeitos distintos para ações coletivas de construção/comércio/defesa, conclusão real de casa pelo trabalho autônomo e fase de acontecimento de anomalias. Limitador de 1,8 s entre efeitos para evitar excesso.
 - Suspende áudio e cancela fala ao ocultar a página, retoma ambiente ao retornar se habilitado. Nenhuma alteração nos saldos, salvamentos ou mecânica.
 - Sintaxe JavaScript PASS. Android visual/sonoro da V12.3 ainda não testado; qualidade e suporte variam conforme navegador e dispositivo.
+
+## V12.4 | Correção após QA Android do usuário
+- Feedback: apenas o teste de voz do Arauto foi audível na V12.3. Ambiente e efeitos NÃO homologados.
+- Commit `07e31d94`: níveis iniciais de volume ambiente 45% e efeitos 65%, ganho procedural aumentado, botão de teste direto que dispara ambiente, construção, comércio e defesa em sequência, sem aguardar eventos reais.
+- Nenhuma alteração em recursos, salvamentos, `main`, TikTok, Supabase ou serviços externos. Sintaxe JS PASS.
+- **Pendente**: confirmação auditiva da V12.4 no Android; teste automatizado de sintaxe não comprova áudio físico.
