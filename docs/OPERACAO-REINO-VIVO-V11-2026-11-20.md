@@ -60,3 +60,10 @@ Cada lote: REBOBINE -> preservar patrimônio -> implementar alteração mínima 
 - Evidência: sete verificações PASS (10 vilas, produção, construção, restore, JSON inválido, estoques não negativos em 80 ciclos, sintaxe do script principal).
 - Limites: ciclo depende de frames com a página aberta, não de relógio real; moradores ainda não possuem rotas individuais; o checkpoint de comércio e trabalho não unifica o checkpoint cívico; sem QA visual Android.
 - Próximos P0: testar recarregamento com checkpoint, resolver coexistência de snapshots do comércio após ações manuais, validar a câmera e estabilidade no Chrome Android.
+
+## Atualização V11.5 | Correção territorial e persistência
+- Commit `38b05881`: a posição de anomalias agora é obtida de `settlementStops`; corrigidas as associações incorretas de BR-PE (bioma 3) e BR-RS (bioma 4).
+- Comércio manual e produção autônoma compartilham a função `persistLaborTrade`, com rollback da alteração em memória quando o navegador recusa a gravação.
+- Sintaxe do script principal: PASS; verificação da posição BR-PE/BR-RS: PASS.
+- Verificação remota HTTPS pelo ambiente de execução: **BLOQUEADA** (falha de resolução de DNS); não confundir commit GitHub com confirmação de carregamento no Android.
+- P0 pendente: smoke real no navegador Android; teste de armazenamento cheio e recarga real; eventual reconciliação do relatório comercial com ciclos de produção independentes.
