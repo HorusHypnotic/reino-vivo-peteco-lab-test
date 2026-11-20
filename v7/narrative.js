@@ -2,6 +2,9 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PetecoNarrative=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
 const META={
+injury:[5,'Um construtor se feriu. A obra vai esperar pelo atendimento.'],
+care:[2,'O morador recebeu atendimento e está se recuperando.'],
+recovered:[4,'O construtor se recuperou e pode voltar ao trabalho.'],
 'house-damaged':[5,'Uma casa foi danificada pelo temporal. Os construtores precisam de madeira.'],
 repair:[4,'Os trabalhadores repararam os danos da casa.'],
 storm:[5,'Tempestade na vila. As novas entregas foram suspensas.'],
