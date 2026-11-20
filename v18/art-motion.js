@@ -2,7 +2,7 @@
 (function(root){'use strict';
 const colors={woodcut:'#8f6245',farm:'#8baf66',build:'#dfaa67',carry:'#a6c6d4',guard:'#a7a6c6',trade:'#d58b75'};
 function worker(g,w,t){
- const machine=root.PetecoActorV18;const state=machine?machine.jobState(w.job,w.phase||((Math.floor(t/180+w.x)%3===0)?'working':'moving')):'walk';const actor=machine?machine.advance({state,elapsed:t/60,frame:0},0):{frame:Math.floor(t/6)%6};const stride=state==='walk'||state==='carry'?Math.sin(actor.frame*Math.PI/3)*4:0;const dx=state==='walk'?Math.sin(t/65+w.x)*11:0,dy=state==='walk'?Math.cos(t/65+w.x)*3:0;
+ const machine=root.PetecoActorV18;const state=machine?machine.jobState(w.job,w.phase||'idle'):'walk';const actor=machine?machine.advance({state,elapsed:t/60,frame:0},0):{frame:Math.floor(t/6)%6};const stride=state==='walk'||state==='carry'?Math.sin(actor.frame*Math.PI/3)*4:0;const dx=state==='walk'&&w.target?Math.sin(t/65+w.x)*11:0,dy=state==='walk'&&w.target?Math.cos(t/65+w.x)*3:0;
  const x=w.x+dx,y=w.y+dy;g.save();g.translate(x,y);
  g.fillStyle='#183b35aa';g.beginPath();g.ellipse(0,2,7,3,0,0,7);g.fill();
  g.fillStyle='#493a32';g.fillRect(-5,-9+stride,4,11);g.fillRect(2,-9-stride,4,11);
