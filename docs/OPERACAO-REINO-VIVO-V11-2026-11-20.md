@@ -142,3 +142,11 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Commit `25f2c29c`: corrige silêncio do Arauto após primeira fala em eventos de plateia, narrando entrada em facção, simulação de 100 espectadores, primeira ação coletiva da rodada e comércio confirmado. Preserva intervalo de 11 s para evitar sobreposição; efeitos de teste agora sequenciais e não simultâneos.
 - Escopo verdadeiro: comandos de chat disponíveis no Lab são `!estado UF` e `!pais país`; construir/comerciar/defender são ações simuladas por botões e não comandos TikTok reais.
 - **Limitação de QA**: 48/48 são testes de lógica JavaScript, não áudio físico nem reprodução Android. Música, saída de som e eventos visuais ao vivo ainda aguardam teste no dispositivo do usuário.
+
+## V12.8 | Direção audiovisual e diagnóstico contínuo
+- Commit `64b5d4ae` na `gh-pages`, sem alteração em `main`.
+- O Arauto tenta retomar o motor musical após `SpeechSynthesisUtterance.onend` ou `onerror`, mitigando a suspensão de Web Audio por foco de mídia no Android. **Limitação:** a política de gesto do navegador ainda pode bloquear `resume()`; não há garantia de áudio físico.
+- Indicador de RMS atualizado a cada 2 segundos enquanto visível, com duas casas decimais, exibindo aviso de estado suspenso. `running` e RMS não provam que o alto-falante reproduz.
+- Ações individuais confirmadas passam a focar câmera, tocar efeitos e solicitar narração; entregas concluídas tocam efeito e ganham legenda no modo espectador; construções autônomas geram aviso de cena.
+- Mensagem específica para jogador não cadastrado no painel de facções.
+- Verificações: script inline sintaxe PASS; 8/8 assertivas estáticas PASS. Regressão anterior de lógica 48/48 PASS na V12.7; **não reexecutada neste lote**. QA de navegador Android e som físico ainda pendentes.
