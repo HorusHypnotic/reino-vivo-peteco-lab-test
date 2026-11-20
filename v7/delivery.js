@@ -1,0 +1,12 @@
+/* Peteco Lab V8.8: persistent sandbox delivery lifecycle, no legacy village mutation. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PetecoDelivery=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){'use strict';
+const TRAVEL=6,BUILD=4,MAX=50;
+function create(){return {version:1,tick:0,seq:0,jobs:[],events:[]};}
+function enqueue(s,event){if(!event||!['build','trade','defend'].includes(event.action))return {ok:false,reason:'action'};if(s.jobs.some(j=>j.sourceSeq===event.seq))return {ok:false,reason:'duplicate'};const j={id:++s.seq,sourceSeq:event.seq,action:event.action,faction:String(event.faction||''),user:String(event.user||''),cost:{...event.cost},status:'queued',created:s.tick,depart:null,arrive:null,complete:null};s.jobs.push(j);if(s.jobs.length>MAX)s.jobs.shift();return {ok:true,job:j};}
+function step(s){s.tick++;let active=s.jobs.find(j=>j.status==='transit'||j.status==='building');if(!active){active=s.jobs.find(j=>j.status==='queued');if(active){active.status='transit';active.depart=s.tick;s.events.push({id:active.id,status:'transit',tick:s.tick});}}
+if(active&&active.status==='transit'&&s.tick-active.depart>=TRAVEL){active.status='building';active.arrive=s.tick;s.events.push({id:active.id,status:'building',tick:s.tick});}
+if(active&&active.status==='building'&&s.tick-active.arrive>=BUILD){active.status='done';active.complete=s.tick;s.events.push({id:active.id,status:'done',tick:s.tick});}
+if(s.events.length>MAX)s.events=s.events.slice(-MAX);return active||null;}
+function restore(raw){try{const v=typeof raw==='string'?JSON.parse(raw):raw;if(!v||v.version!==1||!Number.isSafeInteger(v.tick)||v.tick<0||!Number.isSafeInteger(v.seq)||v.seq<0||!Array.isArray(v.jobs)||!Array.isArray(v.events))return null;const s=create();s.tick=v.tick;s.seq=v.seq;for(const j of v.jobs.slice(-MAX)){if(!j||!Number.isSafeInteger(j.id)||!Number.isSafeInteger(j.sourceSeq)||!['queued','transit','building','done'].includes(j.status)||!['build','trade','defend'].includes(j.action))return null;s.jobs.push({...j,cost:{...j.cost}});}s.events=v.events.slice(-MAX);return s;}catch{return null;}}
+function active(s){return s.jobs.find(j=>j.status==='transit'||j.status==='building')||s.jobs.find(j=>j.status==='queued')||null;}
+return {create,enqueue,step,restore,active,TRAVEL,BUILD};});
