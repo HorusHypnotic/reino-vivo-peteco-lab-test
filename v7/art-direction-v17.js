@@ -30,6 +30,31 @@ function cart(g,x,y,t){g.save();g.translate(x,y);box(g,-21,-13,39,16,'#9b6d46');
 function lantern(g,x,y,t){box(g,x-2,y-29,4,29,'#5c4a39');box(g,x-6,y-32,12,4,'#77563b');box(g,x-4,y-28,8,9,'#f6c878');g.fillStyle='#f7d88b';g.globalAlpha=.12+.06*Math.sin(t/23);g.beginPath();g.arc(x,y-23,18,0,7);g.fill();g.globalAlpha=1;}
 function chimney(g,x,y,t){box(g,x,y,11,19,'#b8a58c');box(g,x-2,y-3,15,5,'#d3c2a3');g.fillStyle='#b6c2b8';for(let i=0;i<3;i++){g.globalAlpha=.17;g.beginPath();g.arc(x+5+Math.sin(t/30+i)*5,y-13-i*11-(t%13),6+i*2,0,7);g.fill();}g.globalAlpha=1;}
 function villager(g,x,y,t,color,tool){const bob=Math.sin(t)*1.6;g.save();g.translate(x,y+bob);g.fillStyle='#243c3a66';g.beginPath();g.ellipse(0,3,8,3,0,0,7);g.fill();box(g,-4,-18,8,8,'#dfb38a');box(g,-5,-10,10,13,color);box(g,-4,3,3,6,'#2c424b');box(g,2,3,3,6,'#2c424b');if(tool)box(g,6,-8,2,12,C.gold);g.restore();}
+function construction(g,x,y,w,stage,integrity,t){
+ const st=clamp(stage,0,3),hp=clamp(integrity,0,100);
+ if(st===3&&hp>=70)return false;
+ g.save();g.translate(x,y);
+ box(g,-w/2,-5,w,10,'#918471');
+ if(st===0||hp===0){
+  for(let i=0;i<7;i++){const px=-w/2+5+(i*17)%(w-8);box(g,px,-5-(i%3)*4,12,7,i%2?'#b49c83':'#887b6a');}
+ }else{
+  for(const xx of [-w/2+7,w/2-12])box(g,xx,-38,6,36,'#85694e');
+  box(g,-w/2+5,-39,w-10,6,'#ad8b64');
+  if(st>=2)poly(g,[[-w/2-5,-39],[0,-62],[w/2+5,-39]],'#86604a');
+ }
+ g.restore();return true;
+}
+function projectSite(g,project,goal,t){
+ const p=clamp(project,0,100000),total=Math.max(1,Number(goal)||30),ratio=clamp(p/total,0,1);
+ const x=180,y=309;g.save();
+ box(g,147,304,66,5,'#927c5b');
+ for(let i=0;i<6;i++){const xx=149+i*11;box(g,xx,299-(Math.floor(ratio*6)>i?13:0),9,Math.floor(ratio*6)>i?17:5,'#c5b59a');}
+ if(ratio>.3){box(g,146,282,5,22,'#80654d');box(g,208,282,5,22,'#80654d');}
+ if(ratio>.7)box(g,146,280,67,6,'#c4ae8c');
+ // Small construction cue, not a HUD that hides the world.
+ g.fillStyle='#f5dfad';g.font='bold 9px system-ui';g.fillText('OBRA '+Math.floor(ratio*100)+'%',149,275);
+ g.restore();
+}
 function foreground(g,t,level){
  // Near-field silhouette frames the center without obscuring the village.
  tree(g,-6,482,1.55);tree(g,363,493,1.45);
@@ -49,13 +74,13 @@ function draw(g,s,t){
  for(let i=0;i<16;i++){const x=(i*41)%360;box(g,x,335+(i%2)*8,18,2,'#d9c39d');}
  // Depth layers: distant buildings and foliage behind workers.
  for(let i=0;i<6;i++)tree(g,19+i*68,206+(i%2)*9,.76);
- building(g,64,274,62,48,'#865744',damage>35?1:0);
- building(g,294,270,65,48,'#8d644d',damage>55?1:0);
+ if(!construction(g,64,274,62,s.structures?.[1]?.stage??3,s.structures?.[1]?.integrity??100,t))building(g,64,274,62,48,'#865744',damage>35?1:0);
+ if(!construction(g,294,270,65,s.structures?.[2]?.stage??3,s.structures?.[2]?.integrity??100,t))building(g,294,270,65,48,'#8d644d',damage>55?1:0);
  if(level>=4)building(g,177,245,85,66,'#87513f',damage>20?1:0);
  // Foreground functional sectors, driven by actual level.
  tree(g,35,379,1.3);tree(g,78,407,1.15);
  for(let i=0;i<5;i++){box(g,244+i*19,373,13,7,'#b4a75e');box(g,244+i*19,386,13,7,'#d4ba6c');}
- building(g,183,418,89,60,level>=12?'#945d45':'#754c3e',damage>0?1:0);
+ if(!construction(g,183,418,89,s.structures?.[0]?.stage??3,s.structures?.[0]?.integrity??100,t))building(g,183,418,89,60,level>=12?'#945d45':'#754c3e',damage>0?1:0);
  // One readable production tableau: well, crops, workshop cart and lamps.
  garden(g,286,420,t);well(g,111,356,t);
  if(level>=4)chimney(g,200,154,t);
@@ -68,6 +93,7 @@ function draw(g,s,t){
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
  for(let i=0;i<workers;i++){const a=routes[i%4],p=(Math.sin(t/115+i*1.8)+1)/2,x=a[0]+(a[2]-a[0])*p,y=a[1]+(a[3]-a[1])*p;villager(g,x,y,t/12+i,['#698aa1','#b78754','#7c9467','#8d719d'][i%4],i%3===0);}
+ projectSite(g,s.project,s.projectGoal,t);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
  box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);
