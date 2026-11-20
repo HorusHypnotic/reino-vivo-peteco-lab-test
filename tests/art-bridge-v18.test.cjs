@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');
+const src=fs.readFileSync(require('node:path').join(__dirname,'../v18/art-bridge.js'),'utf8');
+const ctx={};vm.runInNewContext(src,ctx);
+const art=ctx.PetecoArtBridgeV18;assert.ok(art);
+const low=art.scene({level:1,people:2,project:0},0);
+const high=art.scene({level:78,people:80,project:10,projectGoal:30},2);
+assert.ok(high.buildings.length>low.buildings.length,'advanced village must have more structures');
+assert.ok(high.workers.length>low.workers.length,'advanced village must show more activity');
+assert.equal(high.tier,5);assert.equal(high.biome,'highlands');
+const saved={level:78,people:80,project:10,projectGoal:30,structures:[{stage:0,integrity:0},{stage:1,integrity:80}]};
+const before=JSON.stringify(saved),result=art.scene(saved,0);
+assert.equal(JSON.stringify(saved),before,'art must not mutate saves');
+assert.ok(result.buildings.some(b=>b.status==='ruined'));
+assert.ok(result.buildings.some(b=>b.status==='scaffold'));
+assert.equal(result.saveSchemaChanged,false);
+assert.ok(result.layers.indexOf('workers')>result.layers.indexOf('structures'));
+console.log('PASS V18 art bridge state, density, stages, persistence');
