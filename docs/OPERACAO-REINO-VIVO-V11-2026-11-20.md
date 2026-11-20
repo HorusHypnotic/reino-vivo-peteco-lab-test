@@ -150,3 +150,8 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Ações individuais confirmadas passam a focar câmera, tocar efeitos e solicitar narração; entregas concluídas tocam efeito e ganham legenda no modo espectador; construções autônomas geram aviso de cena.
 - Mensagem específica para jogador não cadastrado no painel de facções.
 - Verificações: script inline sintaxe PASS; 8/8 assertivas estáticas PASS. Regressão anterior de lógica 48/48 PASS na V12.7; **não reexecutada neste lote**. QA de navegador Android e som físico ainda pendentes.
+
+## V12.9 | Correção do link de atualização antigo
+- Encontrado link `href="?v=12.6"` ainda presente na publicação V12.8, apesar de o cabeçalho indicar V12.8. Corrigido para V12.9.
+- Link `#refresh-release` agora adiciona `fresh=<timestamp>` ao endereço via `URLSearchParams`, evitando reutilização da mesma URL em cache e sem tocar em localStorage. URL oficial raiz mantida.
+- Commit `6a257497`, gh-pages. Script inline validado sintaticamente. Publicação HTTPS/CDN e QA Android não verificados externamente.
