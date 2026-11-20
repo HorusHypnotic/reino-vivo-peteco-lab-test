@@ -84,7 +84,7 @@
       const stone = Math.min(charge.cost.stone, Math.max(0, Math.floor(Number(stock.stone) || 0)));
       stock.wood -= wood; stock.stone -= stone;
       nextTrade.warLedger.push(charge.id);
-      if (nextTrade.warLedger.length > 100) nextTrade.warLedger.splice(0, nextTrade.warLedger.length - 100);
+      // Keep charge IDs permanently: truncating this ledger permits a stale journal replay to debit stock twice.
       charge.applied = true;
       settlement.repairPaid.wood += wood; settlement.repairPaid.stone += stone;
       applied.push({ warId: charge.warId, loser: settlement.loser, wood, stone, chargeId: charge.id });
