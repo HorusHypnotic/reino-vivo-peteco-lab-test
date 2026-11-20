@@ -2,6 +2,8 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.PetecoNarrative=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
 'use strict';
 const META={
+'house-damaged':[5,'Uma casa foi danificada pelo temporal. Os construtores precisam de madeira.'],
+repair:[4,'Os trabalhadores repararam os danos da casa.'],
 storm:[5,'Tempestade na vila. As novas entregas foram suspensas.'],
 'weather-clear':[4,'O temporal passou. As estradas estão liberadas.'],
 'delivery-confirmed':[3,'A carroça chegou à obra com materiais.'],
