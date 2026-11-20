@@ -123,3 +123,9 @@ Fonte inspecionada: `HorusHypnotic/reino-em-construcao`, branch `experiment/rein
 - Commit `07e31d94`: níveis iniciais de volume ambiente 45% e efeitos 65%, ganho procedural aumentado, botão de teste direto que dispara ambiente, construção, comércio e defesa em sequência, sem aguardar eventos reais.
 - Nenhuma alteração em recursos, salvamentos, `main`, TikTok, Supabase ou serviços externos. Sintaxe JS PASS.
 - **Pendente**: confirmação auditiva da V12.4 no Android; teste automatizado de sintaxe não comprova áudio físico.
+
+## V12.5 | Troca do motor de efeitos após falhas Android
+- Usuário reprovou V12.3 e V12.4: somente voz de teste funcionou; experiência distante do VS Code.
+- Commit `bb8bcb40`: efeitos/ambiente passam a gerar WAV PCM mono 16 kHz em memória e tocar com `HTMLAudioElement`, sem depender de `AudioContext` para esses canais. Preserva `speechSynthesis` do Arauto.
+- Botão de teste inicia WAV simples e registra falha de `play()` com nome do erro no status; os eventos mantêm efeitos próprios e volumes. Limpa mídias ao desligar/ocultar página. Nenhum novo arquivo, serviço pago, alteração em main ou mudança de saves.
+- JS sintaxe PASS. **Não homologado no Android**: o mecanismo de mídia pode sofrer bloqueio por política de autoplay, mesmo com toque inicial. Ainda não reproduz o pipeline audiovisual do projeto VS Code; requer inspeção e adaptação de componentes específicos.
