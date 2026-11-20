@@ -100,5 +100,41 @@ function draw(g,s,t){
  if(damage>0){box(g,10,79,136,23,'#492e2be6');g.fillStyle='#ffd6a9';g.font='bold 11px system-ui';g.fillText('REPAROS · '+damage+'%',18,94);}
  g.restore();
 }
-root.PetecoArtV17={draw};
+// V17.4 territorial view: five visually distinct biomes, no game-state mutation.
+function world(g,s,t){
+ if(!g||!s)return;
+ const level=clamp(s.level,1,100),unlocked=Math.max(1,Math.min(5,1+Math.floor((level-1)/7)));
+ const biomes=[
+  {sky:'#8eb4aa',ground:'#416c50',hill:'#315d4a',roof:'#865342',name:'VALE FLORESTAL'},
+  {sky:'#d6b989',ground:'#a8895a',hill:'#806b4c',roof:'#8d5840',name:'SERTÃO'},
+  {sky:'#b3cbd5',ground:'#819da2',hill:'#68828f',roof:'#596b7e',name:'PLANALTO'},
+  {sky:'#84b6bc',ground:'#438e9c',hill:'#376d86',roof:'#b16f52',name:'COSTA'},
+  {sky:'#e7c88e',ground:'#cba365',hill:'#a98552',roof:'#8e5e43',name:'DUNAS'}
+ ];
+ g.save();box(g,0,0,360,480,'#162d35');
+ // A panoramic overview with the active province expanded; time-driven pan is slow.
+ const selected=Math.floor(t/900)%unlocked,biome=biomes[selected];
+ const sky=g.createLinearGradient(0,0,0,480);sky.addColorStop(0,biome.sky);sky.addColorStop(1,biome.ground);box(g,0,0,360,480,sky);
+ g.fillStyle='#f6e5b0';g.globalAlpha=.8;g.beginPath();g.arc(289,92,30,0,7);g.fill();g.globalAlpha=1;
+ for(let i=0;i<4;i++){const dx=Math.sin(t/1200+i)*14;poly(g,[[i*130-80+dx,229],[i*130+45+dx,99+i*11],[i*130+160+dx,229]],i%2?biome.hill:'#638f83');}
+ poly(g,[[0,235],[360,217],[360,480],[0,480]],biome.ground);
+ // Winding road and river follow the same camera, never detach from terrain.
+ poly(g,[[158,480],[207,480],[201,402],[174,352],[188,294],[166,247],[181,247],[210,290],[197,351],[225,402]],'#bfa681');
+ if(selected===3){poly(g,[[0,260],[52,273],[85,314],[56,373],[0,405]],'#6ab7c5');}
+ if(selected===4){for(let i=0;i<7;i++)poly(g,[[i*62-12,286],[i*62+14,268],[i*62+51,287]],'#e4bd79');}
+ if(selected===2){for(let i=0;i<5;i++)poly(g,[[i*93-12,227],[i*93+29,174],[i*93+73,227]],'#dce5dc');}
+ for(let i=0;i<9;i++){const x=17+(i*67)%350,y=245+(i*83)%180;if(selected===0||selected===2)tree(g,x,y,.6+(i%3)*.14);else{box(g,x,y,3,8,'#6b6449');box(g,x-5,y-7,13,7,'#71855a');}}
+ // Buildings in actual persisted integrity states.
+ const structures=Array.isArray(s.structures)?s.structures:[];
+ const houses=[[81,344,62,43],[272,355,66,44],[183,416,84,57]];
+ for(let i=0;i<houses.length;i++){const [x,y,w,h]=houses[i],st=structures[i]||{stage:3,integrity:100};if(!construction(g,x,y,w,st.stage,st.integrity,t))building(g,x,y,w,h,biome.roof,clamp(s.damage,0,100)>50?1:0);}
+ const workers=Math.min(9,Math.max(2,Math.ceil(clamp(s.people,0,200)/13)));
+ for(let i=0;i<workers;i++){const phase=t/150+i*1.5;villager(g,125+Math.sin(phase)*56,332+(i%3)*35,phase*3,['#d0a56b','#7897ac','#a7b77d'][i%3],i%3===0);}
+ projectSite(g,s.project,s.projectGoal,t);
+ // Cinematic location identification rather than overlapping sector labels.
+ box(g,12,43,336,56,'#152f34e8');g.fillStyle='#f7dfaa';g.font='bold 16px system-ui';g.fillText(biome.name,24,65);g.fillStyle='#d2dfd4';g.font='11px system-ui';g.fillText('REGIÃO '+(selected+1)+' / '+unlocked+'  ·  VILA NÍVEL '+level,24,84);
+ for(let i=0;i<unlocked;i++){box(g,15+i*24,108,18,4,i===selected?'#f0ca7f':'#44676a');}
+ g.restore();
+}
+root.PetecoArtV17={draw,world};
 })(typeof window!=='undefined'?window:globalThis);
