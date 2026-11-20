@@ -10,3 +10,7 @@ test('logistics requires confirmed delivery before construction',()=>{const w=li
 test('materials are conserved across stock, transit and worksite',()=>{const w=life.create();for(let i=0;i<1000;i++){life.step(w);assert.equal(life.validate(w),true);}assert.equal(w.spent,12);assert.equal(w.logistics.delivered,12);});
 test('logistics rejects invalid orders',()=>{const w=life.create();assert.throws(()=>life.request(w,'wood',-1,'home-1'));assert.throws(()=>life.request(w,'stone',3,'home-1'));});
 test('pre-logistics experimental saves migrate',()=>{const w=life.create();for(let i=0;i<30;i++)life.step(w);delete w.logistics;assert.ok(life.restore(JSON.stringify(w)));});
+
+test('road closure delays dispatch',()=>{const w=life.create();life.blockRoad(w,8);for(let i=0;i<7;i++){life.step(w);assert.equal(w.logistics.trips,0);assert.equal(w.logistics.trip,null);assert.equal(life.validate(w),true);}for(let i=0;i<100;i++)life.step(w);assert.equal(w.home.occupied,true);});
+test('transport capacity and travel time enforced',()=>{const w=life.create();for(let i=0;i<100;i++){life.step(w);assert.equal(life.validate(w),true);if(w.logistics.trip){assert.ok(w.logistics.trip.quantity<=w.logistics.capacity);assert.ok(w.logistics.trip.eta>=w.tick);}}assert.equal(w.logistics.trips,6);assert.equal(w.logistics.delivered,12);});
+test('invalid road closure rejected',()=>{assert.throws(()=>life.blockRoad(life.create(),0));});
