@@ -6,10 +6,10 @@ function capture(project,projectCount){const calls=[];const g={save(){},restore(
 for(const completed of [0,1,2,3,10,100]){
  const idle=capture(0,completed),working=capture(10,completed);
  assert.ok(working.some(c=>c[0]==='stroke'),'foundation remains visible at completed='+completed);
- assert.ok(working.length>idle.length,'active work adds drawing at completed='+completed);
+ assert.ok(!idle.some(c=>c[0]==='stroke'),'idle state has no active foundation at completed='+completed);
  assert.equal(renderer.derive({project:10,projectGoal:30,projectCount:completed}).completed,completed);
 }
-for(const p of [11,20,21,29])assert.ok(capture(p,20).length>capture(0,20).length,'progress remains visible at '+p);
+for(const p of [11,20,21,29])assert.ok(capture(p,20).some(c=>c[0]==='fill'&&c[1]>=185),'progress remains visible in reserved slot at '+p);
 assert.equal(renderer.derive({project:10,projectGoal:30}).phase,'foundation');
 assert.equal(renderer.derive({project:20,projectGoal:30}).phase,'walls');
 assert.equal(renderer.derive({project:29,projectGoal:30}).phase,'finish');
