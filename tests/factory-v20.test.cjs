@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const sandbox={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/factory-core.js'),'utf8'),sandbox);
+const f=sandbox.PetecoFactoryV20;
+assert.equal(Object.keys(f.JOBS).length,4);
+assert.equal(f.read({sectors:{forest:12}},'forest').value,12);
+assert.equal(f.read({project:25,projectGoal:100},'construction').progress,.25);
+assert.equal(f.read({project:25,projectGoal:0},'construction').progress,null);
+assert.equal(f.read({},'unknown'),null);
+assert.equal(f.event({job:'forest',action:'cut',cycle:1,confirmed:true}).confirmed,true);
+assert.equal(f.event({job:'forest',action:'dance',cycle:1}),null);
+assert.equal(f.event({job:'forest',action:'cut',cycle:-1}),null);
+const a=f.event({job:'forest',action:'cut',cycle:1,confirmed:true,priority:1});
+const b=f.event({job:'farm',action:'harvest',cycle:2,confirmed:true,priority:5});
+const c=f.event({job:'quarry',action:'mine',cycle:3,confirmed:false,priority:10});
+assert.equal(f.queue([a,a,b,c]).length,2);
+assert.equal(f.queue([a,b])[0].job,'farm');
+assert.equal(f.queue([a,b],1).length,1);
+console.log('PASS V20 factory contracts');
