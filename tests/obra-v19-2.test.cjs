@@ -1,0 +1,17 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const sandbox={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v18/obra-viva.js'),'utf8'),sandbox);
+const obra=sandbox.PetecoObraV192;
+assert.equal(obra.model({project:0,projectGoal:100}).percent,0);
+assert.equal(obra.model({project:25,projectGoal:100}).percent,25);
+assert.equal(obra.model({project:250,projectGoal:100}).percent,100);
+assert.equal(obra.model({project:100,projectGoal:100}).finished,true);
+assert.equal(obra.model({project:3,projectGoal:0}).valid,false);
+const calls=[];
+const g={save(){},restore(){},fillRect(...a){calls.push(a)},fillText(...a){calls.push(a)},beginPath(){},moveTo(){},lineTo(){},closePath(){},fill(){}};
+assert.equal(obra.draw(g,{project:0,projectGoal:0},0),false);
+assert.equal(obra.draw(g,{project:25,projectGoal:100},100),true);
+assert.ok(calls.some(x=>x[0]==='OBRA 25%'));
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.ok(html.includes('v18/obra-viva.js'));
+assert.ok(html.includes('PetecoObraV192.draw(g,s,s.t)'));
+console.log('PASS construction visual reads existing project without modifying state');
