@@ -35,3 +35,11 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - `tests/actor-v20.test.cjs` cobre rejeição de evento não confirmado, sequência, retorno ao depósito, cancelamento e fila.
 - **Limitação deliberada:** não há integração com o motor, spritesheets das novas profissões nem prova de navegador. O controlador não deve criar eventos por conta própria.
 - O lenhador V18/V19 permanece com seu controlador homologado.
+
+## Integração real incremental (V20.0)
+- `index.html` agora carrega os quatro módulos V20 antes do jogo.
+- `progress()` captura o estado antes do cálculo econômico e traduz diferenças somente depois do commit original do lenhador; aciona atores de agricultura, mineração e construção sem mutar economia.
+- `frame()` avança o controlador genérico e `reset` cancela os atores. O lenhador e seu atlas continuam independentes.
+- **Não há sprites ou renderização das novas profissões:** a ponte funciona internamente, sem criar figuras provisórias na página. Os novos atores não devem ser apresentados como homologados.
+- `tests/integration-v20.test.cjs` verifica a integração textual. Suíte completa e navegador ainda pendentes.
+- Observação: setor farm/quarry zera nos ciclos de entrega; o adaptador só emite trabalho quando observa acúmulo positivo, e não deduz entrega individual a partir do total agregado.
