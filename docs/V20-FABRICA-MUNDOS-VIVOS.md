@@ -29,3 +29,9 @@ V20.1: lenhador + agricultor + minerador + construtor; V20.2: oficina, transport
 
 ## Situação
 Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou suíte completa reivindicados.
+
+## Incremento: controlador universal
+- `v20/actor-controller.js` implementa caminhada → trabalho → retorno, cancelamento e uma ação pendente.
+- `tests/actor-v20.test.cjs` cobre rejeição de evento não confirmado, sequência, retorno ao depósito, cancelamento e fila.
+- **Limitação deliberada:** não há integração com o motor, spritesheets das novas profissões nem prova de navegador. O controlador não deve criar eventos por conta própria.
+- O lenhador V18/V19 permanece com seu controlador homologado.
