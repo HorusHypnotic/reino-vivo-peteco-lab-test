@@ -50,3 +50,10 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - O rig é **provisório e procedural**, não um atlas final de qualidade V19. Ele serve para validar coordenadas, gatilhos e sobreposições. Não declarar arte final.
 - `tests/profession-renderer-v20.test.cjs`: contrato de desenho e flag de prévia.
 - **Ainda pendente:** executar testes Node, verificar layout e performance em navegador Android, gerar atlas artístico licenciado e substituir o rig após aprovação visual. Branch não publicada.
+
+## QA incremental 21/11/2026
+- Cinco módulos V20 carregados e nove verificações funcionais aprovadas em sandbox JavaScript.
+- Cinco arquivos de testes V20 executados com simulação de `require`, `fs`, `vm` e `path`: 5/5 PASS. **Não é execução nativa do Node.**
+- Smoke Canvas simulado com três profissões e fallback sem `roundRect` PASS; teste de regressão persistido no commit 9b39a58.
+- Integração textual no HTML verificada: ordem de scripts, captura econômica, commit, reset e flag `?v20=1`.
+- Ainda bloqueado: suíte completa `node --test` real, renderização em browser, inspeção visual, FPS Android, autorização para publicação.
