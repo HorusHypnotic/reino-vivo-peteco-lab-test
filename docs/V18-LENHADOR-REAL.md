@@ -65,6 +65,7 @@ Os testes novos cobrem par/ímpar no contrato do controlador, estados dos quadro
 Consequências para a revisão:
 
 - Não há captura de antes/depois do runtime nesta entrega; o atlas PNG é a evidência visual dos 16 quadros, não prova de integração no navegador.
+- A inspeção do atlas encontrou pequenas franjas/pixels coloridos em algumas bordas das silhuetas; limpar ou aprovar esses pixels faz parte da revisão da arte.
 - Viewports Android simulada 360×800 e desktop não foram validados. Android real não foi testado.
 - Ciclos econômicos pares/ímpares, cancelamento, reset e save foram cobertos por unidade e inspeção estática; não houve ensaio runtime nem recarga real do navegador.
 - As coordenadas da rota e a escala do sprite precisam de revisão visual no runtime local. A cena de fundo V18 continua estática; nenhum corte/dano de árvore foi inventado.
