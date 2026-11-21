@@ -47,6 +47,21 @@ function construction(g,x,y,w,stage,integrity,t){
  }
  g.restore();return true;
 }
+function completedWalls(g,count){
+ const n=Math.max(0,Math.floor(Number(count)||0));if(!n)return;
+ // Separate persistent monument: never infer completed walls from current project progress.
+ g.save();
+ const visible=Math.min(3,n);
+ for(let i=0;i<visible;i++){
+  const x=232+i*24,y=312-i*2;
+  box(g,x,y-24,21,24,'#a99879');
+  box(g,x-2,y-29,25,6,'#d2c3a0');
+  for(let j=0;j<3;j++)box(g,x+j*7,y-34,5,6,'#c6b797');
+  box(g,x+5,y-16,11,5,'#72634f');
+ }
+ g.fillStyle='#f5dfad';g.font='bold 9px system-ui';g.fillText('MURALHAS '+n,229,270);
+ g.restore();
+}
 function projectSite(g,project,goal,t){
  const p=clamp(project,0,100000),total=Math.max(1,Number(goal)||30),ratio=clamp(p/total,0,1);
  const x=180,y=309;g.save();
@@ -96,7 +111,13 @@ function draw(g,s,t){
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
  for(let i=0;i<workers;i++){const a=routes[i%4],p=(Math.sin(t/115+i*1.8)+1)/2,x=a[0]+(a[2]-a[0])*p,y=a[1]+(a[3]-a[1])*p;villager(g,x,y,t/12+i,['#698aa1','#b78754','#7c9467','#8d719d'][i%4],i%3===0);}
- projectSite(g,s.project,s.projectGoal,t);
+ // V21 renderer must run in the actual village scene, not only fixture scripts.
+ // Keep the established monument at the right and render active work in the
+ // central site. This reads existing V2 fields and never mutates the save.
+ if(root.PetecoConstructionV20&&typeof root.PetecoConstructionV20.draw==='function'){
+  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:0},t,{x:148,y:308,width:64,rowHeight:8,slots:1});
+ }else projectSite(g,s.project,s.projectGoal,t);
+ completedWalls(g,s.projectCount);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
  box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);
