@@ -16,7 +16,7 @@ function draw(g,snapshot,tick){
  // One shared body rig, with per-job clothing and hand-held tools.
  g.strokeStyle='#49382c';g.lineWidth=3;g.lineCap='round';
  g.beginPath();g.moveTo(-4,-13);g.lineTo(-5,0);g.moveTo(4,-13);g.lineTo(6,0);g.stroke();
- g.fillStyle=s.coat;g.beginPath();g.roundRect(-9,-31,18,19,4);g.fill();
+ g.fillStyle=s.coat;g.beginPath();if(typeof g.roundRect==='function')g.roundRect(-9,-31,18,19,4);else g.rect(-9,-31,18,19);g.fill();
  g.fillStyle='#d9b38d';g.beginPath();g.arc(0,-38,7,0,Math.PI*2);g.fill();
  g.fillStyle=s.hat;g.fillRect(-9,-46,18,5);g.fillRect(-6,-51,12,7);
  const swing=snapshot.phase==='work'?Math.sin(tick*.35)*.65:0;
