@@ -111,7 +111,12 @@ function draw(g,s,t){
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
  for(let i=0;i<workers;i++){const a=routes[i%4],p=(Math.sin(t/115+i*1.8)+1)/2,x=a[0]+(a[2]-a[0])*p,y=a[1]+(a[3]-a[1])*p;villager(g,x,y,t/12+i,['#698aa1','#b78754','#7c9467','#8d719d'][i%4],i%3===0);}
- projectSite(g,s.project,s.projectGoal,t);
+ // V21 renderer must run in the actual village scene, not only fixture scripts.
+ // Keep the established monument at the right and render active work in the
+ // central site. This reads existing V2 fields and never mutates the save.
+ if(root.PetecoConstructionV20&&typeof root.PetecoConstructionV20.draw==='function'){
+  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:0},t,{x:148,y:308,width:64,rowHeight:8,slots:1});
+ }else projectSite(g,s.project,s.projectGoal,t);
  completedWalls(g,s.projectCount);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
