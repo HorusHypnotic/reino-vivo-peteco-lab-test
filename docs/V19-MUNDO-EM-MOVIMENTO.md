@@ -2,7 +2,7 @@
 
 ## Estado deste lote
 
-Lote 0 rebobinado e Lote 1 recebeu uma camada artística de floresta sobre o ciclo do lenhador existente. A alteração reutiliza o controlador V18.1 e observa apenas o ledger confirmado; não grava estado, não soma madeira e não cria habitantes. A página oficial e a PR #11 continuam sem publicação/merge.
+Lote 0 rebobinado e Lote 1 recebeu uma camada artística de floresta sobre o ciclo do lenhador existente. A alteração reutiliza o controlador V18.1 e observa apenas o ledger confirmado; não grava estado, não soma madeira e não cria habitantes. A PR #11 foi incorporada em `a23a8ff`; a URL oficial serve o HTML e os assets V19. O save V2 e a economia permaneceram sem alterações.
 
 ## Catálogo integrado
 
@@ -35,13 +35,13 @@ Construções reais estão em `s.structures` com `stage` e `integrity`; guerras 
 | Lote | Estado |
 | --- | --- |
 | 0 · inventário/contratos | Concluído nesta retomada; V2, eventos agregados, estruturas e guerra identificados |
-| 1 · bosque V18.1 | Atlas ilustrado integrado no branch; testes automatizados passam; QA de runtime local continua bloqueado |
+| 1 · bosque V18.1 | Atlas ilustrado integrado e publicado; suíte automatizada passa; a aba do navegador conectado manteve uma resposta antiga |
 | 2 · pacote artístico | Parcial: atlas ambiental do bosque catalogado. Outros personagens/biomas/construções ainda não produzidos |
 | 3 · economia viva | Pendente: sem ponte confirmada para atores de fazenda, pedreira, oficina e entrega |
 | 4 · vila em transformação | Pendente: ligar estados reais de estruturas a arte de estágio, dano e reparo |
 | 5 · guerra visual | Pendente: revisar apresentação atual e acrescentar efeitos sem comandar o resultado do combate |
 | 6 · direção cinematográfica | Pendente; guerra ativa e interação confirmada continuam prioridades |
-| 7 · QA/publicação | Bloqueado até QA visual do branch e verificação pública integral na URL oficial |
+| 7 · QA/publicação | HTML, módulo e atlas verificados por HTTP 200 na URL oficial; QA visual/runtime dessa aba e Android real continuam pendentes |
 
 ## Verificações desta retomada
 
@@ -51,9 +51,9 @@ Construções reais estão em `s.structures` com `stage` e `integrity`; guerras 
 - `node --check v18/bosque-vivo.js`: PASS.
 - `git diff --check`: PASS antes das alterações V19.
 - `tests/forest-art-v19.test.cjs`: PASS; testa decode PNG, canais alfa, os quatro estados, gate de entrega e fallback.
-- Página oficial retornou HTTP 200, mas o HTML observado identifica `V14.6`; o conteúdo ainda não apresenta o código experimental V18/V19.
-- O navegador conectado alcançou a página oficial, mas não conseguiu acessar a porta local de QA. A captura de runtime e a viewport móvel não foram validadas; Android real não foi testado.
+- URL oficial canônica: HTML HTTP 200, 142627 bytes, SHA-256 idêntico ao `index.html` em `gh-pages` (`2c7842f45fadd539caf7aaedfd8943a89d3ca8b10211b9d4f1b7698ad48fa670`). O documento serve as referências `PetecoForestArtV19`, `v19/forest-art.js` e `v19/assets/forest-cycle-atlas.png`.
+- O atlas oficial e o módulo retornam HTTP 200; SHA-256 do atlas publicado coincide com o asset do branch (`422978a6e7c430d7fcd7e30aebd0fec7e51a71af79f18ad659922a282faf4a1f`). A aba de navegador conectada reteve um HTML anterior mesmo após navegação com cache bust; por isso não comprova o runtime atualizado. Captura visual do runtime, viewport móvel e Android real não foram homologados.
 
 ## Gate de publicação
 
-Não publicar este lote até confirmar a integração no runtime, revisar a composição da queda/toco/ator, exercitar os ciclos e reload com save V2, testar fallback/clássico/guerra e confirmar assets por HTTP na mesma página oficial. A validação pendente não autoriza alterar `gh-pages`.
+A publicação controlada ocorreu após validação automatizada e conferência de HTTP/SHA na mesma URL oficial. Rollback preparado: `gh-pages` anterior era `edca0cec8cd058c0e9cb577ad3dccdcbe9461a4f`; para reverter somente o merge `a23a8ff`, usar `git revert -m 1 a23a8ff660b950d71dcea60564842f8d0f0ba612` em `gh-pages`. QA visual/runtime no navegador atualizado, save/reload real, viewport móvel e Android real permanecem pendentes; portanto não há homologação visual/Android.
