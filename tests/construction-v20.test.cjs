@@ -11,6 +11,7 @@ assert.equal(construction.derive(state(11)).phase,'walls');
 assert.equal(construction.derive(state(20)).phase,'walls','20/30 reaches the walls milestone');
 assert.equal(construction.derive(state(21)).phase,'finish');
 assert.equal(construction.derive(state(29)).phase,'finish');
+assert.equal(construction.derive(state(30)).phase,'finish','30/30 is rendered as the final construction frame before the economy commits it');
 assert.equal(construction.derive(state(0,1)).phase,'complete');
 assert.equal(construction.derive(state(0)).completed,0);
 
@@ -37,6 +38,10 @@ assert.equal(event.job,'construction');
 assert.equal(event.action,'build');
 assert.equal(construction.confirmedContribution(factory,before,state(4)),null,'no event without committed progress');
 assert.equal(construction.confirmedContribution(factory,10,state(9)),null,'rollback or reset creates no work event');
+const atGoal=state(30),goalEvent=construction.confirmedContribution(factory,construction.workUnits(state(29)),atGoal);
+assert.equal(goalEvent.cycle,30,'the final contribution at 30/30 is observable before the economic commit');
+const afterGoalCommit=JSON.parse(JSON.stringify({v:2,...state(0,1)}));
+assert.equal(construction.derive(afterGoalCommit).phase,'complete','the accepted economic commit becomes a persistent wall in the next cycle');
 const confirmed=construction.confirmedContribution(context.PetecoFactoryV20,before,after);
 const builder=context.PetecoActorV20.create(context.PetecoFactoryV20,context.PetecoSceneMapV20,'construction');
 assert.equal(builder.start(confirmed),true);assert.equal(builder.snapshot().phase,'walk','accepted contribution activates the shared V20 builder');

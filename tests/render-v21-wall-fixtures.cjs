@@ -12,6 +12,7 @@ const stages=[
  ['10-foundation',{project:10,projectGoal:30,projectCount:0}],
  ['20-walls',{project:20,projectGoal:30,projectCount:0}],
  ['29-finish',{project:29,projectGoal:30,projectCount:0}],
+ ['30-goal',{project:30,projectGoal:30,projectCount:0}],
  ['01-complete',{project:0,projectGoal:30,projectCount:1}],
  ['15-next',{project:15,projectGoal:30,projectCount:1}],
  ['reload-preserved',JSON.parse(JSON.stringify({v:2,project:15,projectGoal:30,projectCount:1}))]

@@ -45,6 +45,16 @@
       "sha256": "e9fbe21ddeaa13dab0d1728a499315d6eaf2a60495c5f8acf5d1f03c5d2bf2c0"
     },
     {
+      "file": "docs/evidence/v21-wall-stages/30-goal.png",
+      "state": {
+        "project": 30,
+        "projectGoal": 30,
+        "projectCount": 0
+      },
+      "phase": "finish",
+      "sha256": "f25b3ac9132e58c8af654061e91415f866f33d4918422d18e5741b1f2702ac54"
+    },
+    {
       "file": "docs/evidence/v21-wall-stages/01-complete.png",
       "state": {
         "project": 0,
