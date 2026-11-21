@@ -11,4 +11,6 @@ const save=html.match(/function save\(\)\{[\s\S]*?\n/)[0];assert.doesNotMatch(sa
 assert.match(html,/if\(warOnScreen\)\{rect\(0,0,360,480/,'war rendering keeps priority over the V18 village scene');
 assert.match(html,/PetecoArtV17\.world\(g,s,s\.t\)/,'classic renderer fallback remains present');
 assert.match(html,/PetecoWoodcutterRendererV18\.draw\(g,workerState,workerAtlas\.image\)/,'V18 painterly atlas is used by the renderer');
+assert.match(html,/workerState\.ledger\.producedWood,17,433/,'HUD uses actual confirmed producedWood field');
+assert.doesNotMatch(html,/workerState\.ledger\.forestOutput/,'HUD must not display undefined forestOutput');
 console.log('PASS economic event hooks preserve parity authority, cancellation, save schema, classic mode and war priority');
