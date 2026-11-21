@@ -10,6 +10,17 @@ for(const completed of [0,1,2,3,10,100]){
  assert.equal(renderer.derive({project:10,projectGoal:30,projectCount:completed}).completed,completed);
 }
 for(const p of [11,20,21,29])assert.ok(capture(p,20).some(c=>c[0]==='fill'&&c[1]>=185),'progress remains visible in reserved slot at '+p);
+// The active slot must remain inside the canvas bounds and not overwrite
+// completed sections when the saved completion counter exceeds the display.
+for(const completed of [0,1,2,3,10,100])for(const p of [10,11,20,21,29]){
+ const calls=capture(p,completed);
+ assert.ok(calls.length>0,'nonempty draw at '+completed+'/'+p);
+ for(const call of calls){
+  const [,x,y,w,h]=call;
+  assert.ok(Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(w)&&Number.isFinite(h),'finite geometry');
+  assert.ok(x>=150&&x+w<=220,'construction within canvas slot bounds at '+completed+'/'+p);
+ }
+}
 assert.equal(renderer.derive({project:10,projectGoal:30}).phase,'foundation');
 assert.equal(renderer.derive({project:20,projectGoal:30}).phase,'walls');
 assert.equal(renderer.derive({project:29,projectGoal:30}).phase,'finish');
