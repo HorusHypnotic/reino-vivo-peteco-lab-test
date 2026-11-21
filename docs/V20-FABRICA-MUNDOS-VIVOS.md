@@ -75,3 +75,9 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - `tests/qa-runtime-v20.test.cjs`: estados ociosos, trabalho ativo, violação durante guerra e coordenadas inválidas.
 - Seis testes V20 passaram em execução JS com módulos Node simulados. Ainda sem `node --test` nativo, navegador real ou QA visual Android.
 - Para inspeção após disponibilização controlada, abrir a página com `?v20=1` e ler `window.PetecoV20Diagnostics` no console; não declarar que o parâmetro já está disponível na URL oficial antes do merge.
+
+## 21/11/2026 · Preparação para canário Android
+- Commit 2486243: fábrica V20 inteira passa a ser instanciada somente em `?v20=1`. Sem parâmetro, nenhum controlador V20 é criado, nem há captura de economia experimental; scripts permanecem carregados.
+- Commit 9e83931: regressão estática para assegurar opt-in completo.
+- Work reportou `node --test` 13/13, regressões coletivas 8/8, live commands 49/49 e merge-tree sem conflitos **antes destes dois commits**. Reexecutar suíte nativa no HEAD novo antes de liberar merge.
+- Inspeção visual Android e verificação HTTP pós-publicação ainda não realizadas. A publicação permanece bloqueada até a aprovação dos portões.
