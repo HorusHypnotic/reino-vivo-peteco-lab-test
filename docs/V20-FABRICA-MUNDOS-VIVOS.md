@@ -43,3 +43,10 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - **Não há sprites ou renderização das novas profissões:** a ponte funciona internamente, sem criar figuras provisórias na página. Os novos atores não devem ser apresentados como homologados.
 - `tests/integration-v20.test.cjs` verifica a integração textual. Suíte completa e navegador ainda pendentes.
 - Observação: setor farm/quarry zera nos ciclos de entrega; o adaptador só emite trabalho quando observa acúmulo positivo, e não deduz entrega individual a partir do total agregado.
+
+## V20.0: protótipo visual opt-in
+- `v20/profession-renderer.js`: rig Canvas 2D reutilizável para agricultor, minerador e construtor, com roupa/ferramenta configuradas por profissão.
+- Em `index.html`, desenha somente se `?v20=1` e o cenário V18 estiver ativo; `?classic=1` continua clássico. Nenhuma alteração do save ou da economia.
+- O rig é **provisório e procedural**, não um atlas final de qualidade V19. Ele serve para validar coordenadas, gatilhos e sobreposições. Não declarar arte final.
+- `tests/profession-renderer-v20.test.cjs`: contrato de desenho e flag de prévia.
+- **Ainda pendente:** executar testes Node, verificar layout e performance em navegador Android, gerar atlas artístico licenciado e substituir o rig após aprovação visual. Branch não publicada.
