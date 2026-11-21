@@ -1,0 +1,79 @@
+{
+  "type": "synthetic-renderer-captures",
+  "saveMutated": false,
+  "browserHomologation": false,
+  "reloadCropMatches": true,
+  "frames": [
+    {
+      "file": "docs/evidence/v21-wall-stages/00-idle.png",
+      "state": {
+        "project": 0,
+        "projectGoal": 30,
+        "projectCount": 0
+      },
+      "phase": "idle",
+      "sha256": "0a7b9fbfbfb397e4c25cb2cfcc09a4de351a645128a2d62416288aa83f659a05"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/10-foundation.png",
+      "state": {
+        "project": 10,
+        "projectGoal": 30,
+        "projectCount": 0
+      },
+      "phase": "foundation",
+      "sha256": "e10f9c4705847ce2d473ec8b02aba11323cf948aeb02fc72d5d3dc64b4c245a3"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/20-walls.png",
+      "state": {
+        "project": 20,
+        "projectGoal": 30,
+        "projectCount": 0
+      },
+      "phase": "walls",
+      "sha256": "89f388a572ed65dbfbaf46c055225f6f97bb76d13e740d2ac0c7b79545d07f8b"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/29-finish.png",
+      "state": {
+        "project": 29,
+        "projectGoal": 30,
+        "projectCount": 0
+      },
+      "phase": "finish",
+      "sha256": "e9fbe21ddeaa13dab0d1728a499315d6eaf2a60495c5f8acf5d1f03c5d2bf2c0"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/01-complete.png",
+      "state": {
+        "project": 0,
+        "projectGoal": 30,
+        "projectCount": 1
+      },
+      "phase": "complete",
+      "sha256": "56bb89a1cf2060fdd48a8246acbdabbb02ce553aa277ccb851998ee7a97ee0a2"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/15-next.png",
+      "state": {
+        "project": 15,
+        "projectGoal": 30,
+        "projectCount": 1
+      },
+      "phase": "walls",
+      "sha256": "62d40dcbda9f580cb1f7df414500fdac5d69f1c193929e22b9032909d32dfb9d"
+    },
+    {
+      "file": "docs/evidence/v21-wall-stages/reload-preserved.png",
+      "state": {
+        "v": 2,
+        "project": 15,
+        "projectGoal": 30,
+        "projectCount": 1
+      },
+      "phase": "walls",
+      "sha256": "f17a1ed0d253f400501b1dae21d24546499b8ecfabe6002aaac7035f17045b8d"
+    }
+  ]
+}
