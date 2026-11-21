@@ -29,7 +29,10 @@ function draw(g,state,tick=0,options={}){
  // full slot; the current project uses the next slot, so a new 0/30 cycle can
  // never erase or draw over completed masonry.
  const slots=Math.max(1,Math.min(4,Math.floor(finite(options.slots,courses))));
- const slotWidth=width/slots,completedSlots=Math.min(slots,d.completed);
+ const slotWidth=width/slots,hasNext=d.progress>0,completedSlots=Math.min(hasNext?Math.max(0,slots-1):slots,d.completed);
+ // Window the visible completed sections when the village has built more than
+ // the available slots. Reserve the final slot for the active construction.
+ // The persisted completion count is never reduced or rewritten.
  function masonry(x,w,height){
   const builtCourses=Math.max(1,Math.min(courses,Math.round(height/rowHeight)));
   for(let row=0;row<builtCourses;row++){
