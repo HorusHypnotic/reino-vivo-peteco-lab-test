@@ -18,4 +18,21 @@ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 assert.ok(html.includes('v18/bosque-vivo.js'));
 assert.ok(html.includes('PetecoBosqueV181.draw(g,workerState,s.cycles);PetecoWoodcutterRendererV18.draw'));
 assert.ok(html.indexOf('PetecoBosqueV181.draw(g,workerState,s.cycles)')<html.indexOf('PetecoWoodcutterRendererV18.draw(g,workerState,workerAtlas.image)'));
+
+// Regression: a completed cut must remain visible after the 0.34s carry segment.
+// A fake clock makes this deterministic without waiting in real time.
+let fakeNow=10000;
+const visualSandbox={Date:{now:()=>fakeNow}};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v18/bosque-vivo.js'),'utf8'),visualSandbox);
+const forestVisual=visualSandbox.PetecoBosqueV181;
+const fills=[];
+const g={save(){},restore(){},beginPath(){},ellipse(){},fill(){},fillRect(...a){fills.push(a)},translate(){},rotate(){}};
+forestVisual.draw(g,{phase:'carry',cycle:14,elapsed:.25,ledger:{deliveryConfirmed:true}},14);
+fills.length=0;fakeNow+=700;
+forestVisual.draw(g,{phase:'idle',cycle:14,elapsed:0,ledger:{deliveryConfirmed:true}},14);
+assert.ok(fills.some(([x,y,w,h])=>x===109&&y===276&&w===18&&h===15),'stump persists after carrier returns idle');
+fills.length=0;fakeNow+=3700;
+forestVisual.draw(g,{phase:'idle',cycle:14,elapsed:0,ledger:{deliveryConfirmed:true}},14);
+assert.ok(!fills.some(([x,y,w,h])=>x===109&&y===276&&w===18&&h===15),'stump expires after regrowth');
+
 console.log('PASS bosque target, read-only ledger gate, foreground ordering and regrowth');
