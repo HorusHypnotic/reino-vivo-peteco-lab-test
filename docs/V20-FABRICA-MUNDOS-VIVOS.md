@@ -57,3 +57,8 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - Smoke Canvas simulado com três profissões e fallback sem `roundRect` PASS; teste de regressão persistido no commit 9b39a58.
 - Integração textual no HTML verificada: ordem de scripts, captura econômica, commit, reset e flag `?v20=1`.
 - Ainda bloqueado: suíte completa `node --test` real, renderização em browser, inspeção visual, FPS Android, autorização para publicação.
+
+## 21/11/2026 · Robustez da fila por trabalhador
+- Corrigido `actor-controller.js`: rejeita ciclos duplicados/antigos, conserva o evento pendente de maior ciclo e limpa marcação no reset. Commits 294cbd4, a2af185.
+- Cinco testes V20 novamente PASS em execução JS com dependências Node simuladas. A suíte Node nativa e QA Android continuam pendentes.
+- Nota: eventos de trabalho são observados na economia, mas não equivalem a entregas individuais confirmadas. Não usar o rótulo 'entrega' para farm/quarry sem comprovação adicional.
