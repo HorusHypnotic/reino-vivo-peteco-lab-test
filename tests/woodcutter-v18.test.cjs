@@ -1,0 +1,27 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),zlib=require('node:zlib');
+const base=path.join(__dirname,'../v18'),sandbox={};
+const png=fs.readFileSync(path.join(base,'assets/woodcutter-atlas-original.png'));
+assert.equal(png.toString('ascii',1,4),'PNG');assert.equal(png.readUInt32BE(16),1122);assert.equal(png.readUInt32BE(20),1402);assert.equal(png[24],8);assert.equal(png[25],6,'atlas must preserve 8-bit RGBA transparency');
+const compressed=[];for(let offset=8;offset<png.length;){const length=png.readUInt32BE(offset),kind=png.toString('ascii',offset+4,offset+8);if(kind==='IDAT')compressed.push(png.subarray(offset+8,offset+8+length));offset+=12+length;if(kind==='IEND')break;}assert.ok(compressed.length>0,'atlas requires image data');assert.doesNotThrow(()=>zlib.inflateSync(Buffer.concat(compressed)),'atlas image data must decode without corruption');
+for(const file of ['woodcutter-controller.js','woodcutter-renderer.js'])vm.runInNewContext(fs.readFileSync(path.join(base,file),'utf8'),sandbox);
+const factory=sandbox.PetecoWoodcutterV18,renderer=sandbox.PetecoWoodcutterRendererV18;
+function tick(controller,seconds,step=.05){for(let elapsed=0;elapsed<seconds;elapsed+=step)controller.update(Math.min(step,seconds-elapsed));}
+assert.deepEqual(Object.keys(renderer.rows),['idle','walk','work','carry']);
+assert.deepEqual(Object.values(renderer.rows),[0,1,2,3],'atlas rows map to idle, walk, chop and carry in order');
+assert.equal(renderer.cell.width,280.5,'4 columns divide the 1122px atlas');assert.equal(renderer.cell.height,350.5,'4 rows divide the 1402px atlas');
+let c=factory.create();
+assert.equal(c.snapshot().state,'idle');assert.equal(c.start({epoch:1,cycle:1}),true);assert.equal(c.snapshot().state,'walk');
+tick(c,.4);assert.equal(c.snapshot().state,'work','walker reaches the tree before chopping');
+assert.equal(c.commit({epoch:1,cycle:1,forestBefore:0,forestAfter:3,producedWood:0,deliveriesBefore:0,deliveriesAfter:0,woodBefore:0,woodAfter:0}),true);
+tick(c,.4);assert.equal(c.snapshot().state,'idle','odd cycle accumulates forestry without claiming a delivery');
+assert.equal(c.snapshot().ledger.deliveryConfirmed,false);
+const economy={wood:19,deliveries:4};c.start({epoch:2,cycle:2});tick(c,.4);assert.equal(c.snapshot().state,'work');
+assert.equal(c.commit({epoch:2,cycle:2,forestBefore:3,forestAfter:0,producedWood:7,deliveriesBefore:4,deliveriesAfter:5,woodBefore:19,woodAfter:21}),true);
+assert.equal(c.snapshot().state,'carry','even cycle delivery plays carrying frames only after confirmation');assert.equal(c.snapshot().ledger.producedWood,7);assert.equal(economy.wood,19);assert.equal(economy.deliveries,4,'renderer receives no writable economy reference');
+tick(c,.4);assert.equal(c.snapshot().state,'idle');
+let last=c.snapshot();assert.equal(c.start({epoch:3,cycle:3}),true);c.cancel(3);assert.equal(c.snapshot().state,'idle');assert.equal(c.snapshot().epoch,null);
+c.start({epoch:4,cycle:4});tick(c,.4);c.commit({epoch:4,cycle:4,forestBefore:2,forestAfter:0,producedWood:2,deliveriesBefore:5,deliveriesAfter:6,woodBefore:21,woodAfter:23});c.start({epoch:5,cycle:5});assert.equal(c.snapshot().pending,true,'new production waits for confirmed delivery animation to finish');tick(c,.4);assert.equal(c.snapshot().state,'walk');assert.equal(c.snapshot().cycle,5,'queued cycle restarts from its own epoch');
+const calls=[];const ctx={save(){},restore(){},translate(){},scale(){},beginPath(){},ellipse(...a){calls.push(['shadow',...a])},fill(){},drawImage(...a){calls.push(['sprite',...a])},set fillStyle(v){}};
+assert.equal(renderer.draw(ctx,{state:'walk',frame:2,x:100,y:200},{complete:true,naturalWidth:1122}),true);assert.equal(calls.filter(x=>x[0]==='sprite').length,1);assert.equal(calls.find(x=>x[0]==='sprite')[2],561,'walk frame crops from the generated atlas');
+assert.equal(renderer.draw(ctx,{state:'walk',frame:2,x:100,y:200},{complete:false,naturalWidth:0}),false);
+console.log('PASS V18 woodcutter animation, odd/even delivery, cancellation, restart, queue, and atlas renderer');
