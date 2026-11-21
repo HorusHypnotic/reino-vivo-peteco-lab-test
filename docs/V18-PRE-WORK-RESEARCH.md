@@ -91,3 +91,10 @@ Uma demonstração real de 1 lenhador: idle→walk→chop→carry→idle, sincro
 - Commit 63de9f8f: testes do art-bridge atualizados para exigir zero casas/trabalhadores sem fonte autoritativa e correspondência 1:1 quando fornecidos.
 - **Ressalva:** `s.artWorkers` é contrato visual proposto, não campo confirmado no motor; não está integrado. Portanto, trabalhadores dinâmicos podem desaparecer no experimento até integração de eventos reais. Não alterar save para adicionar esse campo.
 - **QA:** commits realizados, testes não executados neste ciclo; sem homologação visual.
+
+## Revisão de integração e HUD (commit 708b6640)
+- A chamada real em `index.html` é `PetecoArtBridgeV18.scene(s,Math.floor(s.t/900)%5)` e `PetecoArtMotionV18.draw(g,art,s.t)` somente sob `cinematicMap` e cena V18 carregada. Fora disso, usa fallback V17. Guerra tem prioridade de tela.
+- HUD anterior dizia `N construções · M trabalhadores`; esses números não eram garantidos por estado autoritativo e, após correção do bridge, frequentemente seriam zero. HUD agora diz `N estruturas registradas · produção em andamento/em espera` com base em `s.structures` e `s.busy`. Isto NÃO significa que exista lenhador animado real.
+- **Bloqueio visual maior:** imagem `v18/assets/village-scene.svg` é cena estática de uma vila específica, enquanto a chamada do bridge alterna biomas a cada 900 frames. É necessário atlas/cenários por bioma ou manter rótulo consistente; não alegar que a imagem representa os cinco biomas.
+- **Bloqueio funcional:** `s.artWorkers` não é preenchido no motor; logo a V18 não possui trabalhadores dinâmicos comprovados após remoção dos falsos. O próximo lote deve introduzir adaptador read-only derivado de eventos, sem forjar jobs individuais.
+- **Validação:** alteração no GitHub, sem execução de browser/testes neste ciclo.
