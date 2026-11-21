@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const sandbox={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v18/bosque-vivo.js'),'utf8'),sandbox);
+const forest=sandbox.PetecoBosqueV181;
+assert.equal(forest.TREE.x,118);assert.equal(forest.TREE.y,290);
+assert.equal(forest.model({phase:'cut',ledger:null},12).felled,false);
+assert.equal(forest.model({phase:'carry',ledger:{deliveryConfirmed:false}},12).felled,false);
+assert.equal(forest.model({phase:'carry',ledger:{deliveryConfirmed:true}},12).felled,true);
+assert.equal(forest.model({phase:'return',ledger:{deliveryConfirmed:true}},12).logs,2);
+assert.equal(forest.model({phase:'idle',ledger:{deliveryConfirmed:true}},12).felled,false);
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.ok(html.includes('v18/bosque-vivo.js'));
+assert.ok(html.includes('PetecoBosqueV181.draw(g,workerState,s.cycles);PetecoWoodcutterRendererV18.draw'));
+assert.ok(html.indexOf('PetecoBosqueV181.draw(g,workerState,s.cycles)')<html.indexOf('PetecoWoodcutterRendererV18.draw(g,workerState,workerAtlas.image)'));
+console.log('PASS bosque target, read-only ledger gate, foreground ordering and regrowth');
