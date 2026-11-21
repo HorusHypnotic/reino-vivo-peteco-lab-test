@@ -5,11 +5,13 @@ function create(factory,map,job){
  if(!spec||!route)return null;
  const origin=route.depot,target=route.target;
  let actor={job,phase:'idle',x:origin.x,y:origin.y,elapsed:0,cycle:null,action:null};
- let pending=null,segment=null;
+ let pending=null,segment=null,lastCycle=-1;
  const snapshot=()=>Object.freeze({...actor,pending:!!pending});
  function start(e){
   if(!e||e.job!==job||e.confirmed!==true||!spec.actions.includes(e.action)||!Number.isSafeInteger(e.cycle)||e.cycle<0||e.id!==job+':'+e.cycle+':'+e.action)return false;
-  if(actor.phase!=='idle'){pending=e;return true;}
+  if(e.cycle<=lastCycle)return false;
+  if(actor.phase!=='idle'){if(!pending||e.cycle>pending.cycle)pending=e;return true;}
+  lastCycle=e.cycle;
   actor={job,phase:'walk',x:origin.x,y:origin.y,elapsed:0,cycle:e.cycle,action:e.action};
   segment={from:origin,to:target,duration:.6};return true;
  }
@@ -27,7 +29,7 @@ function create(factory,map,job){
   }else if(actor.phase==='idle'&&pending){const next=pending;pending=null;start(next);}
   return snapshot();
  }
- function cancel(){pending=null;segment=null;actor={job,phase:'idle',x:origin.x,y:origin.y,elapsed:0,cycle:null,action:null};return snapshot();}
+ function cancel(){pending=null;segment=null;lastCycle=-1;actor={job,phase:'idle',x:origin.x,y:origin.y,elapsed:0,cycle:null,action:null};return snapshot();}
  return Object.freeze({start,tick,cancel,snapshot});
 }
 root.PetecoActorV20=Object.freeze({create});
