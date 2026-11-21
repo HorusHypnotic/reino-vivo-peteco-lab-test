@@ -98,3 +98,5 @@ Recuperei o arquivo gerado existente `Atlas de sprites do lenhador em poses.png`
 **Publicação ainda bloqueada:** tentei executar a branch em Chromium via Playwright; o Chromium empacotado não está instalado e `/usr/bin/chromium` aborta com `socket() failed: Operation not permitted`. A aba de navegador conectada não consegue acessar o servidor local: devolveu `Missing or invalid bearer token`. Não obtive captura de runtime nem conferi animações, console, FPS, reload, batalha ou viewport 360×800. Assim, não fiz merge de #9 nem alterei `gh-pages`. Publicar agora impediria validar previamente o critério central e não atende ao gate definido.
 
 O diagnóstico visual estático confirmou a grade de 16 poses e a transparência, mas há pequenas franjas coloridas nas bordas de algumas silhuetas. A posição/escala da rota ainda não foi validada no runtime. Salvamentos continuam com o mesmo schema V2 no código; como não houve teste real de recarga nesta rodada, a preservação funcional em navegador segue sem homologação.
+
+Commit de correção aplicado à branch existente: `ca020d1fe5edcb15cdd96f7f5a9b85c2afe87a57` (`fix(v18): restore and validate woodcutter atlas`).
