@@ -114,9 +114,10 @@ function draw(g,s,t){
  // V21 renderer must run in the actual village scene, not only fixture scripts.
  // Keep the established monument at the right and render active work in the
  // central site. This reads existing V2 fields and never mutates the save.
- if(root.PetecoConstructionV20&&typeof root.PetecoConstructionV20.draw==='function'){
-  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:0},t,{x:148,y:308,width:64,rowHeight:8,slots:1});
- }else projectSite(g,s.project,s.projectGoal,t);
+ const v21WallRenderer=root.PetecoConstructionV20;
+ const v21Drawn=v21WallRenderer&&typeof v21WallRenderer.draw==='function'&&
+  v21WallRenderer.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:0},t,{x:148,y:308,width:64,rowHeight:8,slots:1});
+ if(!v21Drawn)projectSite(g,s.project,s.projectGoal,t);
  completedWalls(g,s.projectCount);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
