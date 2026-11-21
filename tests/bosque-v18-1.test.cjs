@@ -7,6 +7,10 @@ assert.equal(forest.model({phase:'carry',ledger:{deliveryConfirmed:false}},12).f
 assert.equal(forest.model({phase:'carry',ledger:{deliveryConfirmed:true}},12).felled,true);
 assert.equal(forest.model({phase:'return',ledger:{deliveryConfirmed:true}},12).logs,2);
 assert.equal(forest.model({phase:'idle',ledger:{deliveryConfirmed:true}},12).felled,false);
+assert.equal(forest.model({phase:'idle',ledger:{deliveryConfirmed:true}},12).logs,0,'do not display stale delivered logs');
+assert.equal(forest.model({phase:'cut',elapsed:.2},12).chopping,true);
+assert.notEqual(forest.model({phase:'cut',elapsed:.2},12).lean,0);
+assert.equal(forest.model({phase:'idle',elapsed:.2},12).lean,0);
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 assert.ok(html.includes('v18/bosque-vivo.js'));
 assert.ok(html.includes('PetecoBosqueV181.draw(g,workerState,s.cycles);PetecoWoodcutterRendererV18.draw'));
