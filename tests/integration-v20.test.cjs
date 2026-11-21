@@ -1,6 +1,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 for(const name of ['factory-core','scene-map','actor-controller','economy-bridge'])assert.ok(html.includes('src="v20/'+name+'.js"'),name+' script loaded');
+assert.ok(html.includes("const factoryV20=new URLSearchParams(location.search).get('v20')==='1'&&"),'factory must be entirely opt-in');
 assert.ok(html.includes('const beforeV20=factoryV20?PetecoEconomyBridgeV20.capture(s):null;s.cycles++;'),'capture before mutation');
 assert.ok(html.includes('woodcutterActivity.commit(woodLedger);if(factoryV20&&beforeV20)'),'only after original woodcutter commit');
 assert.ok(html.includes('PetecoFactoryV20.queue(PetecoEconomyBridgeV20.diff('),'real events are gated');
