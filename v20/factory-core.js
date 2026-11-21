@@ -20,7 +20,7 @@ function event(input){
  return Object.freeze({id:input.job+':'+cycle+':'+input.action,job:input.job,action:input.action,cycle,confirmed,priority:Math.max(0,Math.min(10,finite(input.priority)))});
 }
 function queue(events,max=24){
- const seen=new Set();return (Array.isArray(events)?events:[]).filter(e=>e&&e.confirmed&&JOBS[e.job]&&!seen.has(e.id)&&seen.add(e.id))
+ const seen=new Set();return (Array.isArray(events)?events:[]).filter(e=>e&&e.confirmed===true&&JOBS[e.job]&&JOBS[e.job].actions.includes(e.action)&&Number.isSafeInteger(e.cycle)&&e.cycle>=0&&e.id===e.job+':'+e.cycle+':'+e.action&&!seen.has(e.id)&&seen.add(e.id))
   .sort((a,b)=>b.priority-a.priority||a.cycle-b.cycle).slice(0,Math.max(0,Math.min(64,finite(max))));
 }
 root.PetecoFactoryV20=Object.freeze({JOBS,read,event,queue});
