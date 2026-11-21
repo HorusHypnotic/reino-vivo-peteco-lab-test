@@ -9,7 +9,7 @@ function model(actor={},cycle=0){
  // A felled tree is only visualized after the production ledger confirms delivery.
  const falling=confirmed&&phase==='carry';
  const fallProgress=falling?Math.min(1,Math.max(0,(Number(actor.elapsed)||0)/.34)):0;
- const felled=confirmed&&(phase==='return'||(falling&&fallProgress>=1));
+ const felled=confirmed&&(phase==='return'||(falling&&fallProgress>=.65));
  const regrowth=felled?0:Math.min(1,.72+(n%7)*.04);
  const chopping=phase==='cut'||actor.state==='work';
  const lean=chopping?Math.sin((Number(actor.elapsed)||0)*18)*.075:0;
