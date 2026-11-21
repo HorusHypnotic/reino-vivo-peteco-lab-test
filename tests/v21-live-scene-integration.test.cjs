@@ -13,8 +13,8 @@ test('V21 module is loaded before the live simulation script',()=>{
  assert.ok(moduleAt>0&&gameAt>moduleAt);
 });
 test('real village calls V21 renderer and retains fallback and persistent monument',()=>{
- assert.match(village,/root\.PetecoConstructionV20\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:0\}/);
- assert.match(village,/else projectSite\(g,s\.project,s\.projectGoal,t\)/);
+ assert.match(village,/v21WallRenderer\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:0\}/);
+ assert.match(village,/if\(!v21Drawn\)projectSite\(g,s\.project,s\.projectGoal,t\)/);
  assert.match(village,/completedWalls\(g,s\.projectCount\)/);
 });
 test('V21 display integration does not change persisted state',()=>{
