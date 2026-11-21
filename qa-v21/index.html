@@ -1,1 +1,61 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>V21 · QA visual isolado</title><style>body{margin:0;background:#101723;color:#f6e5bc;font:15px system-ui}main{max-width:540px;margin:auto;padding:16px}h1{font-size:22px}p{line-height:1.5}img{width:100%;max-width:360px;display:block;margin:12px auto;border:2px solid #a88b50;border-radius:12px}button{padding:12px;border-radius:8px;background:#c9a65b;color:#151923;border:0;font-weight:bold;margin:4px}button[aria-pressed=true]{background:#f5dfa7}#state{font-weight:bold}small{color:#bac5c7}a{color:#f5dfa7}</style></head><body><main><h1>🏰 V21 · QA visual das muralhas</h1><p>Sete capturas sintéticas reproduzíveis dos renderizadores do jogo. Esta página <strong>não executa a economia</strong>, não acessa nem modifica o salvamento do jogador e não substitui o teste da transição no jogo ao vivo.</p><div id="buttons"></div><p id="state" aria-live="polite"></p><img id="scene" alt="Captura de estado sintético da Vila Viva" width="720" height="960"><section aria-label="Comparação antes e depois"><h2>Comparação lado a lado</h2><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><figure style="margin:0"><figcaption>Antes: 0/30</figcaption><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/0fa9153af56c14fd65f5da78f788f8c3091c4f30/docs/evidence/v21-wall-stages/00-idle.png" alt="Sem muralha concluída"></figure><figure style="margin:0"><figcaption>Depois: muralha + 15/30</figcaption><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/0fa9153af56c14fd65f5da78f788f8c3091c4f30/docs/evidence/v21-wall-stages/15-next.png" alt="Muralha concluída e próxima obra"></figure></div><p><small>Comparação de capturas sintéticas, não de uma sessão de jogo.</small></p></section><p id="asset-status" role="status">Verificando carregamento das imagens…</p><p><small>Fonte: docs/evidence/v21-wall-stages · PR #15. O teste de persistência é comparação pixel a pixel de fixtures, não recarregamento de uma sessão real.</small></p><p><a href="../index.html?v20=1">Abrir canário real da Vila Viva</a></p></main><script>const frames=[['00-idle','0/30 · nenhuma muralha'],['10-foundation','10/30 · fundação'],['20-walls','20/30 · paredes'],['29-finish','29/30 · acabamento'],['01-complete','muralha concluída · nova obra 0/30'],['15-next','muralha preservada · nova obra 15/30'],['reload-preserved','fixture V2 reidratado · 15/30']];const b=document.getElementById('buttons'),im=document.getElementById('scene'),state=document.getElementById('state');function show(i){const [file,label]=frames[i];im.src='https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/0fa9153af56c14fd65f5da78f788f8c3091c4f30/docs/evidence/v21-wall-stages/'+file+'.png';im.alt=label;state.textContent=label;[...b.children].forEach((x,j)=>x.setAttribute('aria-pressed',String(i===j)))}frames.forEach(([file,label],i)=>{const btn=document.createElement('button');btn.textContent=String(i+1);btn.title=label;btn.onclick=()=>show(i);b.append(btn)});im.addEventListener('load',()=>document.getElementById('asset-status').textContent='Imagem carregada. Captura sintética, não homologação do jogo ao vivo.');im.addEventListener('error',()=>document.getElementById('asset-status').textContent='Falha ao carregar a imagem. Consulte as evidências na PR #15.');show(0)</script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>V21 · QA visual isolado</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101723;color:#f6e5bc;font:15px system-ui,sans-serif}main{width:min(100%,560px);margin:auto;padding:16px}h1{font-size:22px}p{line-height:1.45}button{padding:10px 8px;border-radius:8px;background:#c9a65b;color:#151923;border:0;font-weight:bold;margin:3px;cursor:pointer}button[aria-pressed=true]{background:#f5dfa7;outline:2px solid #fff0cf}.stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.world{width:min(100%,360px);margin:12px auto;border:2px solid #a88b50;border-radius:12px;overflow:hidden}.world canvas{display:block;width:100%;height:auto;aspect-ratio:3/4}.status{background:#1e3040;border-radius:8px;padding:9px;margin:8px 0}.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.compare img{width:100%;height:auto;border:1px solid #a88b50;border-radius:8px}small{color:#bac5c7}a{color:#f5dfa7}@media(max-width:390px){main{padding:10px}.stages{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body><main>
+<h1>🏰 V21 · QA visual isolado</h1>
+<p>Renderizadores reais da PR carregados no Chromium. Estados econômicos sintéticos; a página não acessa nem grava o save, não executa economia e não simula contribuição real.</p>
+<div id="buttons" class="stages"></div>
+<div id="status" class="status" aria-live="polite">Carregando renderizadores e atlas…</div>
+<div class="world"><canvas id="scene" width="720" height="960"></canvas></div>
+<button id="reload">Recarregar este fixture</button>
+<h2>Comparação de referência</h2>
+<div class="compare"><figure><figcaption>Antes · 0/30</figcaption><img src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/0fa9153af56c14fd65f5da78f788f8c3091c4f30/docs/evidence/v21-wall-stages/00-idle.png" alt="Nenhuma muralha concluída"></figure><figure><figcaption>Depois · muralha + 15/30</figcaption><img src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/0fa9153af56c14fd65f5da78f788f8c3091c4f30/docs/evidence/v21-wall-stages/15-next.png" alt="Muralha preservada e nova obra"></figure></div>
+<p><small>O desenho acima roda em browser com o código da PR. O construtor mostrado é um ator sintético de composição; não representa entrega ou trabalho econômico ocorrido. Esta página não é o jogo publicado.</small></p>
+<p><a href="../index.html">Voltar para a única página oficial do jogo</a></p>
+</main>
+<script src="../v18/actor-state-machine.js"></script>
+<script src="../v18/art-bridge.js"></script>
+<script src="../v18/woodcutter-renderer.js"></script>
+<script src="../v19/forest-art.js"></script>
+<script src="../v20/profession-renderer.js"></script>
+<script src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/ecfd36b4b44f2c82cad4d18b99121437fb7488f0/v20/construction-state.js"></script>
+<script src="https://raw.githubusercontent.com/HorusHypnotic/reino-vivo-peteco-lab-test/ecfd36b4b44f2c82cad4d18b99121437fb7488f0/v18/art-motion.js"></script>
+<script>
+(function(){'use strict';
+const frames=[
+ {id:'idle',label:'0/30 · nenhuma muralha',p:0,c:0,actor:'idle'},
+ {id:'foundation',label:'10/30 · fundação',p:10,c:0,actor:'walk'},
+ {id:'walls',label:'20/30 · paredes',p:20,c:0,actor:'work'},
+ {id:'finish',label:'29/30 · acabamento',p:29,c:0,actor:'work'},
+ {id:'goal',label:'30/30 · antes do commit econômico',p:30,c:0,actor:'work'},
+ {id:'complete',label:'30/30 confirmado · nova obra 0/30',p:0,c:1,actor:'idle'},
+ {id:'next',label:'muralha persistente · próxima obra 15/30',p:15,c:1,actor:'carry'},
+ {id:'reload',label:'fixture V2 reidratado · uma muralha + 15/30',p:15,c:1,actor:'carry'}
+];
+const params=new URLSearchParams(location.search),selected=params.get('stage')||'idle',frame=frames.find(x=>x.id===selected)||frames[0];
+const buttons=document.getElementById('buttons'),canvas=document.getElementById('scene'),g=canvas.getContext('2d'),status=document.getElementById('status');
+frames.forEach(f=>{const b=document.createElement('button');b.textContent=f.label;b.setAttribute('aria-pressed',String(f.id===frame.id));b.onclick=()=>{const u=new URL(location.href);u.searchParams.set('v20','1');u.searchParams.set('stage',f.id);location.assign(u)};buttons.append(b)});
+document.getElementById('reload').onclick=()=>location.reload();
+function load(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('Falha de asset: '+src));img.src=src})}
+Promise.all([load('../v18/assets/village-scene.svg'),load('../v18/assets/woodcutter-atlas-original.png'),load('../v19/assets/forest-cycle-atlas.png')]).then(([scene,wood,forest])=>{
+ if(!window.PetecoConstructionV20||!window.PetecoArtMotionV18||!window.PetecoArtBridgeV18||!window.PetecoWoodcutterRendererV18||!window.PetecoForestArtV19||!window.PetecoProfessionRendererV20)throw new Error('Módulo de renderer ausente');
+ g.setTransform(2,0,0,2,0,0);g.drawImage(scene,0,0,360,480);
+ const state={project:frame.p,projectGoal:30,projectCount:frame.c};
+ const art=PetecoArtBridgeV18.scene({level:79,people:81,...state,structures:[],artWorkers:[]});
+ PetecoArtMotionV18.draw(g,art,480);
+ PetecoWoodcutterRendererV18.draw(g,{state:frame.actor==='walk'?'walk':frame.actor==='work'?'work':frame.actor==='carry'?'carry':'idle',frame:frame.actor==='walk'?2:frame.actor==='work'?1:frame.actor==='carry'?3:0,x:112,y:353,facing:1},wood);
+ PetecoForestArtV19.draw(g,{phase:'idle',state:'idle',cycle:1},forest,1000);
+ PetecoProfessionRendererV20.draw(g,{job:'construction',phase:'work',x:234,y:330},480);
+ status.textContent=frame.label+' · fase '+PetecoConstructionV20.derive(state).phase+' · fixture sintético; sem leitura/gravação de save.';
+}).catch(e=>{status.textContent='QA bloqueado: '+e.message;status.style.color='#ffae9e'});
+})();
+</script>
+</body></html>
