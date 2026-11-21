@@ -68,3 +68,10 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - O construtor segue no catálogo e recebe eventos econômicos, mas **não é desenhado** sobre a obra ilustrada sem vínculo comprovado. Renderização experimental opt-in apenas de farm/quarry.
 - Commit 547c322: teste de integração cobre os dois contratos.
 - Execução simulada de cinco testes V20 após correções: 5/5 PASS; sem alegação de suíte Node nativa ou QA Android.
+
+## Instrumentação de QA (21/11/2026)
+- `v20/qa-runtime.js`: `PetecoQAV20.inspect(actors,state,warOnScreen)` produz diagnóstico somente leitura, com ciclo, fase, coordenadas e violações.
+- `index.html`: somente em `?v20=1`, publica `window.PetecoV20Diagnostics` a cada 60 frames. Não escreve no save e não altera a economia.
+- `tests/qa-runtime-v20.test.cjs`: estados ociosos, trabalho ativo, violação durante guerra e coordenadas inválidas.
+- Seis testes V20 passaram em execução JS com módulos Node simulados. Ainda sem `node --test` nativo, navegador real ou QA visual Android.
+- Para inspeção após disponibilização controlada, abrir a página com `?v20=1` e ler `window.PetecoV20Diagnostics` no console; não declarar que o parâmetro já está disponível na URL oficial antes do merge.
