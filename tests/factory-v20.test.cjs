@@ -15,4 +15,15 @@ const c=f.event({job:'quarry',action:'mine',cycle:3,confirmed:false,priority:10}
 assert.equal(f.queue([a,a,b,c]).length,2);
 assert.equal(f.queue([a,b])[0].job,'farm');
 assert.equal(f.queue([a,b],1).length,1);
-console.log('PASS V20 factory contracts');
+assert.equal(f.queue([{id:'forest:1:cut',job:'forest',action:'cut',cycle:1,confirmed:false}]).length,0);
+assert.equal(f.queue([{id:'forest:1:cut',job:'forest',action:'dance',cycle:1,confirmed:true}]).length,0);
+assert.equal(f.queue([{id:'forest:1:cut',job:'forest',action:'cut',cycle:2,confirmed:true}]).length,0);
+const scene={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/scene-map.js'),'utf8'),scene);
+const m=scene.PetecoSceneMapV20;
+assert.equal(m.validate(),true);
+assert.equal(m.route('forest').target.x,118);
+assert.equal(m.route('forest').target.y,290);
+assert.equal(m.position('forest',0).x,200);
+assert.equal(m.position('forest',1).x,118);
+assert.equal(m.route('unknown'),null);
+console.log('PASS V20 factory contracts and scene-map');
