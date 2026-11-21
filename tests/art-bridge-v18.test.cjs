@@ -17,5 +17,6 @@ assert.ok(result.buildings.some(b=>b.status==='scaffold'));
 assert.equal(result.workers.length,1);
 assert.equal(result.workers[0].phase,'working');
 assert.equal(result.saveSchemaChanged,false);
+assert.equal(result.construction.project,10);assert.equal(result.construction.goal,30);assert.equal(result.construction.completed,0);
 assert.ok(result.layers.indexOf('workers')>result.layers.indexOf('structures'));
 console.log('PASS V18 art bridge authoritative structures, explicit workers, persistence');

@@ -1,0 +1,52 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const context={};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/construction-state.js'),'utf8'),context);
+for(const name of ['factory-core','scene-map','actor-controller'])vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/'+name+'.js'),'utf8'),context);
+const construction=context.PetecoConstructionV20;
+const state=(project,projectCount=0)=>({project,projectGoal:30,projectCount});
+assert.equal(construction.derive(state(0)).phase,'idle');
+assert.equal(construction.derive(state(1)).phase,'foundation');
+assert.equal(construction.derive(state(10)).phase,'walls');
+assert.equal(construction.derive(state(20)).phase,'finish');
+assert.equal(construction.derive(state(0,1)).phase,'complete');
+assert.equal(construction.derive(state(0)).completed,0);
+
+const legacySaved=JSON.parse(JSON.stringify({v:2,project:21,projectCount:4,projectGoal:30,structures:[{id:0,stage:3,integrity:100}]}));
+assert.equal(construction.derive(legacySaved).phase,'finish');
+assert.equal(construction.derive(legacySaved).completed,4);
+assert.deepEqual(Object.keys(legacySaved).sort(),['project','projectCount','projectGoal','structures','v']);
+const finished=JSON.parse(JSON.stringify({v:2,...state(0,5)}));
+assert.equal(construction.derive(finished).phase,'complete','completed wall remains after save/reload');
+
+const calls=[];
+const ctx={save(){},restore(){},fillRect(...args){calls.push(['rect',...args])},beginPath(){},moveTo(){},lineTo(){},stroke(){}};
+assert.equal(construction.draw(ctx,state(0),0),false,'no inactive 0% construction is drawn');
+for(const n of [1,10,20,0]){calls.length=0;assert.equal(construction.draw(ctx,state(n,n===0?1:0),12),true);assert.ok(calls.length>0);}
+const factory={event(input){return Object.freeze({...input,id:input.job+':'+input.cycle+':'+input.action})}};
+const before=construction.workUnits(state(4)),after=state(5);
+const event=construction.confirmedContribution(factory,before,after);
+assert.equal(event.confirmed,true);
+assert.equal(event.job,'construction');
+assert.equal(event.action,'build');
+assert.equal(construction.confirmedContribution(factory,before,state(4)),null,'no event without committed progress');
+assert.equal(construction.confirmedContribution(factory,10,state(9)),null,'rollback or reset creates no work event');
+const confirmed=construction.confirmedContribution(context.PetecoFactoryV20,before,after);
+const builder=context.PetecoActorV20.create(context.PetecoFactoryV20,context.PetecoSceneMapV20,'construction');
+assert.equal(builder.start(confirmed),true);assert.equal(builder.snapshot().phase,'walk','accepted contribution activates the shared V20 builder');
+for(let i=0;i<37;i++)builder.tick(1/60);assert.equal(builder.snapshot().phase,'work');
+
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const art=fs.readFileSync(path.join(__dirname,'../v7/art-direction-v17.js'),'utf8');
+assert.ok(html.includes('src="v20/construction-state.js"'));
+assert.ok(html.includes('project:s.project,projectCount:s.projectCount'),'V2 save keeps project progress and completion');
+assert.ok(html.includes('project:Math.max(0,Number(p.project)||0),projectCount:Math.max(0,Number(p.projectCount)||0)'),'legacy V2 reload restores project fields');
+assert.ok(html.includes('PetecoConstructionV20.confirmedContribution(PetecoFactoryV20,previousWork,s)'));
+assert.ok(html.includes("for(const job of ['farm','quarry','construction'])"));
+assert.ok(art.includes("get('v20')==='1'"));
+assert.ok(art.includes('root.PetecoConstructionV20.draw(g,state,t,{x:147,y:309,width:66,rowHeight:9})'));
+const motion=fs.readFileSync(path.join(__dirname,'../v18/art-motion.js'),'utf8');
+assert.ok(motion.includes('project:art.construction.project'));
+assert.ok(motion.includes('root.PetecoConstructionV20.draw(g,projectState,t,{x:169,y:274,width:56,rowHeight:7})'));
+assert.ok(motion.includes("get('v20')==='1'"));
+assert.ok(art.includes('projectCount'));
+console.log('PASS V20/V21 wall stages derive from V2 save and accepted contributions');

@@ -25,5 +25,7 @@ assert.equal(m.route('forest').target.x,118);
 assert.equal(m.route('forest').target.y,290);
 assert.equal(m.position('forest',0).x,200);
 assert.equal(m.position('forest',1).x,118);
+assert.equal(m.route('construction').target.x,173);
+assert.equal(m.route('construction').target.y,274,'builder target aligns with the V18 project-site anchor');
 assert.equal(m.route('unknown'),null);
 console.log('PASS V20 factory contracts and scene-map');

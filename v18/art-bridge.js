@@ -25,7 +25,7 @@ function scene(state,region=0){
   .map((w,i)=>({id:String(w.id??'actor-'+i),job:w.job,phase:w.phase||'idle',
    x:clamp(w.x,0,360),y:clamp(w.y,0,480),target:w.target||null}));
  return {biome:ARCHETYPES.biome[clamp(region,0,4)],tier,population,level,
-  construction:{progress:clamp((Number(s.project)||0)/Math.max(1,Number(s.projectGoal)||30),0,1)},
+  construction:{progress:clamp((Number(s.project)||0)/Math.max(1,Number(s.projectGoal)||30),0,1),project:Math.max(0,Number(s.project)||0),goal:Math.max(1,Number(s.projectGoal)||30),completed:Math.max(0,Number(s.projectCount)||0)},
   layers:['ground','paths','water','vegetation','structures','workers','effects'],
   buildings,workers,sceneFocus:'village',saveSchemaChanged:false};
 }

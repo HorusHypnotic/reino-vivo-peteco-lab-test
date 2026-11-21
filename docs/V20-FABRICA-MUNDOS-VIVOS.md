@@ -81,3 +81,14 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - Commit 9e83931: regressão estática para assegurar opt-in completo.
 - Work reportou `node --test` 13/13, regressões coletivas 8/8, live commands 49/49 e merge-tree sem conflitos **antes destes dois commits**. Reexecutar suíte nativa no HEAD novo antes de liberar merge.
 - Inspeção visual Android e verificação HTTP pós-publicação ainda não realizadas. A publicação permanece bloqueada até a aprovação dos portões.
+
+## V21 · Obra pública ligada ao mundo (21/11/2026)
+
+- A obra indicada no cenário é a **muralha pública**: `contribute()` aumenta `s.project`; ao atingir `s.projectGoal`, o motor reduz o saldo, incrementa `s.projectCount`, registra “Muralha N concluída pela comunidade” e salva ambos em `peteco-lab-vila-v2`.
+- `s.structures` descreve três casas danificáveis/consertáveis; não há identificador que associe qualquer delas ao projeto público. O renderizador não vincula a muralha a essas casas.
+- `v20/construction-state.js` deriva repouso/fundação/paredes/acabamento/conclusão somente de `project`, `projectGoal` e `projectCount`, campos que já persistem no Save V2. Não há migração nem novo motor econômico.
+- A obra parada deixa de exibir “OBRA 0%”. Contribuições renderizam módulos de muralha; as unidades concluídas continuam após recarregar. Na prévia `?v20=1`, cada contribuição aceita em vila também aciona o ator construtor da fábrica V20. Guerra continua interrompendo os atores experimentais.
+- Limite visual da primeira muralha: quatro cursos persistidos, após os quais o render inclui torres nos extremos. É representação de estado, não saldo de madeira/pedra nem casa construída. Sem contribuição aceita, nada avança.
+- Teste novo: `tests/construction-v20.test.cjs`, cobrindo fases, persistência V2, evento confirmado, ausência de evento sem progresso e renderização ociosa.
+- Revalidação nativa no HEAD de referência `25f9eaa` antes das alterações: Node 24.22.3, 13/13; coletivos 8/8; live commands 49/49; `git diff --check` PASS.
+- O lote V21 acrescentou regressão para estados da muralha, evento confirmado, sincronização do ator da fábrica, desenho ocioso e recuperação dos campos V2. QA visual em browser/canário ainda não realizado nesta etapa; Android real não homologado.
