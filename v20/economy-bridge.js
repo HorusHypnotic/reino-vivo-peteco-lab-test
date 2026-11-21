@@ -4,7 +4,7 @@
 function capture(s){const x=s||{},a=x.sectors||{};return Object.freeze({cycle:Number(x.cycles)||0,deliveries:Number(x.deliveries)||0,food:Number(x.food)||0,stone:Number(x.stone)||0,project:Number(x.project)||0,farm:Number(a.farm)||0,quarry:Number(a.quarry)||0});}
 function diff(before,after,factory){
  if(!before||!after||!factory||after.cycle<=before.cycle)return [];
- const out=[],cycle=after.cycle,delivered=after.deliveries>before.deliveries;
+ const out=[],cycle=after.cycle;
  // On delivery cycles, farm/quarry sector counters reset to zero.
  // The actual inventory delta may be masked by consumption; delivery counter is the
  // confirmed transaction, but individual profession credit is not independently proven.
