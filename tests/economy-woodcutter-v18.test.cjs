@@ -19,4 +19,5 @@ for(const asset of ['v18/art-bridge.js','v18/actor-state-machine.js','v18/art-mo
 }
 assert.match(html,/window\.PetecoWoodcutterV18\.create\(\)/,'controller must initialize');
 assert.match(html,/woodcutterActivity\.update\(1\/60\)/,'animation must advance each frame');
+assert.match(html,/PetecoV18Scene\.ready&&window\.PetecoArtBridgeV18&&window\.PetecoWoodcutterAtlasV18&&window\.PetecoWoodcutterAtlasV18\.ready&&window\.PetecoWoodcutterRendererV18/,'V18 scene must not replace V17 before the woodcutter atlas loads');
 console.log('PASS economic event hooks preserve parity authority, cancellation, save schema, classic mode and war priority');
