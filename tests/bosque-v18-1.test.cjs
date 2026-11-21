@@ -16,8 +16,9 @@ assert.notEqual(forest.model({phase:'cut',elapsed:.2},12).lean,0);
 assert.equal(forest.model({phase:'idle',elapsed:.2},12).lean,0);
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 assert.ok(html.includes('v18/bosque-vivo.js'));
-assert.ok(html.includes('PetecoBosqueV181.draw(g,workerState,s.cycles);PetecoWoodcutterRendererV18.draw'));
-assert.ok(html.indexOf('PetecoBosqueV181.draw(g,workerState,s.cycles)')<html.indexOf('PetecoWoodcutterRendererV18.draw(g,workerState,workerAtlas.image)'));
+assert.ok(html.includes('PetecoForestArtV19.draw(g,workerState,PetecoForestAtlasV19.image)'));
+assert.ok(html.includes('else if(window.PetecoBosqueV181)PetecoBosqueV181.draw(g,workerState,s.cycles)'));
+assert.ok(html.indexOf('PetecoForestArtV19.draw(g,workerState,PetecoForestAtlasV19.image)')<html.indexOf('PetecoWoodcutterRendererV18.draw(g,workerState,workerAtlas.image)'));
 
 // Regression: a completed cut must remain visible after the 0.34s carry segment.
 // A fake clock makes this deterministic without waiting in real time.

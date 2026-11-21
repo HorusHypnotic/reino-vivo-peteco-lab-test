@@ -3,6 +3,7 @@
 const CELL=Object.freeze({width:543,height:724});
 const FRAME=Object.freeze({tree:0,falling:1,stump:2,sapling:3});
 const SIZE=Object.freeze({width:66,height:88});
+const TREE=Object.freeze({x:118,y:290});
 let cycle=null,stumpUntil=0,regrowUntil=0;
 function state(actor,now){
  const ledger=actor&&actor.ledger;
@@ -18,9 +19,8 @@ function state(actor,now){
 function draw(g,actor,image,now=Date.now()){
  if(!g||!image||!image.complete||!image.naturalWidth||image.naturalWidth!==CELL.width*4||image.naturalHeight!==CELL.height)return false;
  const phase=state(actor||{},Number(now)||0),frame=FRAME[phase];
- const x=Number(actor&&actor.x)||118,y=Number(actor&&actor.y)||290;
- g.drawImage(image,frame*CELL.width,0,CELL.width,CELL.height,x-SIZE.width/2,y-SIZE.height,SIZE.width,SIZE.height);
+ g.drawImage(image,frame*CELL.width,0,CELL.width,CELL.height,TREE.x-SIZE.width/2,TREE.y-SIZE.height,SIZE.width,SIZE.height);
  return phase;
 }
-root.PetecoForestArtV19=Object.freeze({CELL,FRAME,SIZE,state,draw});
+root.PetecoForestArtV19=Object.freeze({CELL,FRAME,SIZE,TREE,state,draw});
 })(typeof window!=='undefined'?window:globalThis);

@@ -7,7 +7,7 @@ const sandbox={Date:{now:()=>0}};vm.runInNewContext(fs.readFileSync(path.join(ro
 assert.deepEqual(Object.values(forest.FRAME),[0,1,2,3]);
 const actor={x:118,y:290,phase:'carry',cycle:2,ledger:{deliveryConfirmed:true}},calls=[];
 const image={complete:true,naturalWidth:2172,naturalHeight:724};const g={drawImage(...args){calls.push(args)}};
-assert.equal(forest.draw(g,{...actor,phase:'cut'},image,10),'tree','unconfirmed or non-carry actions cannot fell a tree');
+assert.equal(forest.draw(g,{...actor,x:200,y:404,phase:'cut'},image,10),'tree','unconfirmed or non-carry actions cannot fell a tree');assert.equal(calls.at(-1)[5],85,'tree remains fixed at the controller target rather than following the worker');assert.equal(calls.at(-1)[6],202);
 assert.equal(forest.draw(g,actor,image,20),'falling','only confirmed carry shows a falling tree');assert.equal(calls.at(-1)[0],image);assert.equal(calls.at(-1)[1],543,'falling pose selects the second atlas cell');
 assert.equal(forest.draw(g,{...actor,phase:'idle'},image,500),'stump','delivered cut persists as a stump');assert.equal(calls.at(-1)[1],1086,'stump and logs use the third atlas cell');
 assert.equal(forest.draw(g,{...actor,phase:'idle'},image,1200),'sapling','regrowth has an explicit sapling stage');assert.equal(calls.at(-1)[1],1629,'sapling uses the fourth atlas cell');
