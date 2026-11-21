@@ -62,3 +62,9 @@ Fundação técnica em branch experimental. Nenhuma publicação, QA Android ou 
 - Corrigido `actor-controller.js`: rejeita ciclos duplicados/antigos, conserva o evento pendente de maior ciclo e limpa marcação no reset. Commits 294cbd4, a2af185.
 - Cinco testes V20 novamente PASS em execução JS com dependências Node simuladas. A suíte Node nativa e QA Android continuam pendentes.
 - Nota: eventos de trabalho são observados na economia, mas não equivalem a entregas individuais confirmadas. Não usar o rótulo 'entrega' para farm/quarry sem comprovação adicional.
+
+## 21/11/2026 · Portão de batalha e obra
+- Commit 3d206d5: frame cancela atores V20 quando a fase deixa de ser vila ou a guerra ocupa a cena; prioridade de guerra preservada.
+- O construtor segue no catálogo e recebe eventos econômicos, mas **não é desenhado** sobre a obra ilustrada sem vínculo comprovado. Renderização experimental opt-in apenas de farm/quarry.
+- Commit 547c322: teste de integração cobre os dois contratos.
+- Execução simulada de cinco testes V20 após correções: 5/5 PASS; sem alegação de suíte Node nativa ou QA Android.
