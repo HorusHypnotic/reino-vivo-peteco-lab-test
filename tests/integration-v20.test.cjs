@@ -4,7 +4,9 @@ for(const name of ['factory-core','scene-map','actor-controller','economy-bridge
 assert.ok(html.includes('const beforeV20=factoryV20?PetecoEconomyBridgeV20.capture(s):null;s.cycles++;'),'capture before mutation');
 assert.ok(html.includes('woodcutterActivity.commit(woodLedger);if(factoryV20&&beforeV20)'),'only after original woodcutter commit');
 assert.ok(html.includes('PetecoFactoryV20.queue(PetecoEconomyBridgeV20.diff('),'real events are gated');
-assert.ok(html.includes('actor.tick(1/60)'),'visual actors tick without modifying economy');
+assert.ok(html.includes("if(s.phase!=='vila'||warOnScreen)actor.cancel();else actor.tick(1/60)"),'war interrupts and cancels preview actors');
+assert.ok(html.includes("for(const job of ['farm','quarry'])"),'only verified sectors are drawn');
+assert.ok(!html.includes("for(const actor of Object.values(factoryV20))if(actor)PetecoProfessionRendererV20.draw"),'construction is not placed over unrelated illustrated building');
 assert.ok(html.includes('if(actor)actor.cancel();Object.assign(s,'),'reset cancels generic actors');
 assert.ok(!html.includes('PetecoActorV20.draw('),'no unapproved placeholder sprites');
 console.log('PASS V20 scripts, progress integration, reset and no fake rendering');
