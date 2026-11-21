@@ -84,3 +84,10 @@ Uma demonstração real de 1 lenhador: idle→walk→chop→carry→idle, sincro
 5. Capturar pelo menos 2 imagens comparáveis e relatório de licenças antes de pedir publicação.
 
 **Bloqueio remanescente:** personagem LPC específico ainda não foi exportado nem inspecionado em cena; QA Android e execução de testes seguem pendentes. A pesquisa é suficiente para um lote de prova técnica estritamente delimitado, mas não para declarar arte aprovada.
+
+## Correção incremental sem Work: remover estados fictícios
+
+- Commit 2d43d5f5: `v18/art-bridge.js` deixou de multiplicar casas por nível e população. Agora `buildings` contém somente estruturas explicitamente presentes em `s.structures`; cenário ilustrado continua decorativo e separado. `workers` só é populado por `s.artWorkers` explícito, sem atribuição de profissão por fórmula.
+- Commit 63de9f8f: testes do art-bridge atualizados para exigir zero casas/trabalhadores sem fonte autoritativa e correspondência 1:1 quando fornecidos.
+- **Ressalva:** `s.artWorkers` é contrato visual proposto, não campo confirmado no motor; não está integrado. Portanto, trabalhadores dinâmicos podem desaparecer no experimento até integração de eventos reais. Não alterar save para adicionar esse campo.
+- **QA:** commits realizados, testes não executados neste ciclo; sem homologação visual.
