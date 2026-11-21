@@ -1,9 +1,14 @@
-const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),zlib=require('node:zlib');
 const base=path.join(__dirname,'../v18'),sandbox={};
+const png=fs.readFileSync(path.join(base,'assets/woodcutter-atlas-original.png'));
+assert.equal(png.toString('ascii',1,4),'PNG');assert.equal(png.readUInt32BE(16),1122);assert.equal(png.readUInt32BE(20),1402);assert.equal(png[24],8);assert.equal(png[25],6,'atlas must preserve 8-bit RGBA transparency');
+const compressed=[];for(let offset=8;offset<png.length;){const length=png.readUInt32BE(offset),kind=png.toString('ascii',offset+4,offset+8);if(kind==='IDAT')compressed.push(png.subarray(offset+8,offset+8+length));offset+=12+length;if(kind==='IEND')break;}assert.ok(compressed.length>0,'atlas requires image data');assert.doesNotThrow(()=>zlib.inflateSync(Buffer.concat(compressed)),'atlas image data must decode without corruption');
 for(const file of ['woodcutter-controller.js','woodcutter-renderer.js'])vm.runInNewContext(fs.readFileSync(path.join(base,file),'utf8'),sandbox);
 const factory=sandbox.PetecoWoodcutterV18,renderer=sandbox.PetecoWoodcutterRendererV18;
 function tick(controller,seconds,step=.05){for(let elapsed=0;elapsed<seconds;elapsed+=step)controller.update(Math.min(step,seconds-elapsed));}
 assert.deepEqual(Object.keys(renderer.rows),['idle','walk','work','carry']);
+assert.deepEqual(Object.values(renderer.rows),[0,1,2,3],'atlas rows map to idle, walk, chop and carry in order');
+assert.equal(renderer.cell.width,280.5,'4 columns divide the 1122px atlas');assert.equal(renderer.cell.height,350.5,'4 rows divide the 1402px atlas');
 let c=factory.create();
 assert.equal(c.snapshot().state,'idle');assert.equal(c.start({epoch:1,cycle:1}),true);assert.equal(c.snapshot().state,'walk');
 tick(c,.4);assert.equal(c.snapshot().state,'work','walker reaches the tree before chopping');

@@ -84,3 +84,17 @@ Consequências para a revisão:
 - `ac4ce61c0af9af924915cd3bbbd87cc79d57d6ca` — `feat(v18): deliver animated woodcutter tied to forest production` (árvore completa baseada no HEAD `5f738479c77cd9ac544ca5a9e109fbab157515d7`).
 
 PR #9 permanece draft e sem merge; `gh-pages`, `main` e publicação oficial não foram alterados.
+
+## Retomada P0 de publicação (21/11/2026)
+
+Rebobinei para o HEAD informado `be2762013db63f87fddb7959579b04d2d804deb9` e confirmei que ele já contém os ajustes recentes de HUD e de fallback: o renderizador só troca da V17 para V18 quando cena e atlas sinalizam `ready`. Encontrei, porém, o atlas do próprio HEAD corrompido: `identify` falhou com `IDAT: invalid distance code`. Isso acionava o fallback e impedia o lenhador de aparecer.
+
+Recuperei o arquivo gerado existente `Atlas de sprites do lenhador em poses.png`, sem redesenhar o personagem, e restaurei o caminho já usado pelo renderizador. O asset validado mede 1122×1402, é RGBA com transparência, contém 4×4 quadros e tem SHA-256 `ad8aea4d0c7606c472689d334a6b71ba240e658ac12ca306eb588eca19e75b0d`. Acrescentei uma regressão que decodifica os dados IDAT com o `zlib` nativo do Node, confirma dimensões/canal alfa e mapeia as quatro linhas aos estados idle/walk/work/carry.
+
+**Verificação local:** HTTP smoke em servidor estático retornou 200 para `index.html` (142046 bytes) e para o atlas (200, 1409701 bytes, `image/png`). Sintaxe do módulo inline, sintaxe dos scripts e suíte automatizada passaram.
+
+**Página oficial:** `https://horushypnotic.github.io/reino-vivo-peteco-lab-test/` respondeu HTTP 200 e mostrou “Publicação oficial · V14.6”. O HTML servido (138850 bytes) é byte a byte igual ao `index.html` de `gh-pages` no commit `a8011c9`; portanto a página oficial continua apontando para esse conteúdo antigo. A API pública de configurações do Pages retornou 404, então a associação é confirmada pela igualdade do conteúdo servido, não por leitura da configuração do projeto.
+
+**Publicação ainda bloqueada:** tentei executar a branch em Chromium via Playwright; o Chromium empacotado não está instalado e `/usr/bin/chromium` aborta com `socket() failed: Operation not permitted`. A aba de navegador conectada não consegue acessar o servidor local: devolveu `Missing or invalid bearer token`. Não obtive captura de runtime nem conferi animações, console, FPS, reload, batalha ou viewport 360×800. Assim, não fiz merge de #9 nem alterei `gh-pages`. Publicar agora impediria validar previamente o critério central e não atende ao gate definido.
+
+O diagnóstico visual estático confirmou a grade de 16 poses e a transparência, mas há pequenas franjas coloridas nas bordas de algumas silhuetas. A posição/escala da rota ainda não foi validada no runtime. Salvamentos continuam com o mesmo schema V2 no código; como não houve teste real de recarga nesta rodada, a preservação funcional em navegador segue sem homologação.
