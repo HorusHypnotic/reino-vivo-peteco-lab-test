@@ -78,9 +78,8 @@ Consequências para a revisão:
 4. Ajustar posição/escala com base nas capturas. Fazer teste em aparelho Android real antes de declarar homologação Android.
 5. Validar a composição visual com revisão técnica/visual; não fazer merge ou publicar nesta etapa.
 
-## Commits
+## Commit na branch da PR
 
-- `29c1a73` — `feat(v18): animate forest work from real production events` (controlador, renderizador, atlas, integração e regressões).
-- Próximo commit: este relatório de implementação/QA/licenças.
+- `ac4ce61c0af9af924915cd3bbbd87cc79d57d6ca` — `feat(v18): deliver animated woodcutter tied to forest production` (árvore completa baseada no HEAD `5f738479c77cd9ac544ca5a9e109fbab157515d7`).
 
 PR #9 permanece draft e sem merge; `gh-pages`, `main` e publicação oficial não foram alterados.
