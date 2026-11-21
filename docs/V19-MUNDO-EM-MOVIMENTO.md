@@ -45,12 +45,12 @@ Construções reais estão em `s.structures` com `stage` e `integrity`; guerras 
 
 ## Verificações desta retomada
 
-- `node --test`: PASS, 6/6 arquivos antes da inclusão do novo teste V19.
+- `node --test`: PASS, 7/7 arquivos, incluindo a regressão do atlas V19 e posição fixa da árvore.
 - `node tests/collective-regression.cjs`: PASS, 8 checks.
 - `node tests/live-command-regression.cjs`: PASS, 49/49.
 - `node --check v18/bosque-vivo.js`: PASS.
 - `git diff --check`: PASS antes das alterações V19.
-- O novo teste `tests/forest-art-v19.test.cjs` será executado após sua integração.
+- `tests/forest-art-v19.test.cjs`: PASS; testa decode PNG, canais alfa, os quatro estados, gate de entrega e fallback.
 - Página oficial retornou HTTP 200, mas o HTML observado identifica `V14.6`; o conteúdo ainda não apresenta o código experimental V18/V19.
 - O navegador conectado alcançou a página oficial, mas não conseguiu acessar a porta local de QA. A captura de runtime e a viewport móvel não foram validadas; Android real não foi testado.
 
