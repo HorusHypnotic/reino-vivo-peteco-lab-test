@@ -44,16 +44,16 @@ function construction(g,x,y,w,stage,integrity,t){
  }
  g.restore();return true;
 }
-function projectSite(g,project,goal,t){
+function projectSite(g,project,goal,t,projectCount=0){
+ const state={project,projectGoal:goal,projectCount};
+ if(root.PetecoConstructionV20&&new URLSearchParams(root.location?.search||'').get('v20')==='1'){root.PetecoConstructionV20.draw(g,state,t,{x:147,y:309,width:66,rowHeight:9});return;}
+ // Safe legacy fallback: never display an idle site as an active 0% construction.
+ if(!(Number(project)>0))return;
  const p=clamp(project,0,100000),total=Math.max(1,Number(goal)||30),ratio=clamp(p/total,0,1);
- const x=180,y=309;g.save();
- box(g,147,304,66,5,'#927c5b');
+ const x=180,y=309;g.save();box(g,147,304,66,5,'#927c5b');
  for(let i=0;i<6;i++){const xx=149+i*11;box(g,xx,299-(Math.floor(ratio*6)>i?13:0),9,Math.floor(ratio*6)>i?17:5,'#c5b59a');}
  if(ratio>.3){box(g,146,282,5,22,'#80654d');box(g,208,282,5,22,'#80654d');}
- if(ratio>.7)box(g,146,280,67,6,'#c4ae8c');
- // Small construction cue, not a HUD that hides the world.
- g.fillStyle='#f5dfad';g.font='bold 9px system-ui';g.fillText('OBRA '+Math.floor(ratio*100)+'%',149,275);
- g.restore();
+ if(ratio>.7)box(g,146,280,67,6,'#c4ae8c');g.restore();
 }
 function foreground(g,t,level){
  // Near-field silhouette frames the center without obscuring the village.
@@ -93,7 +93,7 @@ function draw(g,s,t){
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
  for(let i=0;i<workers;i++){const a=routes[i%4],p=(Math.sin(t/115+i*1.8)+1)/2,x=a[0]+(a[2]-a[0])*p,y=a[1]+(a[3]-a[1])*p;villager(g,x,y,t/12+i,['#698aa1','#b78754','#7c9467','#8d719d'][i%4],i%3===0);}
- projectSite(g,s.project,s.projectGoal,t);
+ projectSite(g,s.project,s.projectGoal,t,s.projectCount);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
  box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);
@@ -130,7 +130,7 @@ function world(g,s,t){
  for(let i=0;i<houses.length;i++){const [x,y,w,h]=houses[i],st=structures[i]||{stage:3,integrity:100};if(!construction(g,x,y,w,st.stage,st.integrity,t))building(g,x,y,w,h,biome.roof,clamp(s.damage,0,100)>50?1:0);}
  const workers=Math.min(9,Math.max(2,Math.ceil(clamp(s.people,0,200)/13)));
  for(let i=0;i<workers;i++){const phase=t/150+i*1.5;villager(g,125+Math.sin(phase)*56,332+(i%3)*35,phase*3,['#d0a56b','#7897ac','#a7b77d'][i%3],i%3===0);}
- projectSite(g,s.project,s.projectGoal,t);
+ projectSite(g,s.project,s.projectGoal,t,s.projectCount);
  // Cinematic location identification rather than overlapping sector labels.
  box(g,12,43,336,56,'#152f34e8');g.fillStyle='#f7dfaa';g.font='bold 16px system-ui';g.fillText(biome.name,24,65);g.fillStyle='#d2dfd4';g.font='11px system-ui';g.fillText('REGIÃO '+(selected+1)+' / '+unlocked+'  ·  VILA NÍVEL '+level,24,84);
  for(let i=0;i<unlocked;i++){box(g,15+i*24,108,18,4,i===selected?'#f0ca7f':'#44676a');}

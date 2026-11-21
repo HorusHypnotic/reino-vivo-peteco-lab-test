@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const x={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/profession-renderer.js'),'utf8'),x);
+const renderer=x.PetecoProfessionRendererV20;
+const ctx={save(){},restore(){},translate(){},scale(){},beginPath(){},ellipse(){},fill(){},moveTo(){},lineTo(){},stroke(){},arc(){},fillRect(){},roundRect(){},rotate(){}};
+assert.equal(renderer.draw(ctx,{job:'farm',phase:'idle',x:10,y:20},0),false);
+for(const job of ['farm','quarry','construction'])assert.equal(renderer.draw(ctx,{job,phase:'work',x:150,y:280},10),true);
+assert.equal(renderer.draw(ctx,{job:'farm',phase:'work',x:NaN,y:280},10),false);
+const legacy={...ctx};delete legacy.roundRect;legacy.rect=()=>{};
+for(const job of ['farm','quarry','construction'])assert.equal(renderer.draw(legacy,{job,phase:'work',x:150,y:280},10),true,'Canvas without roundRect');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.ok(html.includes('src="v20/profession-renderer.js"'));
+assert.ok(html.includes("get('v20')==='1'"),'preview is opt-in');
+assert.ok(html.includes('PetecoProfessionRendererV20.draw(g,actor.snapshot(),s.t)'));
+console.log('PASS V20 opt-in procedural renderer contract');

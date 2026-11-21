@@ -19,9 +19,11 @@ function draw(g,art,t){
  // Subtle atmospheric particles that do not alter the underlying illustration.
  for(let i=0;i<15;i++){const x=(i*83+t*.08)%360,y=(i*113+t*.025)%480;g.globalAlpha=.16+(i%4)*.04;g.fillStyle='#ffe5a6';g.beginPath();g.arc(x,y,1.2+i%3,0,7);g.fill()}
  g.globalAlpha=1;
- // Construction is linked to project progress. Scaffold disappears when complete.
- const p=art.construction.progress;
- if(p<1){const x=169,y=274;g.strokeStyle='#d4ad73';g.lineWidth=3;g.strokeRect(x,y-45,56,47);g.beginPath();g.moveTo(x-6,y-22);g.lineTo(x+62,y-22);g.moveTo(x+15,y-48);g.lineTo(x+15,y+3);g.moveTo(x+41,y-48);g.lineTo(x+41,y+3);g.stroke();g.fillStyle='#4a3529b8';g.fillRect(x-9,y-66,75,17);g.fillStyle='#ffe2a0';g.font='bold 11px system-ui';g.fillText('OBRA '+Math.round(p*100)+'%',x-4,y-53)}
+ // The illustrated central build is the persisted public wall project, not one of s.structures.
+ const p=art.construction.progress||0,projectState={project:art.construction.project||0,projectGoal:art.construction.goal||30,projectCount:art.construction.completed||0};
+ const v20OptIn=!!(root.location&&new URLSearchParams(root.location.search).get('v20')==='1');
+ if(v20OptIn&&root.PetecoConstructionV20){root.PetecoConstructionV20.draw(g,projectState,t,{x:169,y:274,width:56,rowHeight:7});}
+ else if(p>0){const x=169,y=274;g.strokeStyle='#d4ad73';g.lineWidth=3;g.strokeRect(x,y-45,56,47);g.beginPath();g.moveTo(x-6,y-22);g.lineTo(x+62,y-22);g.moveTo(x+15,y-48);g.lineTo(x+15,y+3);g.moveTo(x+41,y-48);g.lineTo(x+41,y+3);g.stroke();g.fillStyle='#4a3529b8';g.fillRect(x-9,y-66,75,17);g.fillStyle='#ffe2a0';g.font='bold 11px system-ui';g.fillText('OBRA '+Math.round(p*100)+'%',x-4,y-53)}
  // Foreground actors are depth sorted, never drawn on top of the HUD.
  art.workers.slice().sort((a,b)=>a.y-b.y).forEach(w=>worker(g,w,t));
  g.restore();
