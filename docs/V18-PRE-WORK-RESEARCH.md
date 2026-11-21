@@ -59,3 +59,28 @@ Uma demonstração real de 1 lenhador: idle→walk→chop→carry→idle, sincro
 **Construções:** `structureState()` inicializa três estruturas autoritativas; `damageStructures()` reduz `integrity` e pode zerar `stage`; `repairStructures()` consome madeira/pedra e melhora `integrity`/`stage` a cada quatro ciclos quando elegível. O `art-bridge.js` atual projeta até 38 edifícios fictícios repetindo o array de três estruturas, o que não deve ser apresentado como dezenas de casas reais destruídas.
 
 **Gate atualizado:** antes de Work, escolher visual e verificar licenças exatas. O contrato de produção já está localizado, mas não há prova de sprite atlas adequado nem testes executados. Propor lote inicial com um lenhador visual read-only, sem economia duplicada, e só depois ampliar elenco.
+
+
+## Pesquisa adicional: seleção de sprites (20/11/2026)
+
+**Candidato preferencial para primeira prova: Universal LPC, sem migração de motor.**
+- Fonte oficial: https://github.com/LiberatedPixelCup/Universal-LPC-Spritesheet-Character-Generator
+- Editor: https://sanderfrenken.github.io/Universal-LPC-Spritesheet-Character-Generator/
+- A documentação confirma animações walk, idle, slash e outras; animações customizadas de ferramenta incluem `tool_axe` com quadros de 128px, enquanto o padrão é 64px. Portanto, a integração não pode assumir todas as linhas com quadros de 64px.
+- A licença do *código do gerador* (GPL-3.0) NÃO define a licença uniforme das imagens. Arte individual pode ser CC0, CC-BY, CC-BY-SA, OGA-BY ou GPL. A seleção final deve exportar e preservar CREDITS.csv/credits.txt específicos e conferir obrigações de cada camada.
+- **Não está aprovado copiar assets específicos ainda**: falta gerar um personagem com peças definidas e validar créditos e visual em jogo.
+
+**Ferramenta potencial para exportação headless:** https://github.com/kanishka-namdeo/lpc-spritesheet-mcp . O projeto declara exportar sprites e atlas em formatos Phaser, Godot, Aseprite etc., além de créditos. É candidato de automação, NÃO dependência aprovada; antes de instalar, verificar licença, procedência, manutenção e riscos de execução de terceiros. Não requer IA paga segundo documentação.
+
+**Alternativa CC0 para experimento:** https://kenney.nl/assets/platformer-characters (150 arquivos, CC0) e https://kenney-assets.itch.io/pixel-platformer (mais de 200 sprites, CC0). Apesar da segurança de licença, são visuais de plataforma lateral, incompatíveis com a câmera da Vila Viva em 3/4. **Rejeitados como arte final do lenhador**. Kenney Roguelike Characters é compatível com perspectiva, mas não tem ciclos de caminhada confirmados, então não resolve a animação.
+
+**Decisão:** preservar Canvas; usar LPC como principal candidato técnico e testar visualmente **um único personagem** com licença/atribuição verificada. Não comprometer todo o cenário ao estilo LPC antes de comparar proporções e perspectiva com a V18 ilustrada.
+
+## Preparação mínima para Work, sem pesquisa repetida
+1. Ler este arquivo e index.html; não repetir descoberta de harvest/progress.
+2. Fazer prova de atlas de um lenhador LPC com export de créditos e frame metadata; se a arte ficar incoerente com o cenário, parar antes de implementar uma vila inteira.
+3. Criar adaptador visual read-only para harvest/progress, sem dupla contagem e sem alterar save v2.
+4. Criar teste de produção em ciclos ímpares/pares, cancelamento/reset, consumo simultâneo e transições idle/walk/chop/carry.
+5. Capturar pelo menos 2 imagens comparáveis e relatório de licenças antes de pedir publicação.
+
+**Bloqueio remanescente:** personagem LPC específico ainda não foi exportado nem inspecionado em cena; QA Android e execução de testes seguem pendentes. A pesquisa é suficiente para um lote de prova técnica estritamente delimitado, mas não para declarar arte aprovada.
