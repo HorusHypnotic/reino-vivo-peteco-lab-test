@@ -39,3 +39,23 @@ Data: 2026-11-20. Status: pesquisa preliminar, não QA. Não acionar Work antes 
 
 ## Critério de sucesso do primeiro lote
 Uma demonstração real de 1 lenhador: idle→walk→chop→carry→idle, sincronizada com evento produtivo real e atualização de saldo feita **somente pelo motor**; teste automático de não duplicação; evidência visual. O caminho pode representar o ciclo agregado, desde que isso seja declarado explicitamente.
+
+
+## Contrato técnico confirmado por leitura direta de index.html
+
+**Produção:** `harvest()` agenda `progress()` em 1400 ms e protege callbacks com `epoch`, `s.busy` e `s.phase==='vila'`. `progress()` incrementa `s.cycles` e adiciona produção bruta a `s.sectors.forest` **em todo ciclo**, mas credita `s.wood` somente em ciclos pares. Em ciclos pares, processa o setor florestal, incrementa `s.deliveries`, zera os acumuladores e pode haver consumo de madeira por construção, defesa, reparos ou outros sistemas na mesma chamada. Portanto `s.wood` pode não aumentar mesmo com trabalho real. A região florestal também pode gerar madeira em `regionalCycle()` a cada quarto ciclo, conforme sucesso regional.
+
+**Eventos recomendados, somente leitura:**
+- `onHarvestStart({epoch, cycle:s.cycles+1})` após definir `busy`, para preparar caminho/animação. Não cria saldo.
+- `onProgressCommitted({cycle, forestBefore, forestAfter, woodBefore, woodAfter, deliveriesBefore, deliveriesAfter, phase})` após `progress()` e seus efeitos, apenas observação. Não inferir madeira entregue por delta final porque há consumo concorrente.
+- `onHarvestAbort({epoch})` quando reset, troca de fase ou cancelamento invalidar callback. Animação volta a idle sem modificar recursos.
+- `onStructureChanged({id, before, after})` apenas quando `damageStructures()`/`repairStructures()` realmente alterarem integridade/stage.
+- Eventualmente criar um registro `producedWood` calculado dentro de `progress()` no ponto exato da produção, sem reexecutar regra de negócio.
+
+**Problema de tempo:** 1400 ms não comportam automaticamente quatro etapas completas (casa→árvore→corte→depósito) com leitura natural. Primeira prova deve tratar um ciclo como um segmento de animação e permitir sequência visual distribuída entre ciclos, sem atrasar nem duplicar a produção. A animação NÃO é autoridade contábil.
+
+**Persistência:** `save()` grava `STORE='peteco-lab-vila-v2'`, com versão `v:2`, recursos, setores, entregas, população, estruturas e demais dados. Não acrescentar campos V18 ao save nem sobrescrever `restore()` sem migração. Estado visual transitório pode ser derivado de `s.cycles`/`s.busy` e reiniciar em idle após reload.
+
+**Construções:** `structureState()` inicializa três estruturas autoritativas; `damageStructures()` reduz `integrity` e pode zerar `stage`; `repairStructures()` consome madeira/pedra e melhora `integrity`/`stage` a cada quatro ciclos quando elegível. O `art-bridge.js` atual projeta até 38 edifícios fictícios repetindo o array de três estruturas, o que não deve ser apresentado como dezenas de casas reais destruídas.
+
+**Gate atualizado:** antes de Work, escolher visual e verificar licenças exatas. O contrato de produção já está localizado, mas não há prova de sprite atlas adequado nem testes executados. Propor lote inicial com um lenhador visual read-only, sem economia duplicada, e só depois ampliar elenco.
