@@ -45,7 +45,7 @@ function draw(g,state,tick=0,options={}){
   g.fillStyle='#9f927c';g.fillRect(x-2,top,3,builtCourses*rowHeight+1);g.fillRect(x+w-1,top,3,builtCourses*rowHeight+1);
  }
  for(let i=0;i<completedSlots;i++)masonry(x0+i*slotWidth,slotWidth,courses*rowHeight);
- if(d.progress>0&&d.completed<slots){
+ if(d.progress>0){
   const x=x0+completedSlots*slotWidth,w=slotWidth,y=baseY-courses*rowHeight;
   if(d.phase==='foundation'){
    g.fillStyle='#795d40';g.fillRect(x-1,baseY-3,w+2,3);
