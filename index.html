@@ -208,6 +208,16 @@ function draw(g,s,t){
   g.restore();
  }
  completedWalls(g,s.projectCount);
+ // The last completed wall is a permanent milestone, derived from the save.
+ // It is visible on every reload, independent of transient ceremony banners.
+ if(Number(s.projectCount)>0){
+  g.save();g.fillStyle='#2a3c32e8';g.fillRect(226,370,118,31);
+  g.strokeStyle='#d1b477';g.lineWidth=1;g.strokeRect(226,370,118,31);
+  g.fillStyle='#f4dc9e';g.font='bold 10px system-ui';
+  g.fillText('MARCO DA VILA',233,382,106);
+  g.font='9px system-ui';g.fillText(Math.floor(s.projectCount)+' muralhas erguidas',233,394,106);
+  g.restore();
+ }
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
  box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);g.font='bold 8px system-ui';g.fillText(civicStage===2?'ERA ARTESANAL URBANA':civicStage===1?'ERA ARTESANAL':'ERA AGRÍCOLA',18,67,166);
@@ -398,7 +408,7 @@ function maybeShowVillageRecap(warOnScreen){
  const history=Array.isArray(s.events)?s.events:[];
  const latest=history.slice().reverse().find(e=>typeof e==='string'&&e.trim());
  if(!latest)return;
- const fact=latest.replace(/^Ciclo\\s+\\d+\\s*[·:]\\s*/,'').slice(0,72);
+ const fact=latest.replace(/^Ciclo\s+\d+\s*[·:]\s*/,'').slice(0,72);
  showVillageChronicle('ANTES DE VOCÊ CHEGAR...',fact,'recap:'+String(s.cycles)+':'+latest);
 }
 function drawVillageChronicle(){
