@@ -168,6 +168,17 @@ function draw(g,s,t){
  siteLabel('PEDREIRA',286,330,68);
  siteLabel('LAVOURA',277,438,70);
  siteLabel('OBRA',150,314,47);
+ // A real construction progress gauge sits beside the actual worksite.
+ // Read persisted project fields; never simulate deliveries or grant materials.
+ const actualGoal=Math.max(1,Number(s.projectGoal)||30);
+ const actualProgress=Math.max(0,Number(s.project)||0);
+ const constructionFraction=Math.min(1,actualProgress/actualGoal);
+ g.fillStyle='#1b3329e8';g.fillRect(142,335,91,25);
+ g.fillStyle='#f2dfad';g.font='bold 9px system-ui';
+ g.fillText('OBRA '+Math.floor(constructionFraction*100)+'%',149,345,79);
+ g.fillStyle='#594d38';g.fillRect(149,350,75,5);
+ g.fillStyle='#e3b56a';g.fillRect(149,350,75*constructionFraction,5);
+
  // Small workers are located along meaningful production routes.
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
