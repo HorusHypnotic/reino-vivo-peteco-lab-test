@@ -11,7 +11,9 @@ Memória operacional canônica para recuperar e industrializar a produção visu
 | Issue de produto | [#16](https://github.com/HorusHypnotic/reino-vivo-peteco-lab-test/issues/16) |
 | Branch | `experiment/v16-product-first-minute` |
 | HEAD inicial verificado | `6cda2561ead7fa0d3353580834c2944e3de9fa87` |
+| Commit desta etapa na PR #17 | `e8c83770e8923bc2c10f423ca2084d7747a759af` |
 | Base `gh-pages` verificada | `aad905efa61835b375e80881fc6bcaae23e3890b` |
+| Estado da PR | aberta, Draft; GitHub informa `mergeable: false` |
 | Publicação | não alterada nesta etapa |
 
 ## Última etapa comprovada
@@ -71,12 +73,12 @@ Inicialmente executados após a integração:
 - `node tests/render-visual-factory-v18.cjs` — PASS, gerou a prancha renderer-only com cinco quadros de estado, sem escrita de save/economia.
 - `git diff --check` — PASS.
 
-QA de navegador: BLOQUEADO com causa observada. O Playwright não encontrou seu binário `chromium_headless_shell`; a tentativa direta com Chromium 156 no servidor local encerrou com `FATAL ... socket() failed: Operation not permitted (1)` e erro de `ptrace` do crashpad. A captura produzida, portanto, vem do renderizador Canvas usado nos fixtures, não de Chromium. Nenhuma validação em aparelho Android foi feita. Nenhuma publicação oficial foi feita.
+QA de navegador: BLOQUEADO com causa observada. O Playwright não encontrou seu binário `chromium_headless_shell`; a tentativa direta com Chromium 156 no servidor local encerrou com `FATAL ... socket() failed: Operation not permitted (1)` e erro de `ptrace` do crashpad. A prévia HTTPS de branch abriu após o commit, mas, mesmo depois de uma recarga, mostrou a página V21 antiga e não expôs `PetecoVisualFactoryV18`, `PetecoWoodcutterAtlasV18` nem `PetecoForestAtlasV19` no runtime. O HTML da branch e a referência do script foram confirmados via GitHub; essa prévia não provou o carregamento dos assets da PR. Não classifico a captura como QA do runtime. O navegador não alterou controles nem save durante essa inspeção. Nenhuma validação em aparelho Android foi feita. Nenhuma publicação oficial foi feita.
 
 ## Situação e continuidade
 
 - **Entregue e comprovável:** contrato industrial reutilizável para os dois atlases existentes, integração retrocompatível dos renderizadores e verificador nativo de PNG/licença/proveniência.
-- **Implementado e testado:** captura de composição e suíte Node completa. Revisão visual em navegador e em aparelho Android permanecem sem comprovação.
+- **Implementado e testado:** captura de composição e suíte Node completa. Revisão visual do runtime e em aparelho Android permanecem sem comprovação; a prévia HTTPS atual não carrega os assets da branch no contexto observado.
 - **Não recuperado:** prompt exato e sessão/ferramenta originais da geração do lenhador; continuam identificados como fonte ausente.
 - **Preservado:** V18, V19, V20, V21, V31–V34, economia, guerra e formato Save V2; `gh-pages`, `main`, publicação oficial e Supabase não foram modificados.
 - **Próxima ação executável:** terminar a prancha de estados, executar toda a suíte/regressões, revisar o render em navegador da branch e atualizar a PR #17. Não iniciar novas profissões ou assets até revisar esse pacote.
