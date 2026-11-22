@@ -452,6 +452,21 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
   const woodV21={...worker,x:200+(worker.x-200)*(122/82),y:404+(worker.y-404)*(-3/114)};
   g.save();g.translate(woodV21.x,woodV21.y);g.scale(.52,.52);g.translate(-woodV21.x,-woodV21.y);
   PetecoWoodcutterRendererV18.draw(g,woodV21,atlas.image);g.restore();
+  // Forestry feedback is tied to the original confirmed actor phases.
+  // Cutting shakes the canopy and throws chips; carrying shows a real delivery.
+  if(worker.phase==='cut'){
+   const shake=Math.sin(s.t*.65)*2;
+   g.save();g.translate(shake,0);
+   for(let i=0;i<4;i++){
+    const px=72+i*5+Math.sin(s.t*.3+i)*4,py=377+(i%3)*7-Math.abs(Math.sin(s.t*.22+i))*12;
+    g.fillStyle=i%2?'#d6b06b':'#a87b47';g.fillRect(px,py,3,4);
+   }
+   g.restore();
+  }
+  if(worker.phase==='carry'&&worker.ledger&&worker.ledger.deliveryConfirmed){
+   g.save();g.fillStyle='#c69c61';g.fillRect(woodV21.x-11,woodV21.y-16,19,8);
+   g.fillStyle='#765138';g.fillRect(woodV21.x-9,woodV21.y-14,15,3);g.restore();
+  }
  }
  // Existing V20 professions only appear while their controllers are active.
  if(factoryV20&&window.PetecoProfessionRendererV20){
