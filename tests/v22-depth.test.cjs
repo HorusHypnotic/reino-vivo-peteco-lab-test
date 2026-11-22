@@ -15,5 +15,5 @@ test('V22 orders by feet, preserves stable ties and never mutates simulation',()
 test('V22 is read-only and wired into the viewer',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
  assert.ok(html.includes('src="v22/depth.js"'));
- assert.ok(html.includes('PetecoV22Depth.order(v7World.agents,v7Position)'));
+ assert.ok(html.includes('PetecoV22Depth.order([{kind:'home',ref:h},...v7World.agents.map(agent=>({kind:'agent',ref:agent}))]'));
 });
