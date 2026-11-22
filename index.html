@@ -142,7 +142,7 @@ function illustratedVillage(g,s,t,worker){
   layouts.forEach(({slot,index,...layout})=>{
    const status=homes[index]||{stage:0,integrity:0},frame=root.PetecoV18Houses&&root.PetecoV18Houses[slot];
    const houseAtlas=root.PetecoHouseAtlasV18;
-   const painted=slot==='northwest'&&houseAtlas&&houseAtlas.ready&&root.PetecoStructureRendererV18&&root.PetecoStructureRendererV18.draw(g,status,houseAtlas.image,layout);
+   const painted=houseAtlas&&houseAtlas.ready&&root.PetecoStructureRendererV18&&root.PetecoStructureRendererV18.draw(g,status,houseAtlas.image,layout);
    if(painted)return;
    if(status.stage===3&&status.integrity>=70&&frame&&frame.ready)g.drawImage(frame.image,0,0,360,480);
    else if(status.stage===3&&status.integrity>=70)building(g,layout.x,layout.y,layout.width,layout.height-12,'#875744');
