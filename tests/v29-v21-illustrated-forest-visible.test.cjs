@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const start=html.indexOf('PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()})');
+assert.ok(start>=0,'default V21 village rendering path must exist');
+const end=html.indexOf('// Existing V20 professions only appear',start);
+assert.ok(end>start);
+const scene=html.slice(start,end);
+assert.match(scene,/PetecoForestAtlasV19/,'V21 must load the illustrated V19 forest atlas');
+assert.match(scene,/PetecoForestArtV19\.draw\(g,worker,forestAtlas\.image,Date\.now\(\),\{x:78,y:407,width:62,height:83\}\)/,'forest overlay must be at the V21 worker chopping target');
+assert.ok(scene.indexOf('PetecoForestArtV19.draw')<scene.indexOf('PetecoWoodcutterRendererV18.draw'),'tree must be drawn before the woodcutter');
+console.log('PASS: actual V21 village renders V19 illustrated tree at the real chopping target');
