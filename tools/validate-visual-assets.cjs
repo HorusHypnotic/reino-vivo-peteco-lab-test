@@ -26,12 +26,21 @@ function decodePng(file,columns=4,rows=4,withPixels=false){
 function loadCatalog(){const box={};vm.runInNewContext(fs.readFileSync(path.join(ROOT,'v18/visual-factory.js'),'utf8'),box);return box.PetecoVisualFactoryV18;}
 function validate(){const catalog=loadCatalog();let checks=0;for(const name of catalog.list()){
  const spec=catalog.get(name),file=path.join(ROOT,spec.asset),png=decodePng(file,spec.grid.columns,spec.grid.rows);
+ if(spec.sourceAsset&&!fs.existsSync(path.join(ROOT,spec.sourceAsset)))throw Error(`${name}: recovered source asset is missing`);else if(spec.sourceAsset)checks++;
  if(png.width!==spec.width||png.height!==spec.height)throw Error(`${name}: expected ${spec.width}x${spec.height}, got ${png.width}x${png.height}`);checks++;
  if(spec.channels!==png.color-2)throw Error(`${name}: alpha/channel metadata mismatch`);checks++;
  if(spec.grid.columns*spec.grid.rows!==Object.keys(spec.states).length*spec.framesPerState)throw Error(`${name}: state/grid count mismatch`);checks++;
  if(png.cells.length!==spec.grid.columns*spec.grid.rows||png.cells.some(n=>n<20))throw Error(`${name}: empty or malformed frame cell`);checks++;
  if(png.sha256!==spec.sha256)throw Error(`${name}: SHA-256 mismatch (${png.sha256})`);checks++;
  console.log(`PASS ${name} ${png.width}x${png.height} RGBA ${spec.grid.columns}x${spec.grid.rows}; ${png.cells.length} non-empty frames; sha256 ${png.sha256}`);
+ }
+ for(const name of catalog.listScenery()){
+  const spec=catalog.getScenery(name),file=path.join(ROOT,spec.asset),source=path.join(ROOT,spec.sourceAsset);
+  if(!fs.existsSync(source)||!fs.existsSync(file))throw Error(`${name}: scenery source or layer missing`);
+  const hash=crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+  if(hash!==spec.sha256)throw Error(`${name}: SVG manifest SHA-256 mismatch (${hash})`);
+  const svg=fs.readFileSync(file,'utf8');if(!svg.startsWith('<svg ')||!svg.includes(`viewBox="${spec.viewBox}"`)||!svg.includes(spec.sourceTransform))throw Error(`${name}: invalid extracted SVG layer`);
+  checks++;console.log(`PASS ${name} ${spec.format} layer; saved-house slot; sha256 ${hash}`);
  }
  const wood=catalog.get('woodcutter'),tree=catalog.get('forest');
  if(wood.interaction.target!=='v19:forest-tree'||tree.interaction.target!==wood.id||wood.interaction.contact!==tree.interaction.contact)throw Error('woodcutter/forest contact contract mismatch');checks++;

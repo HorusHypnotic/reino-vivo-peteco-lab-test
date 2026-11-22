@@ -13,12 +13,12 @@ const PACKS=Object.freeze({
   license:'Original project artwork per docs/V18-LENHADOR-REAL.md; no third-party LPC layer was exported.'
  }),
  forest:Object.freeze({
-  id:'forest-cycle-v19',kind:'environment',asset:'v19/assets/forest-cycle-atlas.png',
+  id:'forest-cycle-v19',kind:'environment',sourceAsset:'v19/assets/forest-cycle-atlas.png',asset:'v19/assets/forest-cycle-atlas-clean.png',
   width:2172,height:724,channels:4,grid:Object.freeze({columns:4,rows:1}),
   states:Object.freeze({tree:0,falling:1,stump:2,sapling:3}),framesPerState:1,
   render:Object.freeze({width:66,height:88,anchor:'feet',feetOffsetY:0,direction:'fixed'}),
   interaction:Object.freeze({target:'woodcutter-v18',contact:'tree-worksite',occlusion:'behind-actor'}),
-  sha256:'422978a6e7c430d7fcd7e30aebd0fec7e51a71af79f18ad659922a282faf4a1f',
+  sha256:'dcd0fa7eb1e2f5b7aeac17a47a5ad87d00f97be4a34b212c72b2e7016fc721d0',
   provenance:'Original illustrated environment atlas recorded in docs/V19-MUNDO-EM-MOVIMENTO.md.',
   license:'Original project artwork; no third-party asset attribution recorded.'
  }),
@@ -50,7 +50,13 @@ const PACKS=Object.freeze({
   license:'OpenAI Terms of Use checked 2026-11-22; user owns Output as between user and OpenAI to the extent permitted by law. Non-unique output; no third-party infringement warranty. Reference is original project art.'
  })
 });
+const SCENERY=Object.freeze({
+ northwest:Object.freeze({id:'v18-house-northwest',asset:'v18/assets/houses/northwest.svg',sourceAsset:'v18/assets/village-scene.svg',sourceTransform:'translate(150 600) scale(0.87)',format:'svg',viewBox:'0 0 720 960',sha256:'9b1321de2a0a0131ef744880999ef664e92fdd39df3e42378169734bece3069d',provenance:'Extracted without redrawing from the recovered V18 scene; visibility follows persisted structure slot 1.'}),
+ northeast:Object.freeze({id:'v18-house-northeast',asset:'v18/assets/houses/northeast.svg',sourceAsset:'v18/assets/village-scene.svg',sourceTransform:'translate(540 585) scale(0.88)',format:'svg',viewBox:'0 0 720 960',sha256:'0d94bfb64a348021661f1eee06d48a0e7279634d7543ec93cde01e251cfb4fe4',provenance:'Extracted without redrawing from the recovered V18 scene; visibility follows persisted structure slot 2.'}),
+ south:Object.freeze({id:'v18-house-south',asset:'v18/assets/houses/south.svg',sourceAsset:'v18/assets/village-scene.svg',sourceTransform:'translate(360 855) scale(1.06)',format:'svg',viewBox:'0 0 720 960',sha256:'5281e48db2b601dab6f2759486324d46dff0935d7a7cee3d014b8a90317f3e59',provenance:'Extracted without redrawing from the recovered V18 scene; visibility follows persisted structure slot 0.'})
+});
 function get(name){return PACKS[name]||null;}
+function getScenery(name){return SCENERY[name]||null;}
 function frameRect(name,state,index=0){
  const p=get(name);if(!p||!Object.hasOwn(p.states,state))return null;
  const i=Math.max(0,Math.min(p.framesPerState-1,Math.floor(Number(index)||0)));
@@ -58,5 +64,5 @@ function frameRect(name,state,index=0){
  const row=p.kind==='actor'?p.states[state]:0,column=p.kind==='actor'?i:p.states[state];
  return Object.freeze({x:column*cellWidth,y:row*cellHeight,width:cellWidth,height:cellHeight});
 }
-root.PetecoVisualFactoryV18=Object.freeze({version:1,list:()=>Object.keys(PACKS),get,frameRect});
+root.PetecoVisualFactoryV18=Object.freeze({version:1,list:()=>Object.keys(PACKS),get,frameRect,listScenery:()=>Object.keys(SCENERY),getScenery});
 })(typeof window!=='undefined'?window:globalThis);

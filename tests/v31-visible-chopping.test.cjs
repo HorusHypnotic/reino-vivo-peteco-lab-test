@@ -12,7 +12,7 @@ test('V34 actual V21 renderer keeps one visible trunk aligned with the V18 woodc
 });
 test('V31 mapped cut point reaches visible trunk without altering the controller',()=>{
  const cut=controller.PetecoWoodcutterV18.TREE;
- const x=200+(cut.x-200)*(122/82),y=404+(cut.y-404)*(-3/114);
+ const x=110+(cut.x-200)*(32/82),y=449+(cut.y-404)*(42/114);
  assert.equal(x,78);assert.equal(y,407);assert.ok(Math.hypot(100-x,407-y)<=28);
  const actor=controller.PetecoWoodcutterV18.create();assert.equal(actor.snapshot().phase,'idle');
 });

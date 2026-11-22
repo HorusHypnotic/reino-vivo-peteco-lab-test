@@ -16,12 +16,14 @@ test('profession routes land on actual V21 visible production sites',()=>{
  assert.match(html,/cropField\(g,322,390,s\.sectors&&s\.sectors\.farm,t\)/);
  assert.match(html,/quarryFace\(g,328,345,s\.stone,t\)/);
  assert.match(html,/village-environment\.svg/);
+ assert.match(html,/root\.PetecoV18Houses&&root\.PetecoV18Houses\[slot\]/);
+ assert.match(html,/status\.stage===3&&status\.integrity>=70&&frame&&frame\.ready/);
 });
 test('V21 woodcutter is translated onto forest without changing V18 controller',()=>{
- assert.match(html,/const woodV21=\{\.\.\.worker,x:200\+\(worker\.x-200\)\*\(122\/82\),y:404\+\(worker\.y-404\)\*\(-3\/114\),facing:/);
- const transform=(x,y)=>({x:200+(x-200)*(122/82),y:404+(y-404)*(-3/114)});
+ assert.match(html,/const woodV21=\{\.\.\.worker,x:110\+\(worker\.x-200\)\*\(32\/82\),y:449\+\(worker\.y-404\)\*\(42\/114\),facing:/);
+ const transform=(x,y)=>({x:110+(x-200)*(32/82),y:449+(y-404)*(42/114)});
  assert.ok(Math.abs(transform(118,290).x-78)<1e-8);
  assert.ok(Math.abs(transform(118,290).y-407)<1e-8);
- assert.deepEqual(transform(200,404),{x:200,y:404});
+ assert.deepEqual(transform(200,404),{x:110,y:449});
  assert.match(html,/PetecoWoodcutterRendererV18\.draw\(g,woodV21,atlas\.image\)/);
 });

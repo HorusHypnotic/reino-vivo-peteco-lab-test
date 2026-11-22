@@ -11,5 +11,5 @@ const start=html.indexOf('function illustratedVillage('),end=html.indexOf('funct
 const scene=html.slice(start,end);
 assert.match(scene,/tree\(g,78,407,1,worker\|\|null,t\)/,'illustrated main worksite uses forest atlas');
 assert.doesNotMatch(scene,/g\.translate\(78,407\)/,'old geometric duplicate removed');
-assert.match(html,/forest\.src="v19\/assets\/forest-cycle-atlas\.png"/,'atlas source retained');
+assert.match(html,/forestSpec\?forestSpec\.asset:"v19\/assets\/forest-cycle-atlas\.png"/,'clean atlas loads from the catalog with a compatibility fallback');
 console.log('PASS: V19 illustrated forest reused in V21 with original fallback and no duplicate tree');

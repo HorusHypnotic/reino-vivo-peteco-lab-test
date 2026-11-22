@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path'),zlib=require('node:zlib');
-const root=path.join(__dirname,'..'),png=fs.readFileSync(path.join(root,'v19/assets/forest-cycle-atlas.png'));
+const root=path.join(__dirname,'..'),png=fs.readFileSync(path.join(root,'v19/assets/forest-cycle-atlas-clean.png'));
 assert.equal(png.toString('ascii',1,4),'PNG');
 assert.equal(png.readUInt32BE(16),2172);assert.equal(png.readUInt32BE(20),724);assert.equal(png[25],6,'forest atlas must retain RGBA alpha');
 const chunks=[];for(let o=8;o<png.length;){const n=png.readUInt32BE(o),type=png.toString('ascii',o+4,o+8);if(type==='IDAT')chunks.push(png.subarray(o+8,o+8+n));o+=n+12;if(type==='IEND')break;}assert.doesNotThrow(()=>zlib.inflateSync(Buffer.concat(chunks)),'atlas image data decodes');
@@ -13,5 +13,5 @@ assert.equal(forest.draw(g,{...actor,phase:'idle'},image,500),'stump','delivered
 assert.equal(forest.draw(g,{...actor,phase:'idle'},image,1200),'sapling','regrowth has an explicit sapling stage');assert.equal(calls.at(-1)[1],1629,'sapling uses the fourth atlas cell');
 assert.equal(forest.draw(g,{...actor,phase:'idle'},image,2000),'tree','tree returns before the next queued forest visit');
 assert.equal(forest.draw(g,actor,{complete:true,naturalWidth:0,naturalHeight:0},5000),false,'invalid or unloaded atlas safely falls back');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8');assert.ok(html.includes('v19/forest-art.js'));assert.ok(html.includes('v19/assets/forest-cycle-atlas.png'));assert.ok(html.includes('PetecoForestArtV19.draw(g,workerState,PetecoForestAtlasV19.image)'));
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),catalog=fs.readFileSync(path.join(root,'v18/visual-factory.js'),'utf8');assert.ok(html.includes('v19/forest-art.js'));assert.ok(catalog.includes("asset:'v19/assets/forest-cycle-atlas-clean.png'"));assert.ok(html.includes('PetecoForestArtV19.draw(g,workerState,PetecoForestAtlasV19.image)'));
 console.log('PASS V19 illustrated forest atlas, state gates, four visual states and fallback');

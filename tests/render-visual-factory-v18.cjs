@@ -6,7 +6,7 @@ function context(withFactory){const box={console,Date,Math,Number,Object,Array};
 (async()=>{
  const scene=await loadImage(path.join(root,'v18/assets/village-scene.svg'));
  const wood=await loadImage(path.join(root,'v18/assets/woodcutter-atlas-original.png'));
- const forest=await loadImage(path.join(root,'v19/assets/forest-cycle-atlas.png'));
+ const forest=await loadImage(path.join(root,'v19/assets/forest-cycle-atlas-clean.png'));
  const panels=[
   ['REPOUSO','idle',0,{phase:'idle',ledger:null},1200],
   ['CAMINHADA','walk',1,{phase:'walk',ledger:null},1300],
