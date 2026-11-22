@@ -46,7 +46,7 @@ function construction(g,x,y,w,stage,integrity,t){
 }
 function projectSite(g,project,goal,t,projectCount=0){
  const state={project,projectGoal:goal,projectCount};
- if(root.PetecoConstructionV20&&new URLSearchParams(root.location?.search||'').get('v20')==='1'){root.PetecoConstructionV20.draw(g,state,t,{x:147,y:309,width:66,rowHeight:9});return;}
+ if(root.PetecoConstructionV20&&new URLSearchParams(root.location?.search||'').get('v20')==='1'){root.PetecoConstructionV20.draw(g,state,t,{x:152,y:259,width:66,rowHeight:8,slots:2});return;}
  // Safe legacy fallback: never display an idle site as an active 0% construction.
  if(!(Number(project)>0))return;
  const p=clamp(project,0,100000),total=Math.max(1,Number(goal)||30),ratio=clamp(p/total,0,1);
