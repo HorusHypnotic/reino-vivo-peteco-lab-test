@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const context={};vm.createContext(context);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../v20/profession-renderer.js'),'utf8'),context);
+const renderer=context.PetecoProfessionRendererV20;
+const atlas={complete:true,naturalWidth:1120,naturalHeight:1400};
+const calls=[],g={save(){},restore(){},translate(){},scale(){},beginPath(){},ellipse(){},fill(){},drawImage(...args){calls.push(args)}};
+assert.equal(renderer.registerAtlas('farm',atlas,{width:72,height:90}),true);
+assert.equal(renderer.draw(g,{job:'farm',phase:'idle',x:152,y:404},0),true,'idle illustrated worker must remain visible');
+assert.equal(calls.length,1);
+assert.equal(calls[0][7],72*.62);
+assert.equal(calls[0][8],90*.62);
+for(const phase of ['walk','work','return'])assert.equal(renderer.draw(g,{job:'farm',phase,x:286,y:420},16),true,phase);
+assert.equal(calls.length,4);
+console.log('PASS: atlas idle/walk/work/return render with village scale and feet anchor');
