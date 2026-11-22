@@ -158,6 +158,16 @@ function draw(g,s,t){
   box(g,323,276,17,7,'#554b45');box(g,327,268,10,8,'#e4a24b');
   if(Math.floor(t/9)%3===0){for(let k=0;k<4;k++)box(g,328+k*3,261-(k%2)*5,2,3,'#ffd16c');}
  }
+ // P0 product legibility: name the actual work sites, not decorative counters.
+ // Labels stay attached to the scenery and never cover the central building.
+ function siteLabel(name,x,y,w){
+  g.fillStyle='#20382fd9';g.fillRect(x,y,w,16);
+  g.fillStyle='#f5e5b8';g.font='bold 9px system-ui';g.fillText(name,x+5,y+11,w-10);
+ }
+ siteLabel('BOSQUE',14,432,53);
+ siteLabel('PEDREIRA',286,330,68);
+ siteLabel('LAVOURA',277,438,70);
+ siteLabel('OBRA',150,314,47);
  // Small workers are located along meaningful production routes.
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
