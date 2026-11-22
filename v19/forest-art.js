@@ -1,8 +1,9 @@
 /* V19 forest states: illustrated, read-only overlays driven by V18 ledger events. */
 (function(root){'use strict';
-const CELL=Object.freeze({width:543,height:724});
-const FRAME=Object.freeze({tree:0,falling:1,stump:2,sapling:3});
-const SIZE=Object.freeze({width:66,height:88});
+const PACK=root.PetecoVisualFactoryV18&&root.PetecoVisualFactoryV18.get('forest');
+const CELL=PACK?Object.freeze({width:PACK.width/PACK.grid.columns,height:PACK.height/PACK.grid.rows}):Object.freeze({width:543,height:724});
+const FRAME=PACK?PACK.states:Object.freeze({tree:0,falling:1,stump:2,sapling:3});
+const SIZE=PACK?PACK.render:Object.freeze({width:66,height:88,feetOffsetY:0});
 const TREE=Object.freeze({x:118,y:290});
 let cycle=null,stumpUntil=0,regrowUntil=0;
 function state(actor,now){
@@ -18,8 +19,8 @@ function state(actor,now){
 }
 function draw(g,actor,image,now=Date.now()){
  if(!g||!image||!image.complete||!image.naturalWidth||image.naturalWidth!==CELL.width*4||image.naturalHeight!==CELL.height)return false;
- const phase=state(actor||{},Number(now)||0),frame=FRAME[phase];
- g.drawImage(image,frame*CELL.width,0,CELL.width,CELL.height,TREE.x-SIZE.width/2,TREE.y-SIZE.height,SIZE.width,SIZE.height);
+ const phase=state(actor||{},Number(now)||0),frame=FRAME[phase],rect=root.PetecoVisualFactoryV18&&root.PetecoVisualFactoryV18.frameRect('forest',phase);
+ g.drawImage(image,rect?rect.x:frame*CELL.width,rect?rect.y:0,CELL.width,CELL.height,TREE.x-SIZE.width/2,TREE.y-SIZE.height+SIZE.feetOffsetY,SIZE.width,SIZE.height);
  return phase;
 }
 root.PetecoForestArtV19=Object.freeze({CELL,FRAME,SIZE,TREE,state,draw});

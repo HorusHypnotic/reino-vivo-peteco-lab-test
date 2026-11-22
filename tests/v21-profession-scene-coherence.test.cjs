@@ -17,7 +17,7 @@ test('profession routes land on actual V21 visible production sites',()=>{
  assert.match(html,/Quarry: visible stone deposits/);
 });
 test('V21 woodcutter is translated onto forest without changing V18 controller',()=>{
- assert.match(html,/const woodV21=\{\.\.\.worker,x:200\+\(worker\.x-200\)\*\(122\/82\),y:404\+\(worker\.y-404\)\*\(-3\/114\)\}/);
+ assert.match(html,/const woodV21=\{\.\.\.worker,x:200\+\(worker\.x-200\)\*\(122\/82\),y:404\+\(worker\.y-404\)\*\(-3\/114\),facing:/);
  const transform=(x,y)=>({x:200+(x-200)*(122/82),y:404+(y-404)*(-3/114)});
  assert.ok(Math.abs(transform(118,290).x-78)<1e-8);
  assert.ok(Math.abs(transform(118,290).y-407)<1e-8);
