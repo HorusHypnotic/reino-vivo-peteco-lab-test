@@ -629,7 +629,17 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
  // Draw the illustrated V19 lifecycle even when the V18 worker atlas is unavailable.
  const forestAtlas=window.PetecoForestAtlasV19;
  if(forestAtlas&&forestAtlas.ready&&window.PetecoForestArtV19){
-  PetecoForestArtV19.draw(g,worker,forestAtlas.image,Date.now(),{x:78,y:407,width:62,height:83});
+  // Explicit QA query parameter previews the four existing atlas frames.
+  // No economy event, save data, or production state is changed.
+  const forestQa=new URLSearchParams(location.search).get('forestqa')==='1';
+  const previewStates=['tree','falling','stump','sapling'];
+  const previewState=forestQa?previewStates[Math.floor(Date.now()/1800)%previewStates.length]:undefined;
+  const forestPhase=PetecoForestArtV19.draw(g,worker,forestAtlas.image,Date.now(),{x:78,y:407,width:62,height:83,previewState});
+  if(forestQa&&forestPhase){
+   g.save();g.fillStyle='#14271fdd';g.fillRect(7,454,205,20);
+   g.fillStyle='#fff4c8';g.font='bold 10px sans-serif';
+   g.fillText('QA FLORESTA V19: '+forestPhase.toUpperCase(),12,468);g.restore();
+  }
  }
  if(worker&&atlas&&atlas.ready&&window.PetecoWoodcutterRendererV18){
   // Translate V18 choreography to the actual V21 forestry worksite.
