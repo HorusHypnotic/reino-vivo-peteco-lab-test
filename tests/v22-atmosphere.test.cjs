@@ -7,7 +7,7 @@ const sandbox={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v22/
 test('contact shadow uses balanced canvas state and foot anchor',()=>{
  const calls=[];const g={save:()=>calls.push('save'),restore:()=>calls.push('restore'),beginPath:()=>calls.push('begin'),ellipse:(...a)=>calls.push(a),fill:()=>calls.push('fill')};
  assert.equal(sandbox.PetecoV22Atmosphere.groundShadow(g,20,30,9,3),true);
- assert.deepEqual(calls[3],[20,32,9,3,0,0,Math.PI*2]);
+ assert.deepEqual(calls[2],[20,32,9,3,0,0,Math.PI*2]);
  assert.equal(calls.at(-1),'restore');
  assert.equal(sandbox.PetecoV22Atmosphere.groundShadow(g,NaN,30),false);
 });
