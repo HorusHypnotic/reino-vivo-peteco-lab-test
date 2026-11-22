@@ -40,3 +40,5 @@ test('existing V7 economy completes woodcutting, confirmed logistics, constructi
  assert.equal(life.validate(world),true);const restored=life.restore(JSON.stringify(world));
  assert.equal(restored.home.stage,3);assert.equal(restored.home.occupied,true);assert.equal(restored.gathered,world.gathered);
 });
+
+test('V30 woodcutter approaches trunk before swinging, then faces visible tree',()=>{const draw=context.PetecoV7ActorRenderer.draw;const a={job:'lenhador',task:'gather',fromX:180,fromY:300,toX:65,toY:250};draw({},a,120,275,20,atlas);assert.equal(calls.at(-1)[1].state,'walk');draw({},a,65,250,21,atlas);assert.equal(calls.at(-1)[1].state,'work');assert.equal(calls.at(-1)[1].facing,1);const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');assert.ok(html.includes('v7WoodcutterArrived?PetecoV27Forest.activeTree'));});
