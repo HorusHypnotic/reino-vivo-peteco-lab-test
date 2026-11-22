@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const begin=html.indexOf('PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()})');
+const end=html.indexOf('// Existing V20 professions only appear',begin);
+assert.ok(begin>=0&&end>begin);
+const scene=html.slice(begin,end);
+const tree=scene.indexOf('PetecoForestArtV19.draw(g,worker,forestAtlas.image,Date.now()');
+const workerGate=scene.indexOf('if(worker&&atlas&&atlas.ready&&window.PetecoWoodcutterRendererV18)');
+const workerDraw=scene.indexOf('PetecoWoodcutterRendererV18.draw(g,woodV21,atlas.image)');
+assert.ok(tree>=0&&workerGate>=0&&workerDraw>=0);
+assert.ok(tree<workerGate,'V19 tree must not be hidden behind the worker atlas readiness gate');
+assert.ok(workerGate<workerDraw,'V18 worker must still require its sprite atlas');
+console.log('PASS: V21 illustrated forest remains visible independently of worker sprite readiness');
