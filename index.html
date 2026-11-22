@@ -365,7 +365,7 @@ function drawVillageCeremony(){
 function focusEvent(message){
 const t=String(message||'').toLowerCase();
 // Celebrate only an actual construction completion recorded by the simulation.
-const completed=t.match(/obra pública concluída! muralha (\\d+)/);
+const completed=t.match(/obra pública concluída! muralha (\d+)/);
 if(completed&&Number(completed[1])===s.projectCount){
  villageCeremony={number:s.projectCount,start:s.t,until:s.t+300};
 }
