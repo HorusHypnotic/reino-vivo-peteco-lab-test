@@ -29,8 +29,13 @@ function drawPainted(g,a,tick){
  const col=a.phase==='idle'?Math.floor(Math.max(0,Number(tick)||0)/24)%4:Math.floor(Math.max(0,Number(tick)||0)/8)%4;
  const iw=pack.image.naturalWidth/4,ih=pack.image.naturalHeight/4;
  if(!iw||!ih)return false;
- g.save();g.translate(x,y);if(a.facing<0)g.scale(-1,1);
- g.drawImage(pack.image,col*iw,row*ih,iw,ih,-pack.width/2,-pack.height,pack.width,pack.height);
+ // The original atlas render dimensions are for close-ups. The 360px
+ // village stage needs smaller actors with a shared feet anchor.
+ const scale=.62,drawW=pack.width*scale,drawH=pack.height*scale;
+ g.save();g.translate(x,y);
+ g.fillStyle='#142d274a';g.beginPath();g.ellipse(0,1,drawW*.32,3.4,0,0,Math.PI*2);g.fill();
+ if(a.facing<0)g.scale(-1,1);
+ g.drawImage(pack.image,col*iw,row*ih,iw,ih,-drawW/2,-drawH,drawW,drawH);
  g.restore();return true;
 }
 function draw(g,a,tick){
