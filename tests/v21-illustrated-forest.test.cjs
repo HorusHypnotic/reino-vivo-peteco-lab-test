@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const a=html.indexOf('function tree(g,x,y,k=1){'),b=html.indexOf('function building(',a);
+assert.ok(a>=0&&b>a);
+const tree=html.slice(a,b);
+assert.match(tree,/root\.PetecoForestAtlasV19/);
+assert.match(tree,/g\.drawImage\(im,0,0,cell,im\.naturalHeight/);
+assert.match(tree,/g\.save\(\);g\.translate\(x,y\)/,'procedural fallback preserved');
+const start=html.indexOf('function draw(g,s,t){'),end=html.indexOf('// V17.4 territorial view:',start);
+const scene=html.slice(start,end);
+assert.match(scene,/tree\(g,78,407,1\.48\)/,'illustrated main worksite uses forest atlas');
+assert.doesNotMatch(scene,/g\.translate\(78,407\)/,'old geometric duplicate removed');
+assert.match(html,/forest\.src="v19\/assets\/forest-cycle-atlas\.png"/,'atlas source retained');
+console.log('PASS: V19 illustrated forest reused in V21 with original fallback and no duplicate tree');
