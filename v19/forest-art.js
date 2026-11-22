@@ -10,9 +10,13 @@ function state(actor,now){
  const ledger=actor&&actor.ledger;
  const confirmed=!!(ledger&&ledger.deliveryConfirmed);
  const active=confirmed&&actor.phase==='carry';
- if(active&&cycle!==actor.cycle){cycle=actor.cycle;stumpUntil=now+850;regrowUntil=now+1900;}
- if(active)return 'falling';
- if(confirmed&&actor.phase==='return')return 'stump';
+ if(active&&cycle!==actor.cycle){
+  cycle=actor.cycle;
+  // Short falling window, followed by a visible stump and regrowth.
+  // Timed from a confirmed delivery, never from speculative work.
+  stumpUntil=now+850;regrowUntil=now+1900;
+ }
+ if(active&&now<stumpUntil-600)return 'falling';
  if(now<stumpUntil)return 'stump';
  if(now<regrowUntil)return 'sapling';
  return 'tree';
