@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const base=path.join(__dirname,'..'),context={};vm.createContext(context);
+vm.runInContext(fs.readFileSync(path.join(base,'v18/woodcutter-controller.js'),'utf8'),context);
+assert.equal(context.PetecoWoodcutterV18.TREE.x,118);
+assert.equal(context.PetecoWoodcutterV18.TREE.y,290);
+const html=fs.readFileSync(path.join(base,'index.html'),'utf8');
+const a=html.indexOf('function illustratedVillage('),b=html.indexOf('function draw(g,s,t,actors)',a);
+assert.ok(a>=0&&b>a);
+const scene=html.slice(a,b);
+assert.match(scene,/PetecoWoodcutterV18\.TREE/,'tree target must come from real controller');
+assert.match(scene,/tree\(g,forestTarget\.x,forestTarget\.y,1,worker\|\|null,t\)/);
+assert.doesNotMatch(scene,/tree\(g,78,407,1,worker/,'misaligned visual tree must not return');
+console.log('PASS: interactive forest tree shares the real woodcutter chopping coordinates');
