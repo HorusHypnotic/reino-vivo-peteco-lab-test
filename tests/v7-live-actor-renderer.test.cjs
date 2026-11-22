@@ -28,7 +28,7 @@ test('main viewer routes V7 agents through the renderer and keeps the sprite atl
  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
  assert.ok(html.includes('src="v7/actor-renderer.js"'));
  assert.ok(html.includes('PetecoV7ActorRenderer.draw(g,a,px,py,s.t'));
- assert.ok(html.includes('PetecoV22Depth.order(v7World.agents,v7Position)'));
+ assert.ok(html.includes('PetecoV22Depth.order([{kind:'home',ref:h},...v7World.agents.map(agent=>({kind:'agent',ref:agent}))]'));
 });
 test('existing V7 economy completes woodcutting, confirmed logistics, construction and persisted home evolution',()=>{
  const life=require('../v7/life.js');const world=life.create(1);let sawFoundation=false,sawWalls=false;
