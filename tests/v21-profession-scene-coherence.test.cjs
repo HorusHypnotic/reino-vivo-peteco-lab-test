@@ -30,3 +30,10 @@ test('V21 woodcutter is translated onto forest without changing V18 controller',
  assert.deepEqual(transform(200,404),{x:110,y:449});
  assert.match(html,/PetecoWoodcutterRendererV18\.draw\(g,woodV21,atlas\.image\)/);
 });
+test('continuous production does not scatter decorative gold particle squares over the forest',()=>{
+ const harvest=html.match(/function harvest\(\)\{[\s\S]*?\nfunction action\(/)?.[0]||'';
+ assert.ok(harvest.includes('progress()'));
+ assert.doesNotMatch(harvest,/burst\(/,'harvest no longer emits unrelated screen-wide particles; confirmed work remains visible through the worker and atlas states');
+ assert.doesNotMatch(html,/if\(s\.busy&&s\.t%14===0\)burst\(82,255,3/,'continuous busy state no longer scatters decorative particles');
+ assert.match(html,/if\(worker\.phase==='cut'\)/,'forest chips remain tied to actual cutting activity');
+});
