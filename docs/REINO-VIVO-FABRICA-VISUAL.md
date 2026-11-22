@@ -137,4 +137,4 @@ Cada entrada mantém a especificação/prompt completo em `v20/art-manifests/`. 
 
 **Resultado:** os três atlases foram produzidos, validados e integrados ao renderizador/controladores experimentais. QA automatizado e composição renderizada passaram; navegador/Android continuam pendentes pelo bloqueio acima. PR #17 deve seguir em Draft até revisão técnica/visual do canário. A publicação oficial permanece intocada.
 
-**Commit de implementação desta etapa:** `a6cb2ff23e6b002cabe148e8d0c9efda9b5fa31d`. A sincronização da branch remota da PR ainda está pendente; não considerar esta alteração entregue na PR até o SHA remoto ser confirmado.
+**Commit de implementação desta etapa:** `a6cb2ff23e6b002cabe148e8d0c9efda9b5fa31d`. A sincronização da branch remota da PR foi confirmada no SHA `7ed802a2a0a8df0e02be587d40ae6fc4d7d8d16d` via atualização compare-and-swap da referência existente. O commit local correspondente é `a6cb2ff23e6b002cabe148e8d0c9efda9b5fa31d`; a árvore verificada é idêntica.
