@@ -9,5 +9,5 @@ assert.ok(start>0&&end>start);
 const scene=html.slice(start,end);
 for(const name of ['BOSQUE','PEDREIRA','LAVOURA'])assert.doesNotMatch(scene,new RegExp("siteLabel\\('"+name+"'"),'sector billboard must not obscure the village');
 assert.match(scene,/PetecoProfessionAtlasesV20/);
-assert.match(html,/function v7Step\(/,'V7 simulation remains intact');
+assert.match(html,/let v7StepFrame=0,v7StepFrames=85/,'V7 simulation scheduling remains intact');
 console.log('PASS: canonical village uncluttered, V7 economy remains, legacy overlay explicit only');
