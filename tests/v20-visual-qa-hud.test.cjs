@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.match(html,/get\('visualqa'\)!=='1'\)return/);
+assert.match(html,/id='visual-qa-v20'/);
+assert.match(html,/farm','quarry','construction'/);
+assert.match(html,/e\.error\?'LOAD ERROR'/);
+assert.match(html,/e\.ready\?'READY '/);
+assert.match(html,/get\('v20'\)==='0'\)return/);
+console.log('PASS: visual QA HUD opt-in and atlas error states');
