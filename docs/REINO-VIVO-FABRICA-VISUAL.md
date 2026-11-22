@@ -147,3 +147,12 @@ Cinco PNGs fornecidos pelo usuário foram inspecionados localmente por leitura R
 Novo script de QA `tools/qa-profession-frames.cjs` (commit `d42972c`) mede vermelho, alfa e diferenças de quadros dos **atlases versionados** por profissão. O script não altera imagens e não aprova a arte automaticamente. O teste local de RGBA e variação de quadros foi executado sobre os uploads; **o script Node versionado não foi executado nesta rodada**. O navegador e o Android continuam não homologados.
 
 **Gate seguinte:** executar o diagnóstico Node sobre os atlases reais; investigar a máscara de resíduos externos em separado das roupas; corrigir a limpeza na etapa de fonte, sem apagar figurino; reconstruir o lote, validar hashes/catálogo, testar os movimentos e só depois integrar uma cena runtime.
+
+
+## Android real e correção do gate V20 (22/11/2026)
+
+Captura do usuário em Chrome Android mostra a página oficial `horushypnotic.github.io/reino-...`, vila nível 96, 98 moradores e seis muralhas. O cenário exibido usa a arte geométrica V17/V21; os novos trabalhadores ilustrados não são identificáveis nessa captura. **A captura não prova que a branch experimental esteja carregada**, nem que os atlases tenham falhado.
+
+Investigação direta do `index.html` da PR #17 identificou bloqueio concreto: o carregador de `PetecoProfessionAtlasesV20` só inicializava quando `?v20=1`. No commit `182e110`, a branch experimental passa a carregar os atlases por padrão, com `?v20=0` como opt-out. A mesma regra foi aplicada à cena cinematográfica; o desenho da vila normal já chamava o renderer V20 com base no estado dos controladores. Teste de regressão estático `tests/v20-painted-default.test.cjs` criado no commit `06eb053`; **ainda não executado em Node**.
+
+**Limites:** a página oficial e os saves não foram alterados. Não há preview de branch nem homologação de navegador/Android. A mudança não resolve a estética geométrica do cenário, as etiquetas sobrepostas ou os resíduos vermelhos. Próxima ação: disponibilizar uma prévia isolada multi-arquivo da PR #17, validar carregamento de imagens com rede e console, capturar a vila com profissões e testar estados reais; só então ajustar escala/oclusão e direção artística.
