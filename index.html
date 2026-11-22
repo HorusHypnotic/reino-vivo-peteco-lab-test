@@ -435,8 +435,11 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
  const worker=woodcutterActivity.snapshot();
  const atlas=window.PetecoWoodcutterAtlasV18;
  if(worker&&atlas&&atlas.ready&&window.PetecoWoodcutterRendererV18){
-  g.save();g.translate(worker.x,worker.y);g.scale(.52,.52);g.translate(-worker.x,-worker.y);
-  PetecoWoodcutterRendererV18.draw(g,worker,atlas.image);g.restore();
+  // Translate V18 forest choreography to the V21 tree at (78,407).
+  // Keep the source controller and the V18 legacy scene untouched.
+  const woodV21={...worker,x:200+(worker.x-200)*(122/82),y:404+(worker.y-404)*(-3/114)};
+  g.save();g.translate(woodV21.x,woodV21.y);g.scale(.52,.52);g.translate(-woodV21.x,-woodV21.y);
+  PetecoWoodcutterRendererV18.draw(g,woodV21,atlas.image);g.restore();
  }
  // Existing V20 professions only appear while their controllers are active.
  if(factoryV20&&window.PetecoProfessionRendererV20){
