@@ -4,11 +4,13 @@ const root=path.join(__dirname,'..'),factoryFile=path.join(root,'v18/visual-fact
 test('visual factory registers recovered woodcutter and forest atlases with compatible frames',()=>{
  const box={};vm.runInNewContext(fs.readFileSync(factoryFile,'utf8'),box);const factory=box.PetecoVisualFactoryV18;
  const plain=value=>JSON.parse(JSON.stringify(value));
- assert.deepEqual(plain(factory.list()),['woodcutter','forest','farm','quarry','construction']);
+ assert.deepEqual(plain(factory.list()),['woodcutter','forest','farm','quarry','construction','house']);
  assert.deepEqual(plain(Object.keys(factory.get('woodcutter').states)),['idle','walk','work','carry']);
  assert.deepEqual(plain(Object.keys(factory.get('forest').states)),['tree','falling','stump','sapling']);
  assert.deepEqual(plain(factory.frameRect('woodcutter','work',3)),{x:841.5,y:701,width:280.5,height:350.5});
  assert.deepEqual(plain(factory.frameRect('forest','sapling')),{x:1629,y:0,width:543,height:724});
+ assert.deepEqual(plain(factory.frameRect('house','damaged')),{x:1629,y:0,width:543,height:724});
+ assert.equal(factory.get('house').interaction.target,'s.structures');
  for(const job of ['farm','quarry','construction']){const spec=factory.get(job);assert.equal(spec.width,1120);assert.equal(spec.height,1400);assert.equal(spec.grid.columns,4);assert.equal(Object.keys(spec.states).length,4);assert.ok(spec.license);assert.match(spec.provenance,/art-manifests/);}
  assert.equal(factory.frameRect('woodcutter','unknown'),null);
 });
@@ -21,6 +23,7 @@ test('production renderers consume factory frame metadata with legacy fallback i
  assert.equal(calls[0][1],0);assert.equal(calls[0][5],85);
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
  assert.ok(html.includes('<script src="v18/visual-factory.js"></script><script src="v18/woodcutter-renderer.js"></script>'));
+ assert.ok(html.includes('<script src="v18/structure-renderer.js"></script>'));
 });
 test('asset validator decodes atlas integrity and confirms every frame is populated',()=>{
  const output=execFileSync(process.execPath,[path.join(root,'tools/validate-visual-assets.cjs')],{encoding:'utf8'});

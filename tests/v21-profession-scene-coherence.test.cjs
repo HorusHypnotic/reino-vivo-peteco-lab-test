@@ -18,6 +18,9 @@ test('profession routes land on actual V21 visible production sites',()=>{
  assert.match(html,/village-environment\.svg/);
  assert.match(html,/root\.PetecoV18Houses&&root\.PetecoV18Houses\[slot\]/);
  assert.match(html,/status\.stage===3&&status\.integrity>=70&&frame&&frame\.ready/);
+ assert.match(html,/slot==='northwest'&&houseAtlas&&houseAtlas\.ready&&root\.PetecoStructureRendererV18/);
+ assert.match(html,/root\.PetecoStructureRendererV18\.draw\(g,status,houseAtlas\.image,layout\)/);
+ assert.match(html,/painted house atlas/);
 });
 test('V21 woodcutter is translated onto forest without changing V18 controller',()=>{
  assert.match(html,/const woodV21=\{\.\.\.worker,x:110\+\(worker\.x-200\)\*\(32\/82\),y:449\+\(worker\.y-404\)\*\(42\/114\),facing:/);

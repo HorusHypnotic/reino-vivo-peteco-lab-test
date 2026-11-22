@@ -48,6 +48,17 @@ const PACKS=Object.freeze({
   sha256:'53305edcb4aefc6bf242a8322a9eabe7be2e16f76a89d629c83e9174fc4bc79e',
   provenance:'Generated for Reino Vivo from v20/art-manifests/construction.json; raw source retained at v20/art-source/builder-source.png; normalized by tools/build-profession-atlas.cjs.',
   license:'OpenAI Terms of Use checked 2026-11-22; user owns Output as between user and OpenAI to the extent permitted by law. Non-unique output; no third-party infringement warranty. Reference is original project art.'
+ }),
+ house:Object.freeze({
+  id:'medieval-house-v18',kind:'structure',sourceAsset:'v18/art-source/medieval-house-states-original.png',asset:'v18/assets/structures/medieval-house-atlas.png',
+  width:2172,height:724,channels:4,grid:Object.freeze({columns:4,rows:1}),
+  states:Object.freeze({foundation:0,construction:1,complete:2,damaged:3}),framesPerState:1,
+  render:Object.freeze({width:94,height:126,anchor:'feet',baselineY:700,direction:'fixed'}),
+  interaction:Object.freeze({target:'s.structures',contact:'saved-stage-and-integrity',occlusion:'structure-before-workers'}),
+  sha256:'110f97944b50a85ca732d48d9ab7559420159955bf7443cbdc37ca4f3ba3761e',
+  sourceSha256:'46e3423bed91b646e3fa9a30f6abaac29c59e2d7de962498ed05271feaa0d211',
+  provenance:'User-provided four-state medieval house artwork from the 2026-11-22 task; original PNG retained unchanged. Frame processing and alignment are reproducible with tools/prepare-house-atlas.cjs.',
+  license:'User provided the artwork and authorized its integration into Reino Vivo in this task; no third-party asset attribution was supplied.'
  })
 });
 const SCENERY=Object.freeze({
