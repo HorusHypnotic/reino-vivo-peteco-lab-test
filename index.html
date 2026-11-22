@@ -172,7 +172,11 @@ function draw(g,s,t){
  // confirmed events through the V18/V20 controllers.
  const residents=Math.min(3,Math.max(1,Math.floor(population/35)));
  const resting=[[109,348],[252,348],[188,365]];
- for(let i=0;i<residents;i++)villager(g,resting[i][0],resting[i][1],t/12+i,['#698aa1','#b78754','#7c9467'][i],false);
+ // V20 painted actors replace generic decorative silhouettes only when all
+ // three real atlas assets are ready. Otherwise preserve the old village.
+ const packs=root.PetecoProfessionAtlasesV20;
+ const paintedReady=packs&&['farm','quarry','construction'].every(job=>packs[job]&&packs[job].ready);
+ if(!paintedReady)for(let i=0;i<residents;i++)villager(g,resting[i][0],resting[i][1],t/12+i,['#698aa1','#b78754','#7c9467'][i],false);
  // V21 renderer must run in the actual village scene, not only fixture scripts.
  // Keep the established monument at the right and render active work in the
  // central site. This reads existing V2 fields and never mutates the save.
