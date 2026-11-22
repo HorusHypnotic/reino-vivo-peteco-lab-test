@@ -82,3 +82,14 @@ QA de navegador: BLOQUEADO com causa observada. O Playwright não encontrou seu 
 - **Não recuperado:** prompt exato e sessão/ferramenta originais da geração do lenhador; continuam identificados como fonte ausente.
 - **Preservado:** V18, V19, V20, V21, V31–V34, economia, guerra e formato Save V2; `gh-pages`, `main`, publicação oficial e Supabase não foram modificados.
 - **Próxima ação executável:** terminar a prancha de estados, executar toda a suíte/regressões, revisar o render em navegador da branch e atualizar a PR #17. Não iniciar novas profissões ou assets até revisar esse pacote.
+
+
+## Continuação de produção artística — 22/11/2026
+
+**Resultado implementado nesta rodada:** `v20/profession-renderer.js` agora aceita `registerAtlas(job,image,{width,height})` para agricultor, minerador e construtor. O adaptador usa quatro colunas e quatro linhas (`idle/walk/work/carry`) por profissão, preserva a simulação e retorna ao desenho procedural anterior quando a imagem não estiver pronta. Teste adicionado em `tests/profession-painted-atlas-v20.test.cjs`. Commits `2edefab` e `a43dadf`.
+
+**Arte em produção, ainda não integrada:** foi produzida uma primeira prancha de direção visual contendo agricultor, minerador e construtor em quatro estados. Essa prancha foi gerada fora do repositório, com três linhas e quatro colunas, e **não** é um atlas V20 4×4 por profissão, nem tem transparência alfa comprovada. Não declarar sprites integrados, validação PNG ou QA visual por causa dessa prancha. É necessário recortar, limpar transparência, completar poses e exportar atlases individuais antes do registro.
+
+**Validação:** a integração do código foi gravada na branch experimental. O teste novo ainda não foi executado em Node nesta rodada; o QA de navegador e Android continua bloqueado/não realizado. A página oficial e os salvamentos não foram alterados.
+
+**Próxima ação executável:** exportar três atlases PNG RGBA reais (4×4 por profissão), validar células/CRC/sha256, registrar metadados e carregamento experimental no `index.html`, executar testes e capturar a cena de profissões em ação. Não transformar a prancha preliminar em asset de produção sem essas verificações.
