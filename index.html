@@ -129,6 +129,18 @@ function draw(g,s,t){
   for(let k=0;k<3;k++){const yy=202-k*8-(t/20%8);g.fillStyle='#b9c1b5aa';g.fillRect(328+k*3,yy,8+k*2,4);}
   box(g,301,247,11,15,'#483f37');box(g,316,238,16,7,'#d2b786');
  }
+ // Distinct professions and trade movement for the urban craft stage.
+ // This animation is visual only and cannot alter persisted economic balances.
+ if(civicStage>=2){
+  const tradeX=78+((t/12)%185);
+  // Two-wheeled delivery wagon follows the market road.
+  box(g,tradeX,347,31,11,'#a87443');box(g,tradeX+3,341,24,7,'#cfb47d');
+  for(const dx of [6,25]){g.fillStyle='#393c36';g.beginPath();g.arc(tradeX+dx,360,5,0,Math.PI*2);g.fill();}
+  // Blacksmith working at the forge; visible sparks distinguish the job.
+  box(g,306,267,14,16,'#455e6a');box(g,305,264,15,5,'#c6a27a');
+  box(g,323,276,17,7,'#554b45');box(g,327,268,10,8,'#e4a24b');
+  if(Math.floor(t/9)%3===0){for(let k=0;k<4;k++)box(g,328+k*3,261-(k%2)*5,2,3,'#ffd16c');}
+ }
  // Small workers are located along meaningful production routes.
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
