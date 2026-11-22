@@ -133,7 +133,10 @@ function illustratedVillage(g,s,t,worker){
  const scene=root.PetecoV18Scene;
  if(!scene||!scene.ready||!scene.image||!scene.image.naturalWidth)return false;
  g.save();g.clearRect(0,0,360,480);g.drawImage(scene.image,0,0,360,480);
- tree(g,78,407,1,worker||null,t);
+ // The interactive tree must share the woodcutter controller's actual target.
+ // Previously it was drawn at (78,407) while the worker chopped at (118,290).
+ const forestTarget=root.PetecoWoodcutterV18&&root.PetecoWoodcutterV18.TREE||{x:118,y:290};
+ tree(g,forestTarget.x,forestTarget.y,1,worker||null,t);
  cropField(g,322,390,s.sectors&&s.sectors.farm,t);
  quarryFace(g,328,345,s.stone,t);
  const homes=Array.isArray(s.structures)?s.structures:[{stage:3,integrity:100},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0}];
