@@ -104,6 +104,11 @@ function draw(g,s,t){
  if(!construction(g,183,418,89,s.structures?.[0]?.stage??3,s.structures?.[0]?.integrity??100,t))building(g,183,418,89,60,level>=12?'#945d45':'#754c3e',damage>0?1:0);
  // One readable production tableau: well, crops, workshop cart and lamps.
  garden(g,286,420,t);well(g,111,356,t);
+ // Quarry: visible stone deposits at the real miner's work destination.
+ // Mining remains tied to confirmed sector deltas, not decorative resource grants.
+ for(let i=0;i<5;i++){const x=291+(i%3)*15,y=302+Math.floor(i/3)*11;
+  box(g,x,y,17,11,i%2?'#8d938b':'#a6a89c');box(g,x+3,y-5,12,6,'#c0bcae');}
+
  if(level>=4)chimney(g,200,154,t);
  if(level>=7)cart(g,245+Math.sin(t/170)*13,340,t);
  if(level>=10){lantern(g,139,341,t);lantern(g,223,341,t);}
