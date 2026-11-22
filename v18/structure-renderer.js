@@ -17,7 +17,12 @@ function draw(ctx,structure,image,layout){
  const selected=frameFor(structure);if(!selected)return false;
  const rect=root.PetecoVisualFactoryV18&&root.PetecoVisualFactoryV18.frameRect('house',selected.state);
  const sx=rect?rect.x:selected.frame*CELL.width;
- const width=RENDER.width,height=RENDER.height,baseline=Number(RENDER.baselineY)||CELL.height;
+ // Preserve the distinct footprint of each persisted house slot.
+ // The atlas supplies the illustration, while layout determines its stage scale.
+ const slotWidth=Number(layout.width),slotHeight=Number(layout.height);
+ const width=Number.isFinite(slotWidth)&&slotWidth>0?Math.min(RENDER.width,slotWidth*1.45):RENDER.width;
+ const height=Number.isFinite(slotHeight)&&slotHeight>0?Math.min(RENDER.height,slotHeight*1.75):RENDER.height;
+ const baseline=Number(RENDER.baselineY)||CELL.height;
  ctx.save();ctx.imageSmoothingEnabled=true;
  ctx.drawImage(image,sx,0,CELL.width,CELL.height,x-width/2,y-height*(baseline/CELL.height),width,height);
  ctx.restore();return selected.state;
