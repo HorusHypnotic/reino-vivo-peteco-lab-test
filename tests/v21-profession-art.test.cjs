@@ -25,11 +25,11 @@ test('visual art remains read-only, with job-specific tools and cargo',()=>{
  assert.match(source,/a\.phase==='return'/);
  assert.doesNotMatch(source,/localStorage|indexedDB|\.food\s*[+\-]?=|\.stone\s*[+\-]?=/);
 });
-test('painted profession atlases are loaded only by v20 canary and displayed in the real V18 village map',()=>{
+test('painted profession atlases load by default and draw in the canonical V21 village',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
- assert.match(html,/get\('v20'\)!=='1'\)return/,'normal play does not fetch the experimental profession atlases');
+ assert.match(html,/get\('v20'\)==='0'\)return/,'explicit fallback opt-out remains available');
  assert.match(html,/PetecoVisualFactoryV18\.get\(job\)/,'atlas paths come from the canonical asset catalog');
  assert.match(html,/registerAtlas\(job,image,spec\.render\)/,'loaded atlas is registered with the existing renderer');
- assert.match(html,/get\('v20'\)==='1'\)\);const sceneClean/,'v20 canary opens the same illustrated village scene');
- assert.match(html,/if\(factoryV20&&window\.PetecoProfessionRendererV20&&new URLSearchParams\(location\.search\)\.get\('v20'\)==='1'\)/,'workers draw from controller snapshots only in the canary');
+ assert.match(html,/PetecoProfessionRendererV20\.draw\(g,actor\.snapshot\(\),s\.t\)/,'workers draw from existing controller snapshots');
+ assert.match(html,/village-environment\.svg/,'canonical illustrated environment is loaded');
 });

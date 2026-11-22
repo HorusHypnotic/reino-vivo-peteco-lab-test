@@ -1,12 +1,12 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
-const start=html.indexOf('function draw(g,s,t){'),end=html.indexOf('// V17.4 territorial view:',start);
-assert.ok(start>0&&end>start);
-const scene=html.slice(start,end);
-assert.match(scene,/const packs=root\.PetecoProfessionAtlasesV20/);
-assert.match(scene,/\['farm','quarry','construction'\]\.every\(job=>packs\[job\]&&packs\[job\]\.ready\)/);
-assert.match(scene,/if\(!paintedReady\)for\(let i=0;i<residents;i\+\+\)villager/);
+const scene=html.slice(html.indexOf('function illustratedVillage('),html.indexOf('function draw(g,s,t,actors){'));
+assert.ok(scene.length>0);
+assert.match(html,/window\.PetecoProfessionAtlasesV20=\{\}/);
+assert.match(html,/image\.onload=function\(\)\{entry\.ready=!!window\.PetecoProfessionRendererV20\.registerAtlas\(job,image,spec\.render\)\}/);
+assert.match(scene,/cropField\(g,322,390,s\.sectors&&s\.sectors\.farm,t\)/);
+assert.match(scene,/quarryFace\(g,328,345,s\.stone,t\)/);
 assert.match(html,/PetecoProfessionRendererV20\.draw\(g,actor\.snapshot\(\),s\.t\)/);
 assert.match(html,/get\('v20'\)==='0'\)return/);
 console.log('PASS: painted professions replace decorative villagers only after assets ready, with fallback preserved');

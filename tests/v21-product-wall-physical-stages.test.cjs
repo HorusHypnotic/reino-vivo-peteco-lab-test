@@ -15,8 +15,8 @@ test('physical foundation, wall and finish stages follow saved work',()=>{
 });
 
 test('renderer only draws state and keeps completed wall separate from new work',()=>{
- const scene=html.slice(html.indexOf('function draw(g,s,t){'),html.indexOf('// V17.4 territorial view:'));
- assert.match(scene,/v21WallRenderer\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:0\}/);
+ const scene=html.slice(html.indexOf('function illustratedVillage('),html.indexOf('// V17.4 territorial view:'));
+ assert.match(scene,/PetecoConstructionV20\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:s\.projectCount\}/);
  assert.match(scene,/completedWalls\(g,s\.projectCount\)/);
  assert.match(source,/const d=derive\(state\)/);
  assert.match(source,/completedSlots=Math\.min\(hasNext\?/);

@@ -7,10 +7,9 @@ assert.ok(html.includes('projectSite(g,s.project,s.projectGoal,t);'),'current pr
 assert.ok(html.includes('s.project-=s.projectGoal;s.projectCount++'),'existing economic completion unchanged');
 const calls=[],ctx={box:(...args)=>calls.push(args)};
 vm.runInNewContext(html.slice(start,end),ctx);
-const g={save(){},restore(){},fillText(text){calls.push(['label',text])},set fillStyle(v){},set font(v){}};
+const g={save(){},restore(){},set fillStyle(v){},set font(v){}};
 ctx.completedWalls(g,0);assert.equal(calls.length,0,'no phantom walls at zero');
-ctx.completedWalls(g,1);assert.ok(calls.some(c=>c[0]==='label'&&c[1]==='MURALHAS 1'),'first completed wall persists');
-calls.length=0;ctx.completedWalls(g,4);assert.ok(calls.some(c=>c[0]==='label'&&c[1]==='MURALHAS 4'),'all completions counted');
-assert.equal(calls.filter(c=>c[0]==='label').length,1);
+ctx.completedWalls(g,1);assert.ok(calls.length>0,'first completed wall persists as masonry');
+const one=calls.length;calls.length=0;ctx.completedWalls(g,4);assert.ok(calls.length>one,'additional completions remain visible');
 calls.length=0;ctx.completedWalls(g,NaN);assert.equal(calls.length,0,'invalid old save never invents wall');
 console.log('PASS V21 wall persistence, old saves and separation from project');

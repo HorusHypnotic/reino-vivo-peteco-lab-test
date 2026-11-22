@@ -7,14 +7,20 @@ const C={grass:'#426b50',grass2:'#527c58',path:'#b9a079',stone:'#9c9a8b',wall:'#
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,Number(n)||0));
 function poly(g,pts,color){g.fillStyle=color;g.beginPath();g.moveTo(...pts[0]);for(let i=1;i<pts.length;i++)g.lineTo(...pts[i]);g.closePath();g.fill();}
 function box(g,x,y,w,h,col){g.fillStyle=col;g.fillRect(x,y,w,h);}
-function tree(g,x,y,k=1){
+function tree(g,x,y,k=1,actor=null,tick=0){
  // Reuse the illustrated V19 forest atlas already in this repository.
  // A missing/failed image keeps the original scenery instead of a blank stage.
  const atlas=root.PetecoForestAtlasV19;
  if(atlas&&atlas.ready&&atlas.image&&atlas.image.naturalWidth){
   const im=atlas.image,cell=im.naturalWidth/4,w=52*k,h=70*k;
+  if(actor&&root.PetecoForestArtV19){
+   const sway=actor.phase==='cut'?Math.sin(tick*.65)*1.8:0;
+   g.save();g.translate(sway,0);
+   const state=root.PetecoForestArtV19.draw(g,actor,im,tick,{x,y,width:w,height:h});
+   g.restore();return state;
+  }
   g.drawImage(im,0,0,cell,im.naturalHeight,x-w/2,y-h,w,h);
-  return;
+  return 'tree';
  }
  g.save();g.translate(x,y);g.scale(k,k);box(g,-4,-22,8,25,'#655039');for(const [dx,dy,r,c] of [[-11,-29,13,'#244f3e'],[9,-33,15,'#2e6246'],[0,-45,17,'#387552']]){g.fillStyle=c;g.beginPath();g.arc(dx,dy,r,0,7);g.fill();}g.restore();
 }
@@ -92,8 +98,59 @@ function foreground(g,t,level){
  for(let i=0;i<8;i++){const x=12+i*48;box(g,x,470+(i%3)*3,16,4,'#688d59');}
  if(level>=8){box(g,6,455,83,7,'#846b4d');for(let i=0;i<4;i++)box(g,12+i*22,445,4,15,'#9b7a55');}
 }
-function draw(g,s,t){
+function cropField(g,x,y,sector,t){
+ if(!g)return false;
+ const work=Math.max(0,Math.floor(Number(sector)||0));
+ g.save();g.beginPath();g.moveTo(x-35,y-14);g.lineTo(x+31,y-19);g.lineTo(x+38,y+15);g.lineTo(x-28,y+20);g.closePath();g.fillStyle='#795d40';g.fill();
+ g.strokeStyle='#aa8a5e';g.lineWidth=1.5;g.lineCap='round';
+ for(let row=0;row<4;row++){
+  const yy=y-10+row*8,offset=row%2?4:0;
+  g.beginPath();g.moveTo(x-28+offset,yy);g.quadraticCurveTo(x,yy+2,x+28,yy-1);g.stroke();
+  const plants=Math.min(6,Math.floor(work/3)+Math.max(0,Math.floor(work/12)-row));
+  for(let col=0;col<plants;col++){
+   const px=x-23+col*9+offset,py=yy-1;
+   g.strokeStyle=col%2?'#71944e':'#8fae5d';g.lineWidth=1.5;g.beginPath();g.moveTo(px,py+2);g.lineTo(px-2,py-2);g.moveTo(px,py+2);g.lineTo(px+3,py-3);g.stroke();
+  }
+ }
+ if(work>0&&Math.floor(t/18)%4===0){g.fillStyle='#e4c783';g.beginPath();g.ellipse(x+23,y-12,2,1.4,0,0,Math.PI*2);g.fill();}
+ g.restore();return true;
+}
+function quarryFace(g,x,y,stone,t){
+ if(!g)return false;
+ const units=Math.max(0,Math.min(24,Math.floor(Number(stone)||0)));
+ g.save();g.fillStyle='#5a564e';g.beginPath();g.moveTo(x-25,y+13);g.lineTo(x-17,y-11);g.lineTo(x-2,y-21);g.lineTo(x+22,y-16);g.lineTo(x+30,y+13);g.closePath();g.fill();
+ g.fillStyle='#8f928d';g.beginPath();g.moveTo(x-18,y+5);g.lineTo(x-12,y-11);g.lineTo(x-1,y-17);g.lineTo(x+8,y-5);g.lineTo(x+5,y+4);g.closePath();g.fill();
+ g.fillStyle='#b2b3aa';g.beginPath();g.moveTo(x+3,y+8);g.lineTo(x+11,y-8);g.lineTo(x+21,y-11);g.lineTo(x+26,y+8);g.closePath();g.fill();
+ const pile=Math.min(6,Math.ceil(units/4));
+ for(let i=0;i<pile;i++){
+  const px=x-17+(i%3)*14,py=y+14-Math.floor(i/3)*7;
+  g.fillStyle=i%2?'#b7b8b0':'#9da19d';g.beginPath();g.moveTo(px-6,py+3);g.lineTo(px-2,py-4);g.lineTo(px+5,py-5);g.lineTo(px+7,py+3);g.closePath();g.fill();
+ }
+ if(Math.floor(t/8)%4===0&&units>0){g.fillStyle='#f2d88f';g.fillRect(x-2,y+2,2,2);g.fillRect(x+5,y-1,2,2);}
+ g.restore();return true;
+}
+function illustratedVillage(g,s,t,worker){
+ const scene=root.PetecoV18Scene;
+ if(!scene||!scene.ready||!scene.image||!scene.image.naturalWidth)return false;
+ g.save();g.clearRect(0,0,360,480);g.drawImage(scene.image,0,0,360,480);
+ tree(g,78,407,1,worker||null,t);
+ cropField(g,322,390,s.sectors&&s.sectors.farm,t);
+ quarryFace(g,328,345,s.stone,t);
+ const homes=Array.isArray(s.structures)?s.structures:[];
+ if(root.PetecoV26Architecture&&root.PetecoV26Architecture.structureState){
+  const layouts=[{x:180,y:430,width:72,height:65},{x:75,y:302,width:54,height:50},{x:270,y:302,width:55,height:50}];
+  layouts.forEach((layout,index)=>{const status=homes[index];if(status)root.PetecoV26Architecture.structureState(g,status,layout,t);});
+  if(Number(s.damage)>0)root.PetecoV26Architecture.structureState(g,{stage:3,integrity:100-Math.min(100,Number(s.damage)||0)},layouts[0],t);
+ }
+ if(root.PetecoConstructionV20){
+  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:s.projectCount},t,{x:132,y:308,width:102,rowHeight:7,slots:4});
+ }
+ completedWalls(g,s.projectCount);
+ g.restore();return true;
+}
+function draw(g,s,t,actors){
  if(!g||!s)return;
+ if(illustratedVillage(g,s,t,actors&&actors.woodcutter))return;
  const level=clamp(s.level,1,100),population=clamp(s.people,0,200),damage=clamp(s.damage,0,100);
  g.save();g.clearRect(0,0,360,480);
  box(g,0,0,360,480,'#7ba69b');poly(g,[[0,112],[92,49],[168,111]],'#648f86');poly(g,[[125,122],[252,45],[360,117]],'#6b9890');
@@ -235,7 +292,7 @@ function world(g,s,t){
 }
 root.PetecoArtV17={draw,world};
 })(typeof window!=='undefined'?window:globalThis);
-</script><script src="v20/factory-core.js"></script><script src="v20/construction-state.js"></script><script src="v20/scene-map.js"></script><script src="v20/actor-controller.js"></script><script src="v20/economy-bridge.js"></script><script src="v20/profession-renderer.js"></script><script src="v20/live-event-gateway.js"></script><script src="v20/qa-runtime.js"></script><script src="v18/art-bridge.js"></script><script src="v18/actor-state-machine.js"></script><script src="v18/art-motion.js"></script><script src="v18/woodcutter-controller.js"></script><script src="v18/visual-factory.js"></script><script src="v18/woodcutter-renderer.js"></script><script src="v18/bosque-vivo.js"></script><script src="v19/forest-art.js"></script><script src="v7/actor-renderer.js"></script><script src="v22/depth.js"></script><script src="v22/atmosphere.js"></script><script src="v23/direction.js"></script><script src="v24/scene.js"></script><script src="v32/first-minute.js"></script><script src="v33/identity.js"></script><script src="v25/terrain.js"></script><script src="v26/architecture.js"></script><script src="v27/forest.js"></script><script>(function(){var forest=new Image();window.PetecoForestAtlasV19={image:forest,ready:false,error:false};forest.onload=function(){window.PetecoForestAtlasV19.ready=true};forest.onerror=function(){window.PetecoForestAtlasV19.error=true};forest.src="v19/assets/forest-cycle-atlas.png";var img=new Image();window.PetecoV18Scene={image:img,ready:false,error:false};img.onload=function(){window.PetecoV18Scene.ready=true};img.onerror=function(){window.PetecoV18Scene.error=true};img.src='v18/assets/village-scene.svg';var worker=new Image();window.PetecoWoodcutterAtlasV18={image:worker,ready:false,error:false};worker.onload=function(){window.PetecoWoodcutterAtlasV18.ready=true};worker.onerror=function(){window.PetecoWoodcutterAtlasV18.error=true};worker.src='v18/assets/woodcutter-atlas-original.png';})();</script><script>(function(){if(new URLSearchParams(location.search).get('v20')==='0')return;var jobs=['farm','quarry','construction'];window.PetecoProfessionAtlasesV20={};jobs.forEach(function(job){var spec=window.PetecoVisualFactoryV18&&PetecoVisualFactoryV18.get(job);if(!spec)return;var image=new Image(),entry=window.PetecoProfessionAtlasesV20[job]={image:image,ready:false,error:false};image.onload=function(){entry.ready=!!window.PetecoProfessionRendererV20.registerAtlas(job,image,spec.render)};image.onerror=function(){entry.error=true};image.src=spec.asset+'?v=17-art1'});})();</script><script>(function(){
+</script><script src="v20/factory-core.js"></script><script src="v20/construction-state.js"></script><script src="v20/scene-map.js"></script><script src="v20/actor-controller.js"></script><script src="v20/economy-bridge.js"></script><script src="v20/profession-renderer.js"></script><script src="v20/live-event-gateway.js"></script><script src="v20/qa-runtime.js"></script><script src="v18/art-bridge.js"></script><script src="v18/actor-state-machine.js"></script><script src="v18/art-motion.js"></script><script src="v18/woodcutter-controller.js"></script><script src="v18/visual-factory.js"></script><script src="v18/woodcutter-renderer.js"></script><script src="v18/bosque-vivo.js"></script><script src="v19/forest-art.js"></script><script src="v7/actor-renderer.js"></script><script src="v22/depth.js"></script><script src="v22/atmosphere.js"></script><script src="v23/direction.js"></script><script src="v24/scene.js"></script><script src="v32/first-minute.js"></script><script src="v33/identity.js"></script><script src="v25/terrain.js"></script><script src="v26/architecture.js"></script><script src="v27/forest.js"></script><script>(function(){var forest=new Image();window.PetecoForestAtlasV19={image:forest,ready:false,error:false};forest.onload=function(){window.PetecoForestAtlasV19.ready=true};forest.onerror=function(){window.PetecoForestAtlasV19.error=true};forest.src="v19/assets/forest-cycle-atlas.png";var img=new Image();window.PetecoV18Scene={image:img,ready:false,error:false};img.onload=function(){window.PetecoV18Scene.ready=true};img.onerror=function(){window.PetecoV18Scene.error=true};img.src='v18/assets/village-environment.svg';var worker=new Image();window.PetecoWoodcutterAtlasV18={image:worker,ready:false,error:false};worker.onload=function(){window.PetecoWoodcutterAtlasV18.ready=true};worker.onerror=function(){window.PetecoWoodcutterAtlasV18.error=true};worker.src='v18/assets/woodcutter-atlas-original.png';})();</script><script>(function(){if(new URLSearchParams(location.search).get('v20')==='0')return;var jobs=['farm','quarry','construction'];window.PetecoProfessionAtlasesV20={};jobs.forEach(function(job){var spec=window.PetecoVisualFactoryV18&&PetecoVisualFactoryV18.get(job);if(!spec)return;var image=new Image(),entry=window.PetecoProfessionAtlasesV20[job]={image:image,ready:false,error:false};image.onload=function(){entry.ready=!!window.PetecoProfessionRendererV20.registerAtlas(job,image,spec.render)};image.onerror=function(){entry.error=true};image.src=spec.asset+'?v=17-art1'});})();</script><script>(function(){
  // Read-only visual QA, only on the experimental URL with ?visualqa=1.
  // Does not write saves, trigger events or alter production state.
  if(new URLSearchParams(location.search).get('visualqa')!=='1')return;
@@ -546,7 +603,7 @@ function anomalyRegion(id){return settlementStops.find(stop=>stop.id===id)?.biom
 function drawAnomalyScene(){if(s.phase!=='vila'||typeof anomalyState==='undefined'||!anomalyState.active)return;const a=anomalyState.active,t=s.t,region=anomalyRegion(a.target);if(worldMapEnabled&&Math.abs(director.x-(210+region*390))>240)return;if(worldMapEnabled&&Math.abs(director.y-(settlementStops.find(v=>v.id===a.target)?.y??315))>155)return;g.save();const intensity=a.phase==='pressagio'?.45:.85;const fish=a.type==='fish',tornado=a.type==='tornado';g.fillStyle=fish?'rgba(60,115,190,'+(intensity*.14)+')':tornado?'rgba(115,105,80,'+(intensity*.22)+')':'rgba(150,80,210,'+(intensity*.16)+')';g.fillRect(0,85,360,320);for(let i=0;i<12;i++){const x=(i*83+t*(fish?1.3:tornado?2:.7))%390-15,y=145+(i*47+(t*(fish?1.8:1.1)))%230;g.fillStyle=fish?'#b3d7f1':tornado?'#d3bb84':'#d6b3ff';g.font='bold '+(fish?13:12)+'px system-ui';if(fish)g.fillText('🐟',x,y);else if(tornado){g.fillRect(x,y,7,2);g.fillRect(x+3,y+5,5,2);}else{g.beginPath();g.arc(x,y+Math.sin(t*.05+i)*7,2.5,0,Math.PI*2);g.fill();}}// V11.9: event notice lives in the lower caption strip, not over village houses.
 g.fillStyle='rgba(17,29,41,.87)';g.fillRect(17,405,326,30);g.fillStyle='#fff1ce';g.font='bold 11px system-ui';g.fillText('📜 '+a.name+' · '+a.target+' · '+a.phase,26,425,305);g.restore();}
 function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="undefined")warTick();if(typeof deliveryState!=='undefined'&&s.t%45===0)deliveryTick();if(typeof laborState!=='undefined'&&s.t%900===0)laborTick();if(typeof anomalyState!=='undefined'&&anomalyState.active&&s.t%360===0)advanceAnomaly();g.save();const warOnScreen=typeof warState!=='undefined'&&(!!warState.active||!!(warAftermath&&s.t<warAftermath.until));if(factoryV20)for(const actor of Object.values(factoryV20))if(actor){if(s.phase!=='vila'||warOnScreen)actor.cancel();else actor.tick(1/60);}if(factoryV20&&window.PetecoQAV20&&new URLSearchParams(location.search).get('v20')==='1'&&s.t%60===0)window.PetecoV20Diagnostics=PetecoQAV20.inspect(factoryV20,s,warOnScreen);const cinematic=document.body.classList.contains('viewer')&&s.phase==='batalha';if(cinematic){const shake=Math.sin(s.t*.7)*Math.min(2.2,Math.max(.4,s.hp/(s.maxHp||150)*2));g.translate(shake,Math.cos(s.t*.8)*.7)}const cinematicMap=!!(window.PetecoArtV17&&worldMapEnabled&&s.phase==='vila'&&!warOnScreen&&(new URLSearchParams(location.search).get('v18')==='1'||new URLSearchParams(location.search).get('v20')==='1'));const sceneClean=document.body.classList.contains('viewer')&&worldMapEnabled;const eventCloseup=director.auto&&director.focus&&s.t<director.until&&director.focus.scene==='village'&&!!director.focus.anchor&&document.body.classList.contains('viewer');if(warOnScreen){rect(0,0,360,480,'#111c2a');}else if(s.phase==='vila'){if(cinematicMap){try{if(window.PetecoV18Scene&&PetecoV18Scene.ready&&window.PetecoArtBridgeV18&&window.PetecoWoodcutterAtlasV18&&window.PetecoWoodcutterAtlasV18.ready&&window.PetecoWoodcutterRendererV18){const art=PetecoArtBridgeV18.scene(s,Math.floor(s.t/900)%5);g.drawImage(PetecoV18Scene.image,0,0,360,480);if(window.PetecoArtMotionV18)PetecoArtMotionV18.draw(g,art,s.t);const workerAtlas=window.PetecoWoodcutterAtlasV18;if(workerAtlas&&workerAtlas.ready&&window.PetecoWoodcutterRendererV18){const workerState=woodcutterActivity.snapshot();if(window.PetecoForestArtV19&&window.PetecoForestAtlasV19&&PetecoForestAtlasV19.ready)PetecoForestArtV19.draw(g,workerState,PetecoForestAtlasV19.image);else if(window.PetecoBosqueV181)PetecoBosqueV181.draw(g,workerState,s.cycles);PetecoWoodcutterRendererV18.draw(g,workerState,workerAtlas.image);if(factoryV20&&window.PetecoProfessionRendererV20&&new URLSearchParams(location.search).get('v20')!=='0'){for(const job of ['farm','quarry','construction']){const actor=factoryV20[job];if(actor)PetecoProfessionRendererV20.draw(g,actor.snapshot(),s.t);}}if(workerState.ledger){g.save();g.fillStyle='#152d2de8';g.fillRect(9,420,342,32);g.fillStyle='#ffe2a0';g.font='bold 10px sans-serif';g.fillText('LENHADOR · setor florestal · ciclo '+workerState.ledger.cycle+' · +'+workerState.ledger.producedWood,17,433);g.fillStyle='#f6e5bc';g.font='10px sans-serif';g.fillText(workerState.ledger.deliveryConfirmed?'Entrega confirmada · setor +'+workerState.ledger.producedWood+' · saldo '+workerState.ledger.woodBefore+' → '+workerState.ledger.woodAfter:'Produção acumulada · sem entrega neste ciclo',17,446);g.restore();}}g.save();g.fillStyle='#152d2dbb';g.fillRect(8,9,344,42);g.fillStyle='#ffe2a0';g.font='bold 15px sans-serif';g.fillText('REINO V18 · '+art.level+' · '+art.population+' moradores',18,27);g.font='11px sans-serif';g.fillText(art.buildings.length+' estruturas registradas · '+(s.busy?'produção em andamento':'produção em espera'),18,43);g.restore();}else PetecoArtV17.world(g,s,s.t)}catch(e){console.error('Cinematic map fallback',e);g.save();g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,360,480);g.restore();worldCamera()}}else if(worldMapEnabled&&!eventCloseup){const focus=director.auto&&director.focus&&s.t<director.until?director.focus:null;if(focus&&focus.scene==='world')worldCamera();else if(window.PetecoArtV17){
- PetecoArtV17.draw(g,s,s.t);
+ PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()});
  // Restore the existing woodcutter to the actual default V21 village.
  // His controller is still advanced by frame(); do not invent production.
  const worker=woodcutterActivity.snapshot();

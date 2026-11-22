@@ -4,8 +4,8 @@ const POINTS=Object.freeze({
  forest:Object.freeze({target:Object.freeze({x:118,y:290}),depot:Object.freeze({x:200,y:404})}),
  // Unique frontages around the shared store keep idle sprites legible. These
  // are visual positions only; delivery/resource accounting remains in V7/V20.
- farm:Object.freeze({target:Object.freeze({x:286,y:420}),depot:Object.freeze({x:152,y:404})}),
- quarry:Object.freeze({target:Object.freeze({x:315,y:314}),depot:Object.freeze({x:200,y:404})}),
+ farm:Object.freeze({target:Object.freeze({x:322,y:390}),depot:Object.freeze({x:152,y:404})}),
+ quarry:Object.freeze({target:Object.freeze({x:328,y:345}),depot:Object.freeze({x:200,y:404})}),
  construction:Object.freeze({target:Object.freeze({x:183,y:311}),depot:Object.freeze({x:248,y:404})})
 });
 function route(job){return POINTS[job]||null;}

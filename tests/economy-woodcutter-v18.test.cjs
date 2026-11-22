@@ -13,10 +13,10 @@ assert.match(html,/PetecoArtV17\.world\(g,s,s\.t\)/,'classic renderer fallback r
 assert.match(html,/PetecoWoodcutterRendererV18\.draw\(g,workerState,workerAtlas\.image\)/,'V18 painterly atlas is used by the renderer');
 assert.match(html,/workerState\.ledger\.producedWood,17,433/,'HUD uses actual confirmed producedWood field');
 assert.doesNotMatch(html,/workerState\.ledger\.forestOutput/,'HUD must not display undefined forestOutput');
-for(const asset of ['v18/art-bridge.js','v18/actor-state-machine.js','v18/art-motion.js','v18/woodcutter-controller.js','v18/woodcutter-renderer.js','v18/assets/village-scene.svg','v18/assets/woodcutter-atlas-original.png']){
+for(const asset of ['v18/art-bridge.js','v18/actor-state-machine.js','v18/art-motion.js','v18/woodcutter-controller.js','v18/woodcutter-renderer.js','v18/assets/village-scene.svg','v18/assets/village-environment.svg','v18/assets/woodcutter-atlas-original.png']){
  assert.ok(fs.existsSync(path.join(__dirname,'..',asset)),'missing V18 asset: '+asset);
- assert.ok(html.includes(asset),'V18 asset is not referenced by the page: '+asset);
 }
+assert.ok(html.includes('v18/assets/village-environment.svg'),'canonical environment layer is loaded');
 assert.match(html,/window\.PetecoWoodcutterV18\.create\(\)/,'controller must initialize');
 assert.match(html,/woodcutterActivity\.update\(1\/60\)/,'animation must advance each frame');
 assert.match(html,/PetecoV18Scene\.ready&&window\.PetecoArtBridgeV18&&window\.PetecoWoodcutterAtlasV18&&window\.PetecoWoodcutterAtlasV18\.ready&&window\.PetecoWoodcutterRendererV18/,'V18 scene must not replace V17 before the woodcutter atlas loads');

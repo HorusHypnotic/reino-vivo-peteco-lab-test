@@ -10,11 +10,12 @@ test('profession routes land on actual V21 visible production sites',()=>{
  const context={};vm.runInNewContext(scene,context);
  const map=context.PetecoSceneMapV20;
  assert.equal(map.validate(),true);
- assert.deepEqual([map.route('farm').target.x,map.route('farm').target.y],[286,420]);
- assert.deepEqual([map.route('quarry').target.x,map.route('quarry').target.y],[315,314]);
+ assert.deepEqual([map.route('farm').target.x,map.route('farm').target.y],[322,390]);
+ assert.deepEqual([map.route('quarry').target.x,map.route('quarry').target.y],[328,345]);
  assert.deepEqual([map.route('construction').target.x,map.route('construction').target.y],[183,311]);
- assert.match(html,/garden\(g,286,420,t\)/);
- assert.match(html,/Quarry: visible stone deposits/);
+ assert.match(html,/cropField\(g,322,390,s\.sectors&&s\.sectors\.farm,t\)/);
+ assert.match(html,/quarryFace\(g,328,345,s\.stone,t\)/);
+ assert.match(html,/village-environment\.svg/);
 });
 test('V21 woodcutter is translated onto forest without changing V18 controller',()=>{
  assert.match(html,/const woodV21=\{\.\.\.worker,x:200\+\(worker\.x-200\)\*\(122\/82\),y:404\+\(worker\.y-404\)\*\(-3\/114\),facing:/);

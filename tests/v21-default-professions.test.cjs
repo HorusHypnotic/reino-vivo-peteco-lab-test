@@ -9,7 +9,7 @@ test('factory starts on normal public URL without opt-in',()=>{
  assert.doesNotMatch(html,/const factoryV20=new URLSearchParams\(location\.search\)/);
 });
 test('default V21 village draws original woodcutter and real V20 jobs',()=>{
- assert.match(scene,/PetecoArtV17\.draw\(g,s,s\.t\)/);
+ assert.match(scene,/PetecoArtV17\.draw\(g,s,s\.t,\{woodcutter:woodcutterActivity\.snapshot\(\)\}\)/);
  assert.match(scene,/woodcutterActivity\.snapshot\(\)/);
  assert.match(scene,/PetecoWoodcutterRendererV18\.draw\(g,woodV21,atlas\.image\)/);
  assert.match(scene,/for\(const job of \['farm','quarry','construction'\]\)/);

@@ -18,8 +18,7 @@ test('construction stages derive from persisted project and goal',()=>{
 });
 
 test('live scene passes saved construction fields into the shared renderer',()=>{
- const scene=html.slice(html.indexOf('function draw(g,s,t){'),html.indexOf('// V17.4 territorial view:'));
- assert.match(scene,/v21WallRenderer\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:0\}/);
- assert.match(scene,/if\(!v21Drawn\)projectSite\(g,s\.project,s\.projectGoal,t\)/);
+ const scene=html.slice(html.indexOf('function illustratedVillage('),html.indexOf('// V17.4 territorial view:'));
+ assert.match(scene,/PetecoConstructionV20\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:s\.projectCount\}/);
  assert.doesNotMatch(scene,/s\.(?:project|projectGoal|wood|stone)\s*(?:=|\+\+|--)/);
 });
