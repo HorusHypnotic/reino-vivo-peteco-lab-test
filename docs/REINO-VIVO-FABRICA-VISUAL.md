@@ -93,3 +93,14 @@ QA de navegador: BLOQUEADO com causa observada. O Playwright não encontrou seu 
 **Validação:** a integração do código foi gravada na branch experimental. O teste novo ainda não foi executado em Node nesta rodada; o QA de navegador e Android continua bloqueado/não realizado. A página oficial e os salvamentos não foram alterados.
 
 **Próxima ação executável:** exportar três atlases PNG RGBA reais (4×4 por profissão), validar células/CRC/sha256, registrar metadados e carregamento experimental no `index.html`, executar testes e capturar a cena de profissões em ação. Não transformar a prancha preliminar em asset de produção sem essas verificações.
+
+
+## Correção de rumo: produção não é geração avulsa (22/11/2026)
+
+Revisados diretamente `docs/V18-PRE-WORK-RESEARCH.md`, `docs/V18-LENHADOR-REAL.md` e `docs/V18-POSTMORTEM-E-BOSQUE-VIVO.md`. A prova original usou **um atlas de arte original gerado para o projeto**, posteriormente recuperado de um arquivo chamado `Atlas de sprites do lenhador em poses.png` após corrupção do PNG versionado. O registro **não contém** prompt original, ferramenta, sessão, automação de geração nem transformação reproduzível da imagem. Portanto **não existe evidência suficiente para afirmar que a etapa de geração artística original está industrializada**. O contrato V18 industrializa catalogação/validação/renderização, não a criação artística.
+
+**Não usar** as pranchas de geração avulsa desta conversa como produto da fábrica nem registrá-las como assets aprovados. O adaptador opcional V20 do commit `2edefab` não constitui prova de arte produzida.
+
+**Novo portão de entrada reproduzível:** `tools/prepare-profession-atlas.cjs` verifica que o candidato seja PNG RGBA 4×4 com dezesseis células ocupadas, quatro estados (`idle/walk/work/carry`), dimensões divisíveis, hash opcional, proveniência, fonte e licença. Reutiliza o decoder de PNG do projeto e não altera o jogo. `tests/profession-atlas-intake.test.cjs` verifica rejeições de entradas incompletas. Commits `b9652ad`, `e260dfe`. **Os testes desta rodada não foram executados em Node.**
+
+**Bloqueio honesto e objetivo:** a fábrica ainda não possui mecanismo comprovado de produção automatizada de novos quadros artísticos coerentes com a arte original. Não converter o gate técnico em substituto dessa capacidade. Próxima execução deve recuperar a ferramenta de geração original se houver evidência verificável, ou implementar e demonstrar um processo novo reproduzível com fonte/licença e comparação visual, antes de afirmar que as três profissões foram fabricadas. QA Android permanece pendente; PR experimental não foi publicada.
