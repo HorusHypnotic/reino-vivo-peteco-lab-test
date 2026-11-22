@@ -16,7 +16,8 @@ function tree(g,x,y,k=1,actor=null,tick=0){
   if(actor&&root.PetecoForestArtV19){
    const sway=actor.phase==='cut'?Math.sin(tick*.65)*1.8:0;
    g.save();g.translate(sway,0);
-   const state=root.PetecoForestArtV19.draw(g,actor,im,tick,{x,y,width:w,height:h});
+   // V19 lifecycle windows are milliseconds, while the V17 scene tick is a frame counter.
+   const state=root.PetecoForestArtV19.draw(g,actor,im,Date.now(),{x,y,width:w,height:h});
    g.restore();return state;
   }
   g.drawImage(im,0,0,cell,im.naturalHeight,x-w/2,y-h,w,h);
