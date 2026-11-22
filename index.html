@@ -542,7 +542,12 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
  if(worker&&atlas&&atlas.ready&&window.PetecoWoodcutterRendererV18){
   // Translate V18 forest choreography to the V21 tree at (78,407).
   // Keep the source controller and the V18 legacy scene untouched.
-  const woodV21={...worker,x:200+(worker.x-200)*(122/82),y:404+(worker.y-404)*(-3/114)};
+  const woodV21={...worker,x:200+(worker.x-200)*(122/82),y:404+(worker.y-404)*(-3/114),facing:worker.phase==='cut'?1:worker.facing};
+  // V31: the active trunk is part of the actual default V21 render path.
+  // It shares the woodcutter's projected ground plane, not the separate V7 overlay.
+  if(worker.phase==='walkToTree'||worker.phase==='cut'||worker.phase==='carry'){
+   if(window.PetecoV27Forest)PetecoV27Forest.draw(g,{x:100,y:407,size:.64},worker.phase==='cut'?'gather':null);
+  }
   g.save();g.translate(woodV21.x,woodV21.y);g.scale(.52,.52);g.translate(-woodV21.x,-woodV21.y);
   PetecoWoodcutterRendererV18.draw(g,woodV21,atlas.image);g.restore();
   // Forestry feedback is tied to the original confirmed actor phases.
@@ -551,7 +556,7 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
    const shake=Math.sin(s.t*.65)*2;
    g.save();g.translate(shake,0);
    for(let i=0;i<4;i++){
-    const px=72+i*5+Math.sin(s.t*.3+i)*4,py=377+(i%3)*7-Math.abs(Math.sin(s.t*.22+i))*12;
+    const px=94+i*3+Math.sin(s.t*.3+i)*3,py=391+(i%3)*3-Math.abs(Math.sin(s.t*.22+i))*8;
     g.fillStyle=i%2?'#d6b06b':'#a87b47';g.fillRect(px,py,3,4);
    }
    g.restore();
