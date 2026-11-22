@@ -62,7 +62,7 @@ function completedWalls(g,count){
   for(let j=0;j<3;j++)box(g,x+j*7,y-34,5,6,'#c6b797');
   box(g,x+5,y-16,11,5,'#72634f');
  }
- g.fillStyle='#f5dfad';g.font='bold 9px system-ui';g.fillText('MURALHAS '+n,229,270);
+ // Wall count already appears in the status panel; do not paint it over houses.
  g.restore();
 }
 function projectSite(g,project,goal,t){
@@ -73,7 +73,7 @@ function projectSite(g,project,goal,t){
  if(ratio>.3){box(g,146,282,5,22,'#80654d');box(g,208,282,5,22,'#80654d');}
  if(ratio>.7)box(g,146,280,67,6,'#c4ae8c');
  // Small construction cue, not a HUD that hides the world.
- g.fillStyle='#f5dfad';g.font='bold 9px system-ui';g.fillText('OBRA '+Math.floor(ratio*100)+'%',149,275);
+ // Construction progress remains in the status panel; keep the site visually clear.
  g.restore();
 }
 function foreground(g,t,level){
@@ -185,14 +185,7 @@ function draw(g,s,t){
  completedWalls(g,s.projectCount);
  // The last completed wall is a permanent milestone, derived from the save.
  // It is visible on every reload, independent of transient ceremony banners.
- if(Number(s.projectCount)>0){
-  g.save();g.fillStyle='#2a3c32e8';g.fillRect(226,370,118,31);
-  g.strokeStyle='#d1b477';g.lineWidth=1;g.strokeRect(226,370,118,31);
-  g.fillStyle='#f4dc9e';g.font='bold 10px system-ui';
-  g.fillText('MARCO DA VILA',233,382,106);
-  g.font='9px system-ui';g.fillText(Math.floor(s.projectCount)+' muralhas erguidas',233,394,106);
-  g.restore();
- }
+ // Milestones remain visible as constructed walls, not a billboard covering the farm.
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
  box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);g.font='bold 8px system-ui';g.fillText(civicStage===2?'ERA ARTESANAL URBANA':civicStage===1?'ERA ARTESANAL':'ERA AGRÍCOLA',18,67,166);
