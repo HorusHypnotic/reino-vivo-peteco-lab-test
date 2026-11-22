@@ -343,8 +343,32 @@ rect(8,445,344,27,'#172d38e8');g.fillStyle='#fff0c2';g.font='bold 11px system-ui
 let cameraMode=0;
 const cameraNames=['MUNDO','REGIÃO','VILA'];
 const director={auto:true,focus:null,until:0,lastEvent:'',x:210,y:490,zoom:.64,hold:0};
+// Event-stage cue is ephemeral; no save schema or artificial achievements.
+let villageCeremony=null;
+function drawVillageCeremony(){
+ if(!villageCeremony||s.t>=villageCeremony.until||s.phase!=='vila')return;
+ const age=s.t-villageCeremony.start;
+ g.save();
+ // Keep the actual built wall and workers visible beneath the celebration.
+ g.fillStyle='#152d32e6';g.fillRect(36,72,288,50);
+ g.strokeStyle='#e4c179';g.lineWidth=2;g.strokeRect(36,72,288,50);
+ g.fillStyle='#ffe5a3';g.font='bold 15px system-ui';
+ g.fillText('🏰 MURALHA '+villageCeremony.number+' CONCLUÍDA',48,93,265);
+ g.font='11px system-ui';g.fillText('A comunidade transformou a vila!',48,110,265);
+ for(let i=0;i<24;i++){
+  const x=24+(i*73)%313,y=140+((age*1.8+i*43)%290);
+  g.fillStyle=['#f4d58b','#c5e1b1','#e9a5a2','#a5d5e3'][i%4];
+  g.fillRect(x,y,4,6);
+ }
+ g.restore();
+}
 function focusEvent(message){
 const t=String(message||'').toLowerCase();
+// Celebrate only an actual construction completion recorded by the simulation.
+const completed=t.match(/obra pública concluída! muralha (\\d+)/);
+if(completed&&Number(completed[1])===s.projectCount){
+ villageCeremony={number:s.projectCount,start:s.t,until:s.t+300};
+}
 let region=0;
 if(/gelo|neve|planalto|frio/.test(t))region=2;
 else if(/costa|maré|porto|pesca/.test(t))region=3;
@@ -474,7 +498,7 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
    const actor=factoryV20[job];if(actor)PetecoProfessionRendererV20.draw(g,actor.snapshot(),s.t);
   }
  }
-}else worldCamera();}else if(eventCloseup&&director.focus.anchor&&document.body.classList.contains('viewer')){const [ax,ay]=director.focus.anchor;const z=1.35;g.save();g.translate(180,245);g.scale(z,z);g.translate(-ax,-ay);territory();g.restore();}else territory()}else battleScene();g.restore();if(!warOnScreen&&s.phase==='vila'&&typeof civicEconomy!=='undefined'&&!worldMapEnabled)drawCivicWorld();for(const p of s.particles){if(!warOnScreen)rect(p.x,p.y,4,4,p.col);p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.life--}s.particles=s.particles.filter(p=>p.life>0);if(!warOnScreen&&!cinematicMap&&!(worldMapEnabled&&s.phase==='vila'&&!eventCloseup)){sceneProgress();if(!eventCloseup)stageOverlay();drawSpotlight();}if(!warOnScreen&&!cinematicMap&&eventCloseup&&document.body.classList.contains('viewer')&&s.phase==='vila'){rect(5,442,350,33,'#142e39e8');g.fillStyle='#ffe9b3';g.font='bold 12px system-ui';g.fillText('🎬 AUTO · '+director.focus.label.slice(0,37),12,462,332);if(director.focus.anchor){g.strokeStyle='#ffe39b';g.lineWidth=3;g.strokeRect(140,203,80,80);}}if(!warOnScreen&&!cinematicMap&&typeof PetecoSponsor!=='undefined'&&document.body.classList.contains('viewer')&&s.phase==='vila'){const ad=PetecoSponsor.contextualSlot({world:v7World,viewer:true,village:true,crisis:!!(v7World&&v7World.climate&&v7World.climate.condition==='storm'),activeBattle:false});if(ad){rect(11,36,338,53,'#14272ce8');g.strokeStyle='#e3c16f';g.lineWidth=1;g.strokeRect(11,36,338,53);g.fillStyle='#ffde91';g.font='bold 10px system-ui';g.fillText(ad.disclosure,19,51);g.fillStyle='#fff0d2';g.font='bold 12px system-ui';g.fillText(ad.name+' · '+ad.category,19,66);g.font='10px system-ui';g.fillText(ad.copy.slice(0,52),19,80);}}if(!warOnScreen&&!cinematicMap){drawPeriodicRanking();drawAnomalyScene();}if(warOnScreen)drawWarScene();rect(0,0,360,30,'#1c2934');g.fillStyle='#f6e5bc';g.font='bold 13px system-ui';g.fillText((warOnScreen?'⚔️ GUERRA':'VILA')+' · Ciclo '+s.cycles+' · Moradores '+s.people,10,20);document.querySelector('[data-a=work]').disabled=s.busy||s.auto;document.querySelector('[data-a=auto]').textContent=s.auto?'Pausar vila':'Retomar vila';requestAnimationFrame(frame)}const V7_STORE='peteco-lab-v7-life-experiment';
+}else worldCamera();}else if(eventCloseup&&director.focus.anchor&&document.body.classList.contains('viewer')){const [ax,ay]=director.focus.anchor;const z=1.35;g.save();g.translate(180,245);g.scale(z,z);g.translate(-ax,-ay);territory();g.restore();}else territory()}else battleScene();g.restore();if(!warOnScreen&&s.phase==='vila')drawVillageCeremony();if(!warOnScreen&&s.phase==='vila'&&typeof civicEconomy!=='undefined'&&!worldMapEnabled)drawCivicWorld();for(const p of s.particles){if(!warOnScreen)rect(p.x,p.y,4,4,p.col);p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.life--}s.particles=s.particles.filter(p=>p.life>0);if(!warOnScreen&&!cinematicMap&&!(worldMapEnabled&&s.phase==='vila'&&!eventCloseup)){sceneProgress();if(!eventCloseup)stageOverlay();drawSpotlight();}if(!warOnScreen&&!cinematicMap&&eventCloseup&&document.body.classList.contains('viewer')&&s.phase==='vila'){rect(5,442,350,33,'#142e39e8');g.fillStyle='#ffe9b3';g.font='bold 12px system-ui';g.fillText('🎬 AUTO · '+director.focus.label.slice(0,37),12,462,332);if(director.focus.anchor){g.strokeStyle='#ffe39b';g.lineWidth=3;g.strokeRect(140,203,80,80);}}if(!warOnScreen&&!cinematicMap&&typeof PetecoSponsor!=='undefined'&&document.body.classList.contains('viewer')&&s.phase==='vila'){const ad=PetecoSponsor.contextualSlot({world:v7World,viewer:true,village:true,crisis:!!(v7World&&v7World.climate&&v7World.climate.condition==='storm'),activeBattle:false});if(ad){rect(11,36,338,53,'#14272ce8');g.strokeStyle='#e3c16f';g.lineWidth=1;g.strokeRect(11,36,338,53);g.fillStyle='#ffde91';g.font='bold 10px system-ui';g.fillText(ad.disclosure,19,51);g.fillStyle='#fff0d2';g.font='bold 12px system-ui';g.fillText(ad.name+' · '+ad.category,19,66);g.font='10px system-ui';g.fillText(ad.copy.slice(0,52),19,80);}}if(!warOnScreen&&!cinematicMap){drawPeriodicRanking();drawAnomalyScene();}if(warOnScreen)drawWarScene();rect(0,0,360,30,'#1c2934');g.fillStyle='#f6e5bc';g.font='bold 13px system-ui';g.fillText((warOnScreen?'⚔️ GUERRA':'VILA')+' · Ciclo '+s.cycles+' · Moradores '+s.people,10,20);document.querySelector('[data-a=work]').disabled=s.busy||s.auto;document.querySelector('[data-a=auto]').textContent=s.auto?'Pausar vila':'Retomar vila';requestAnimationFrame(frame)}const V7_STORE='peteco-lab-v7-life-experiment';
 let v7World=null,v7Narrative=null,v7Announcement=null;
 function v7Init(){if(typeof PetecoLife==='undefined'||typeof PetecoNarrative==='undefined')return;try{v7Narrative=PetecoNarrative.restore(localStorage.getItem('peteco-lab-v7-narrative'))||PetecoNarrative.create();}catch{v7Narrative=PetecoNarrative.create();}try{v7World=PetecoLife.restore(localStorage.getItem(V7_STORE))||PetecoLife.create();}catch{v7World=PetecoLife.create();}}
 function v7Tick(){if(!v7World)return;PetecoLife.step(v7World);v7StepFrame=s.t;if(v7Narrative){PetecoNarrative.ingest(v7Narrative,v7World.events.filter(e=>e.tick===v7World.tick));const announcement=PetecoNarrative.next(v7Narrative,v7World.tick,8);if(announcement){v7Announcement=announcement;if(director.auto){director.focus={priority:announcement.priority,label:'V7 · '+announcement.line,scene:'village',anchor:[v7World.home.x,v7World.home.y],x:210,y:480,houseId:null};director.until=s.t+160;}}}try{localStorage.setItem(V7_STORE,JSON.stringify(v7World));if(v7Narrative)localStorage.setItem('peteco-lab-v7-narrative',JSON.stringify(v7Narrative));}catch{}}
