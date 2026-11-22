@@ -629,8 +629,12 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
   // Translate V18 forest choreography to the V21 tree at (78,407).
   // Keep the source controller and the V18 legacy scene untouched.
   const woodV21={...worker,x:110+(worker.x-200)*(32/82),y:449+(worker.y-404)*(42/114),facing:worker.phase==='cut'?1:worker.facing};
-  // V34: PetecoArtV17 already renders the real trunk at (78,407).
-  // Do not draw a second, offset tree over the same forestry worksite.
+  // Default V21 scene previously never called the V19 illustrated tree renderer.
+  // Overlay its four real-event states at the V21 chopping target, behind the worker.
+  const forestAtlas=window.PetecoForestAtlasV19;
+  if(forestAtlas&&forestAtlas.ready&&window.PetecoForestArtV19){
+   PetecoForestArtV19.draw(g,worker,forestAtlas.image,Date.now(),{x:78,y:407,width:62,height:83});
+  }
   g.save();g.translate(woodV21.x,woodV21.y);g.scale(.52,.52);g.translate(-woodV21.x,-woodV21.y);
   PetecoWoodcutterRendererV18.draw(g,woodV21,atlas.image);g.restore();
   // Forestry feedback is tied to the original confirmed actor phases.
