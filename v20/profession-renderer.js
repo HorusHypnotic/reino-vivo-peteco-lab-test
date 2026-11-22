@@ -10,8 +10,32 @@ const STYLE=Object.freeze({
 function ellipse(g,x,y,rx,ry,color){g.fillStyle=color;g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fill();}
 function line(g,x1,y1,x2,y2,width,color){g.strokeStyle=color;g.lineWidth=width;g.lineCap='round';g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();}
 function poly(g,points,color){g.fillStyle=color;g.beginPath();g.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)g.lineTo(points[i][0],points[i][1]);g.closePath();g.fill();}
+/* Optional painted atlases: each job has four columns (idle/walk/work/carry).
+ * Registration is explicit and isolated from the economic controller.
+ * Until an atlas has loaded successfully the existing procedural renderer remains. */
+const PAINTED=Object.create(null);
+const STATES=Object.freeze({idle:0,walk:1,work:2,carry:3,return:3});
+function registerAtlas(job,image,options){
+ if(!Object.hasOwn(STYLE,job)||!image||!options)return false;
+ const width=Number(options.width),height=Number(options.height);
+ if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return false;
+ PAINTED[job]={image,width,height};
+ return true;
+}
+function drawPainted(g,a,tick){
+ const pack=PAINTED[a.job];if(!pack||!pack.image.complete||!pack.image.naturalWidth)return false;
+ const x=Number(a.x),y=Number(a.y);if(!Number.isFinite(x)||!Number.isFinite(y))return false;
+ const row=STATES[a.phase];if(row==null)return false;
+ const col=a.phase==='idle'?0:Math.floor(Math.max(0,Number(tick)||0)/8)%4;
+ const iw=pack.image.naturalWidth/4,ih=pack.image.naturalHeight/4;
+ if(!iw||!ih)return false;
+ g.save();g.translate(x,y);if(a.facing<0)g.scale(-1,1);
+ g.drawImage(pack.image,col*iw,row*ih,iw,ih,-pack.width/2,-pack.height,pack.width,pack.height);
+ g.restore();return true;
+}
 function draw(g,a,tick){
  if(!g||!a||a.phase==='idle'||!STYLE[a.job])return false;
+ if(drawPainted(g,a,tick))return true;
  const x=Number(a.x),y=Number(a.y);if(!Number.isFinite(x)||!Number.isFinite(y))return false;
  const s=STYLE[a.job],moving=a.phase==='walk'||a.phase==='return';
  const step=moving?Math.sin(tick*.28)*3:0,work=a.phase==='work',swing=work?Math.sin(tick*.32)*.65:0;
@@ -67,5 +91,5 @@ function draw(g,a,tick){
  }
  g.restore();return true;
 }
-root.PetecoProfessionRendererV20=Object.freeze({draw});
+root.PetecoProfessionRendererV20=Object.freeze({draw,registerAtlas});
 })(typeof window!=='undefined'?window:globalThis);
