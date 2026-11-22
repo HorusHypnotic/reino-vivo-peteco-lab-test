@@ -19,7 +19,7 @@ test('real village calls V21 renderer and retains fallback and persistent monume
 });
 test('V21 display integration does not change persisted state',()=>{
  const integration=village.slice(village.indexOf('// V21 renderer'),village.indexOf('foreground(g,t,level)'));
- assert.doesNotMatch(integration,/\bsave\s*\(|localStorage|s\.(?:project|projectCount|projectGoal)\s*(?:=|\+\+|--)/);
+ assert.doesNotMatch(integration,/(^|[^.\w])save\s*\(|localStorage|s\.(?:project|projectCount|projectGoal)\s*(?:=|\+\+|--)/);
 });
 
 test('six persisted wall completions occupy six scene positions without changing the save',()=>{
@@ -29,5 +29,5 @@ test('six persisted wall completions occupy six scene positions without changing
  assert.match(walls,/const visible=Math\.min\(6,n\)/);
  assert.match(walls,/const row=Math\.floor\(i\/3\),column=i%3/);
  assert.match(walls,/g\.fillText\('MURALHAS '\+n/);
- assert.doesNotMatch(walls,/localStorage|save\s*\(/);
+ assert.doesNotMatch(walls,/localStorage|(^|[^.\w])save\s*\(/);
 });

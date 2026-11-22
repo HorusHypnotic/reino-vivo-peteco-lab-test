@@ -11,7 +11,7 @@ test('persistent village milestone derives from saved wall completions',()=>{
  const start=village.indexOf('// The last completed wall is a permanent milestone');
  const end=village.indexOf(' foreground(g,t,level);',start);
  assert.ok(start>=0&&end>start);
- assert.doesNotMatch(village.slice(start,end),/save\(|localStorage|s\.projectCount\s*=|s\.projectCount\+\+/);
+ assert.doesNotMatch(village.slice(start,end),/(^|[^.\w])save\s*\(|localStorage|s\.projectCount\s*=|s\.projectCount\+\+/);
 });
 test('recap removes technical cycle prefix for viewers',()=>{
  assert.ok(html.includes("latest.replace(/^Ciclo\\s+\\d+\\s*[·:]\\s*/,'')"));

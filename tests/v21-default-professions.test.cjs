@@ -11,7 +11,7 @@ test('factory starts on normal public URL without opt-in',()=>{
 test('default V21 village draws original woodcutter and real V20 jobs',()=>{
  assert.match(scene,/PetecoArtV17\.draw\(g,s,s\.t\)/);
  assert.match(scene,/woodcutterActivity\.snapshot\(\)/);
- assert.match(scene,/PetecoWoodcutterRendererV18\.draw\(g,worker,atlas\.image\)/);
+ assert.match(scene,/PetecoWoodcutterRendererV18\.draw\(g,woodV21,atlas\.image\)/);
  assert.match(scene,/for\(const job of \['farm','quarry','construction'\]\)/);
  assert.match(scene,/PetecoProfessionRendererV20\.draw\(g,actor\.snapshot\(\),s\.t\)/);
 });
@@ -20,6 +20,6 @@ test('visual factory consumes real sector changes and never writes economic stat
  const actor=fs.readFileSync(path.join(__dirname,'../v20/actor-controller.js'),'utf8');
  assert.match(bridge,/after\.farm>before\.farm/);
  assert.match(bridge,/after\.quarry>before\.quarry/);
- assert.match(actor,/confirmed===true/);
+ assert.match(actor,/e\.confirmed!==true/);
  assert.doesNotMatch(actor,/localStorage|\.food\s*[+\-]?=|\.stone\s*[+\-]?=/);
 });

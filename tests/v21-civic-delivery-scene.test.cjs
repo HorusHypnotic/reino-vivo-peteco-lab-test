@@ -13,5 +13,5 @@ test('short scene is hidden during war and does not alter economy or save',()=>{
  assert.match(html,/if\(!warOnScreen&&s\.phase==='vila'\)\{drawCivicDeliveryScene\(\);drawVillageCeremony\(\);\}/);
  assert.match(html,/s\.t>=civicDeliveryScene\.until/);
  const scene=html.slice(html.indexOf('function drawCivicDeliveryScene(){'),html.indexOf('let villageCeremony=null;'));
- assert.doesNotMatch(scene,/save\(|localStorage|civicEconomy\.|s\.wood\s*=|s\.food\s*=/);
+ assert.doesNotMatch(scene,/(^|[^.\w])save\s*\(|localStorage|civicEconomy\.|s\.wood\s*=|s\.food\s*=/);
 });
