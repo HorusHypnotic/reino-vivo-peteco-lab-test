@@ -110,6 +110,25 @@ function draw(g,s,t){
 
  if(level>=9){box(g,132,300,10,42,C.stone);box(g,216,300,10,42,C.stone);box(g,131,297,96,8,'#c2b5a0');}
  if(level>=20){box(g,111,452,140,13,'#999487');for(let i=0;i<6;i++)box(g,111+i*24,445,16,8,'#c5bca8');}
+ // Visual civic progression is derived from existing V2 state; no new save keys.
+ // The village remains pre-industrial: agriculture -> crafts -> urban workshops.
+ const civicStage=level>=30&&s.marketTrades>=10?2:level>=10?1:0;
+ if(civicStage>=1){
+  // Water-powered mill and moving wheel: new silhouette for the craft era.
+  box(g,16,258,38,31,'#88654a');box(g,13,251,44,9,'#b99a70');
+  box(g,27,240,16,13,'#735743');
+  g.save();g.translate(55,283);g.rotate(t/90);g.strokeStyle='#d5bb85';g.lineWidth=3;
+  g.beginPath();g.arc(0,0,12,0,Math.PI*2);g.stroke();
+  for(let k=0;k<6;k++){const a=k*Math.PI/3;g.beginPath();g.moveTo(0,0);g.lineTo(Math.cos(a)*12,Math.sin(a)*12);g.stroke();}
+  g.restore();
+ }
+ if(civicStage>=2){
+  // Urban workshop, chimney smoke and delivery carts reflect real trade maturity.
+  box(g,300,230,43,32,'#86634f');box(g,296,224,51,9,'#b48b66');
+  box(g,328,207,8,22,'#70594b');
+  for(let k=0;k<3;k++){const yy=202-k*8-(t/20%8);g.fillStyle='#b9c1b5aa';g.fillRect(328+k*3,yy,8+k*2,4);}
+  box(g,301,247,11,15,'#483f37');box(g,316,238,16,7,'#d2b786');
+ }
  // Small workers are located along meaningful production routes.
  const workers=Math.min(12,Math.max(2,Math.ceil(population/10)));
  const routes=[[72,371,116,350],[266,381,224,352],[159,426,185,365],[54,289,137,320]];
@@ -124,7 +143,7 @@ function draw(g,s,t){
  completedWalls(g,s.projectCount);
  foreground(g,t,level);
  // Compact cinematic location caption; leave central world unobscured.
- box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);
+ box(g,10,39,183,31,'#18342ddd');g.fillStyle='#f9e5b5';g.font='bold 12px system-ui';g.fillText('VILA VIVA  ·  NÍVEL '+level,18,58,166);g.font='bold 8px system-ui';g.fillText(civicStage===2?'ERA ARTESANAL URBANA':civicStage===1?'ERA ARTESANAL':'ERA AGRÍCOLA',18,67,166);
  if(damage>0){box(g,10,79,136,23,'#492e2be6');g.fillStyle='#ffd6a9';g.font='bold 11px system-ui';g.fillText('REPAROS · '+damage+'%',18,94);}
  g.restore();
 }
