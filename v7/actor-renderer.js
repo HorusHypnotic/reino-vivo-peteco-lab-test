@@ -1,6 +1,7 @@
 /* V7 live-economy actors rendered with the approved V18/V20 art. */
 (function(root){'use strict';
 function moving(a){return Number(a?.fromX)!==Number(a?.toX)||Number(a?.fromY)!==Number(a?.toY);}
+function activity(agent){const task=agent?.task;return task==='gather'?'CORTANDO':task==='deliver'?'MADEIRA':task==='transport'?'ENTREGA':task==='build'?'CONSTRUINDO':task==='trade'?'TROCA':null;}
 function draw(g,agent,x,y,tick,atlas){
  if(!g||!agent||!Number.isFinite(Number(x))||!Number.isFinite(Number(y)))return false;
  if(agent.job==='lenhador'&&root.PetecoWoodcutterRendererV18&&atlas&&atlas.complete&&atlas.naturalWidth){
@@ -13,5 +14,5 @@ function draw(g,agent,x,y,tick,atlas){
  }
  return false;
 }
-root.PetecoV7ActorRenderer=Object.freeze({draw});
+root.PetecoV7ActorRenderer=Object.freeze({draw,activity});
 })(typeof window!=='undefined'?window:globalThis);

@@ -24,3 +24,10 @@ A página oficial anterior ao lote foi aberta em navegador. O ambiente não carr
 ## Ponte de LIVE
 
 O conector observado em `reino-em-construcao` é um cliente Node local (PirateTok Live JS) com normalização/deduplicação e WebSocket do próprio servidor. GitHub Pages, sozinho, não mantém a conexão de LIVE. Nenhum evento TikTok real foi recebido nesta execução; o modo simulado não conta como homologação.
+
+## Continuação da PR #17
+
+- `v7/life.js` já executa o ciclo isolado lenhador → depósito → logística confirmada → construtor; o construtor consome madeira registrada e altera etapas da casa persistidas no estado V7. `v7/actor-renderer.js` passa a desenhar o lenhador com o atlas V18 e o construtor com o renderizador V20. Os rótulos de atividade aparecem apenas durante trabalho/transporte. Isso não mistura o estoque V7 com a economia principal nem altera o Save V2.
+- `v20/live-event-gateway.js` recebe o envelope `{type:'fx', payload, seq}` do servidor Node local e encaminha eventos normalizados, com deduplicação e estados de conexão. É um adaptador, não uma conexão iniciada pela página; comentários, curtidas, presentes, follows e shares ainda dependem do servidor local e de integração de comandos específica.
+- QA automatizado após a integração: `node --test` (56/56), regressão coletiva (8/8), comandos simulados (49/49), sintaxe dos dois módulos novos e `git diff --check` (PASS).
+- Captura “depois”: prévia HTTPS isolada da branch em Chrome desktop, modo espectador. A execução avançou a vila sem salvamento oficial e apresentou a crônica V7 de entrega à obra. Não é homologação Android físico nem evento TikTok real.
