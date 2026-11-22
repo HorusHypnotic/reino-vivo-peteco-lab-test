@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const overlay=html.match(/function v7WorldOverlay\(\)\{[^}]+\}/)?.[0]||'';
+assert.match(overlay,/get\('legacyoverlay'\)!=='1'/,'legacy economy scene must be opt-in for visual QA');
+assert.match(overlay,/v7Draw\(\)/,'explicit opt-in still supports regression comparisons');
+const start=html.indexOf('function draw(g,s,t){'),end=html.indexOf('// V17.4 territorial view:',start);
+assert.ok(start>0&&end>start);
+const scene=html.slice(start,end);
+for(const name of ['BOSQUE','PEDREIRA','LAVOURA'])assert.doesNotMatch(scene,new RegExp("siteLabel\\('"+name+"'"),'sector billboard must not obscure the village');
+assert.match(scene,/PetecoProfessionAtlasesV20/);
+assert.match(html,/function v7Step\(/,'V7 simulation remains intact');
+console.log('PASS: canonical village uncluttered, V7 economy remains, legacy overlay explicit only');
