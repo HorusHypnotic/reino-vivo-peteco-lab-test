@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reino Vivo | Bancada V19</title>
+<style>body{margin:0;background:#101c19;color:#f5e9cc;font:15px system-ui,sans-serif}main{max-width:520px;margin:auto;padding:16px}h1{font-size:20px}canvas{display:block;width:100%;max-width:360px;aspect-ratio:3/4;background:#5b775f;border:1px solid #bba477}button{padding:10px;margin:4px;background:#334b3e;color:white;border:1px solid #879b7f;border-radius:6px}button[aria-pressed=true]{background:#9b7441}pre{white-space:pre-wrap;font-size:12px}</style></head><body><main>
+<h1>🌳 Bancada visual V19</h1><p>Experimento isolado. Não inicia a simulação nem acessa os salvamentos da vila.</p>
+<canvas id="scene" width="360" height="480" aria-label="Prévia ilustrada da árvore"></canvas>
+<div id="buttons"></div><p id="status" role="status">Carregando atlas...</p><pre id="details"></pre>
+<script src="../v18/visual-factory.js"></script><script src="../v19/forest-art.js"></script>
+<script>
+(function(){
+'use strict';
+const canvas=document.getElementById('scene'),g=canvas.getContext('2d');
+const status=document.getElementById('status'),details=document.getElementById('details');
+const states=['tree','falling','stump','sapling'];let current=0;
+const pack=window.PetecoVisualFactoryV18&&PetecoVisualFactoryV18.get('forest');
+const image=new Image();
+function draw(){
+ g.clearRect(0,0,360,480);
+ g.fillStyle='#718e71';g.fillRect(0,0,360,480);
+ g.fillStyle='#aa9973';g.beginPath();g.ellipse(180,423,120,26,0,0,Math.PI*2);g.fill();
+ if(!image.complete||!image.naturalWidth||!window.PetecoForestArtV19)return;
+ const phase=PetecoForestArtV19.draw(g,{phase:'idle'},image,Date.now(),{x:180,y:410,width:168,height:225,previewState:states[current]});
+ status.textContent='Estado: '+phase+' | quadro '+(current+1)+'/4';
+}
+function select(i){current=i;document.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));draw();}
+states.forEach((state,i)=>{const b=document.createElement('button');b.textContent=state;b.setAttribute('aria-pressed',String(i===0));b.onclick=()=>select(i);document.getElementById('buttons').appendChild(b)});
+if(!pack){status.textContent='ERRO: pacote forest ausente no catálogo';return}
+image.onload=()=>{const ok=image.naturalWidth===pack.width&&image.naturalHeight===pack.height;details.textContent='Arquivo: '+pack.asset+'\nDimensões: '+image.naturalWidth+' × '+image.naturalHeight+'\nEsperado: '+pack.width+' × '+pack.height+'\nIntegridade: '+(ok?'OK':'DIMENSÕES INCOMPATÍVEIS');if(ok)draw();else status.textContent='ERRO: atlas incompatível'};
+image.onerror=()=>{status.textContent='ERRO: arquivo não carregado';details.textContent='Caminho: '+pack.asset};
+image.src='../'+pack.asset;
+})();
+</script></main></body></html>
