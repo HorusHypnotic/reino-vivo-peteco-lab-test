@@ -19,7 +19,8 @@ function state(actor,now){
 }
 function draw(g,actor,image,now=Date.now(),options={}){
  if(!g||!image||!image.complete||!image.naturalWidth||image.naturalWidth!==CELL.width*4||image.naturalHeight!==CELL.height)return false;
- const phase=state(actor||{},Number(now)||0),frame=FRAME[phase],rect=root.PetecoVisualFactoryV18&&root.PetecoVisualFactoryV18.frameRect('forest',phase);
+ const override=typeof options.previewState==='string'&&Object.prototype.hasOwnProperty.call(FRAME,options.previewState)?options.previewState:null;
+ const phase=override||state(actor||{},Number(now)||0),frame=FRAME[phase],rect=root.PetecoVisualFactoryV18&&root.PetecoVisualFactoryV18.frameRect('forest',phase);
  const x=Number.isFinite(options.x)?options.x:TREE.x,y=Number.isFinite(options.y)?options.y:TREE.y;
  const width=Number.isFinite(options.width)?options.width:SIZE.width,height=Number.isFinite(options.height)?options.height:SIZE.height;
  g.drawImage(image,rect?rect.x:frame*CELL.width,rect?rect.y:0,CELL.width,CELL.height,x-width/2,y-height+SIZE.feetOffsetY,width,height);
