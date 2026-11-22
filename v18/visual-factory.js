@@ -1,5 +1,5 @@
-/* Reusable V18 visual package contract. This registers recovered assets; it
- * does not synthesize frames, actors, simulation events, or persistent state. */
+/* Reusable visual package catalog: recovered V18/V19 art and V20 factory-built
+ * worker atlases. Asset processing is reproducible; simulation stays elsewhere. */
 (function(root){'use strict';
 const PACKS=Object.freeze({
  woodcutter:Object.freeze({
@@ -21,6 +21,33 @@ const PACKS=Object.freeze({
   sha256:'422978a6e7c430d7fcd7e30aebd0fec7e51a71af79f18ad659922a282faf4a1f',
   provenance:'Original illustrated environment atlas recorded in docs/V19-MUNDO-EM-MOVIMENTO.md.',
   license:'Original project artwork; no third-party asset attribution recorded.'
+ }),
+ farm:Object.freeze({
+  id:'farmer-v20',kind:'actor',asset:'v20/assets/professions/farmer.png',width:1120,height:1400,channels:4,
+  grid:Object.freeze({columns:4,rows:4}),states:Object.freeze({idle:0,walk:1,work:2,carry:3}),framesPerState:4,
+  render:Object.freeze({width:72,height:90,anchor:'feet',feetOffsetY:8,direction:'flip-on-facing'}),
+  interaction:Object.freeze({target:'v20:confirmed-farm-event',contact:'farm-worksite',occlusion:'feet-y'}),
+  sha256:'9a4e600a9fc14f8c2788571350751638ac0bc252f3281d83dee070095fc2aa98',
+  provenance:'Generated for Reino Vivo from v20/art-manifests/farm.json; raw source retained at v20/art-source/farmer-source.png; normalized by tools/build-profession-atlas.cjs.',
+  license:'OpenAI Terms of Use checked 2026-11-22; user owns Output as between user and OpenAI to the extent permitted by law. Non-unique output; no third-party infringement warranty. No external art layers.'
+ }),
+ quarry:Object.freeze({
+  id:'miner-v20',kind:'actor',asset:'v20/assets/professions/miner.png',width:1120,height:1400,channels:4,
+  grid:Object.freeze({columns:4,rows:4}),states:Object.freeze({idle:0,walk:1,work:2,carry:3}),framesPerState:4,
+  render:Object.freeze({width:72,height:90,anchor:'feet',feetOffsetY:8,direction:'flip-on-facing'}),
+  interaction:Object.freeze({target:'v20:confirmed-quarry-event',contact:'quarry-worksite',occlusion:'feet-y'}),
+  sha256:'f6d3d14b8b5b0ffa5905ff2c75dc9c8f74b93fc73fe87f948d1a2e6aeebc0b1e',
+  provenance:'Generated for Reino Vivo from v20/art-manifests/quarry.json; raw source retained at v20/art-source/miner-source.png; normalized by tools/build-profession-atlas.cjs.',
+  license:'OpenAI Terms of Use checked 2026-11-22; user owns Output as between user and OpenAI to the extent permitted by law. Non-unique output; no third-party infringement warranty. Reference is original project art.'
+ }),
+ construction:Object.freeze({
+  id:'builder-v20',kind:'actor',asset:'v20/assets/professions/builder.png',width:1120,height:1400,channels:4,
+  grid:Object.freeze({columns:4,rows:4}),states:Object.freeze({idle:0,walk:1,work:2,carry:3}),framesPerState:4,
+  render:Object.freeze({width:72,height:90,anchor:'feet',feetOffsetY:8,direction:'flip-on-facing'}),
+  interaction:Object.freeze({target:'v20:confirmed-project-event',contact:'construction-site',occlusion:'feet-y'}),
+  sha256:'53305edcb4aefc6bf242a8322a9eabe7be2e16f76a89d629c83e9174fc4bc79e',
+  provenance:'Generated for Reino Vivo from v20/art-manifests/construction.json; raw source retained at v20/art-source/builder-source.png; normalized by tools/build-profession-atlas.cjs.',
+  license:'OpenAI Terms of Use checked 2026-11-22; user owns Output as between user and OpenAI to the extent permitted by law. Non-unique output; no third-party infringement warranty. Reference is original project art.'
  })
 });
 function get(name){return PACKS[name]||null;}

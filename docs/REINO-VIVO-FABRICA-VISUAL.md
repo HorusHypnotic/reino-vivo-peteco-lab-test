@@ -10,10 +10,10 @@ Memória operacional canônica para recuperar e industrializar a produção visu
 | PR | [#17](https://github.com/HorusHypnotic/reino-vivo-peteco-lab-test/pull/17), mantida em Draft |
 | Issue de produto | [#16](https://github.com/HorusHypnotic/reino-vivo-peteco-lab-test/issues/16) |
 | Branch | `experiment/v16-product-first-minute` |
-| HEAD inicial verificado | `6cda2561ead7fa0d3353580834c2944e3de9fa87` |
-| Commit desta etapa na PR #17 | `e8c83770e8923bc2c10f423ca2084d7747a759af` |
+| HEAD inicial verificado nesta retomada | `bde9e6261cd02e879c46682c8fdf56e08da23c79` |
+| Commit desta etapa na PR #17 | registrado no commit final desta retomada |
 | Base `gh-pages` verificada | `aad905efa61835b375e80881fc6bcaae23e3890b` |
-| Estado da PR | aberta, Draft; GitHub informa `mergeable: false` |
+| Estado da PR | aberta, Draft; branch verificada no HEAD de referência |
 | Publicação | não alterada nesta etapa |
 
 ## Última etapa comprovada
@@ -104,3 +104,37 @@ Revisados diretamente `docs/V18-PRE-WORK-RESEARCH.md`, `docs/V18-LENHADOR-REAL.m
 **Novo portão de entrada reproduzível:** `tools/prepare-profession-atlas.cjs` verifica que o candidato seja PNG RGBA 4×4 com dezesseis células ocupadas, quatro estados (`idle/walk/work/carry`), dimensões divisíveis, hash opcional, proveniência, fonte e licença. Reutiliza o decoder de PNG do projeto e não altera o jogo. `tests/profession-atlas-intake.test.cjs` verifica rejeições de entradas incompletas. Commits `b9652ad`, `e260dfe`. **Os testes desta rodada não foram executados em Node.**
 
 **Bloqueio honesto e objetivo:** a fábrica ainda não possui mecanismo comprovado de produção automatizada de novos quadros artísticos coerentes com a arte original. Não converter o gate técnico em substituto dessa capacidade. Próxima execução deve recuperar a ferramenta de geração original se houver evidência verificável, ou implementar e demonstrar um processo novo reproduzível com fonte/licença e comparação visual, antes de afirmar que as três profissões foram fabricadas. QA Android permanece pendente; PR experimental não foi publicada.
+
+## Etapa 2 — fábrica executável e lote de três profissões (22/11/2026)
+
+**Estado inicial:** PR #17/branch `experiment/v16-product-first-minute`, HEAD `bde9e6261cd02e879c46682c8fdf56e08da23c79`; base `gh-pages` observada em `aad905efa61835b375e80881fc6bcaae23e3890b`. A PR permanecia aberta em Draft. Nenhuma branch de produção, página oficial ou salvamento foi alterado.
+
+**Recuperação:** a busca limitada confirmou o que já constava no histórico: o PNG do lenhador e sua composição foram recuperados, mas prompt, sessão e identificador do gerador original não foram versionados. Não atribuímos retrospectivamente uma ferramenta ao lenhador. Para este novo lote, as três especificações registram o uso do gerador de imagem integrado disponível nesta execução; o modelo específico não foi informado pela ferramenta.
+
+**Implementação:** `tools/build-profession-atlas.cjs` executa o processamento determinístico de uma prancha RGBA 4×4: recorte por célula, remoção dos pixels de halo vermelho/amarelo mais extremos, normalização pela maior pose para que nenhum quadro invada a linha vizinha, escala comum e âncora de pés, composição de PNG 1120×1400 e manifesto com hashes, prompt, proveniência, referência, ferramenta e licença. `tools/build-profession-batch.cjs` processa os três pacotes com um único comando. `tools/prepare-profession-atlas.cjs` agora rejeita quadro vazio, pose duplicada e pés desalinhados. O pipeline usa Node e `zlib` nativos, sem instalar motor ou dependência.
+
+**Assets produzidos e origem:**
+
+| Trabalho | Fonte RGBA | Atlas de jogo | Estados por linha |
+| --- | --- | --- | --- |
+| Agricultora | `v20/art-source/farmer-source.png` · SHA-256 `7ed8b581692680fe6a6015d9902e92de8c47bad30ba638009629695b0acf01ff` | `v20/assets/professions/farmer.png` · SHA-256 `9a4e600a9fc14f8c2788571350751638ac0bc252f3281d83dee070095fc2aa98` | repouso, caminhada, trabalho, transporte |
+| Mineira | `v20/art-source/miner-source.png` · SHA-256 `b91028b5af9aa0d92aa5227cb776df5de63a7524e731bdff463d5a2f3df05326` | `v20/assets/professions/miner.png` · SHA-256 `f6d3d14b8b5b0ffa5905ff2c75dc9c8f74b93fc73fe87f948d1a2e6aeebc0b1e` | repouso, caminhada, trabalho, transporte |
+| Construtora | `v20/art-source/builder-source.png` · SHA-256 `4cc073e70cf7ec42e8b50c01c1838a722f7fc346506fca9e8988e879b43e9ae9` | `v20/assets/professions/builder.png` · SHA-256 `53305edcb4aefc6bf242a8322a9eabe7be2e16f76a89d629c83e9174fc4bc79e` | repouso, caminhada, trabalho, transporte |
+
+Cada entrada mantém a especificação/prompt completo em `v20/art-manifests/`. O catálogo `v18/visual-factory.js` registra dimensões, grade, escala, âncora, estado, interação visual, hash e licença. A referência LPC foi avaliada na pesquisa existente e continua fora do pacote porque estilo pixel-art e licenças de camadas não correspondem ao cenário. Para mineradora e construtora, a arte original do lenhador foi usada apenas como referência de estilo/escala. A agricultora foi gerada sem imagem de referência.
+
+**Licença e atribuição:** os PNGs deste lote são saídas geradas, não assets LPC nem imagens de terceiros. Os manifestos registram os Termos de Uso da OpenAI consultados em 22/11/2026: a titularidade da saída é atribuída ao usuário entre as partes, na medida permitida por lei; saídas podem não ser únicas e isso não constitui garantia contra direitos de terceiros. Fonte: https://openai.com/policies/terms-of-use/. Não há licença SPDX independente a declarar para essas imagens; a origem e as limitações estão junto de cada asset.
+
+**Integração:** as imagens só são solicitadas por `index.html` quando `?v20=1`; esse canário abre o mesmo mapa ilustrado V18 e registra os pacotes no `PetecoProfessionRendererV20`. O renderizador desenha repouso animado lentamente e estados walk/work/carry a partir dos snapshots existentes. Os controladores V20 só iniciam com eventos confirmados (`harvest`, `mine`, `build`); carga visual aparece no retorno. Nenhum recurso ou save é escrito pelo renderer. Três pontos de espera ao longo da frente do depósito evitam que os sprites em repouso se empilhem; são coordenadas visuais, não logística/economia nova. Fallback procedural anterior permanece caso um PNG falhe ao carregar.
+
+**Evidências:** `docs/evidence/profession-factory/three-profession-atlases.png` mostra os 48 quadros processados; `three-workers-confirmed-v20-scene.png` mostra a composição com o cenário V18 e três snapshots em fases distintas, após aceitar eventos sintéticos confirmados pelos controladores. O manifesto de evidência marca os dados como sintéticos, informa que não leu nem escreveu save e que não é captura de navegador. A composição renderizada foi revisada; homologação de navegador, Android físico e economia em runtime ainda não foram declaradas.
+
+**Testes executados nesta etapa:** `node tools/build-profession-batch.cjs` — PASS, 3 atlases determinísticos; `node tools/validate-visual-assets.cjs` — PASS, 5 pacotes e 26 verificações; `node --test` — PASS, 97/97; `node tests/collective-regression.cjs` — PASS, 8/8; `node tests/live-command-regression.cjs` — PASS, 49/49; `git diff --check` — PASS. Inclui reprocessamento byte-a-byte, dezesseis células, variação de quadros nos quatro estados, alinhamento de pés, alfa, licença/proveniência, registro no catálogo, eventos confirmados, fallback e regressões de guerra/economia/save.
+
+**Limitação concreta:** o gerador original do lenhador continua desconhecido. A etapa de geração de uma nova ilustração depende do gerador integrado desta ferramenta; o processo local versionado reproduz exatamente o tratamento/exportação desde as fontes preservadas, mas não invoca esse serviço nem promete geração pixel-a-pixel de novas fontes. Essa distinção permanece explícita para não chamar a geração por prompt de automação determinística.
+
+**QA do navegador:** tentativa real com Chromium do executor. O `curl` local para `127.0.0.1:8765` retornou `connection refused`; o Chromium de QA está em outro ambiente e a política da organização bloqueou `file:///tmp/vila-pr17-current/index.html` (“This page is blocked”). Portanto esta execução não comprova renderização no navegador, viewport Android ou carregamento do canário. Não há homologação Android físico. A evidência produzida é um render sintético com os mesmos módulos Canvas e controladores, claramente identificado como tal.
+
+**Resultado:** os três atlases foram produzidos, validados e integrados ao renderizador/controladores experimentais. QA automatizado e composição renderizada passaram; navegador/Android continuam pendentes pelo bloqueio acima. PR #17 deve seguir em Draft até revisão técnica/visual do canário. A publicação oficial permanece intocada.
+
+**Commit de implementação desta etapa:** `a6cb2ff23e6b002cabe148e8d0c9efda9b5fa31d`. A sincronização da branch remota da PR ainda está pendente; não considerar esta alteração entregue na PR até o SHA remoto ser confirmado.

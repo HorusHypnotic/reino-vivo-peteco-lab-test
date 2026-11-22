@@ -1,0 +1,11 @@
+{
+  "job": "quarry",
+  "columns": 4,
+  "rows": 4,
+  "states": ["idle", "walk", "work", "carry"],
+  "tool": "OpenAI ChatGPT built-in image generation; provider model identifier was not exposed by the tool",
+  "reference": "v18/assets/woodcutter-atlas-original.png SHA-256 ad8aea4d0c7606c472689d334a6b71ba240e658ac12ca306eb588eca19e75b0d; style and scale only, no lumberjack identity or pose copied by instruction.",
+  "provenance": "Generated for Reino Vivo on 2026-11-22 from this versioned specification. Source sheet retained at v20/art-source/miner-source.png.",
+  "license": "OpenAI Terms of Use, checked 2026-11-22: as between user and OpenAI and to the extent permitted by law, user owns Output; reference is original project artwork. Output may be non-unique and no exclusivity or third-party non-infringement guarantee is implied. https://openai.com/policies/terms-of-use/",
+  "prompt": "Use case: illustration-story. Asset type: one transparent 4×4 spritesheet, 16 frames at the exact 1122×1402 canvas proportions of Image 1. Image 1 is style/scale reference only—painted medieval 2D game illustration, not a source character.\nCreate a DISTINCT MINER, clearly not the lumberjack: stockier older woman with auburn braid, charcoal-blue work clothes, leather apron, wool cap with small lamp, pickaxe, ore sack. Same painterly texture, soft outlines, light and scale as Image 1.\nGrid: exactly four columns × four rows, equal cells, no labels or gutters. Full body centered in each cell; stable foot baseline and same proportions. Four rows top to bottom: idle 4 breathing poses; walk 4 sequential alternating-step poses empty handed; work 4 sequential mining poses holding ONLY a pickaxe, striking a rock out of frame; carry 4 sequential alternating-step poses with an ore sack.\nKeep the pickaxe strictly in work row. No axe, no wood, no logs, no basket, no crops, no other worker or scene. Fully transparent background, clean alpha edges with no colored fringe, no watermark. Distinct frame-to-frame movement, anatomically coherent, three-quarter side view."
+}

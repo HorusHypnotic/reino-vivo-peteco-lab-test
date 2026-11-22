@@ -11,4 +11,6 @@ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 assert.ok(html.includes('src="v20/profession-renderer.js"'));
 assert.ok(html.includes("get('v20')==='1'"),'preview is opt-in');
 assert.ok(html.includes('PetecoProfessionRendererV20.draw(g,actor.snapshot(),s.t)'));
-console.log('PASS V20 opt-in procedural renderer contract');
+assert.ok(html.includes('PetecoProfessionAtlasesV20'),'profession atlas loader is available');
+assert.ok(html.includes("image.src=spec.asset+'?v=17-art1'"),'catalog assets use explicit cache version');
+console.log('PASS V20 opt-in painted atlas renderer contract');

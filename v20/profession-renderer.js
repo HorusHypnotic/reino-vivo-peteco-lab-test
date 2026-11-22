@@ -26,7 +26,7 @@ function drawPainted(g,a,tick){
  const pack=PAINTED[a.job];if(!pack||!pack.image.complete||!pack.image.naturalWidth)return false;
  const x=Number(a.x),y=Number(a.y);if(!Number.isFinite(x)||!Number.isFinite(y))return false;
  const row=STATES[a.phase];if(row==null)return false;
- const col=a.phase==='idle'?0:Math.floor(Math.max(0,Number(tick)||0)/8)%4;
+ const col=a.phase==='idle'?Math.floor(Math.max(0,Number(tick)||0)/24)%4:Math.floor(Math.max(0,Number(tick)||0)/8)%4;
  const iw=pack.image.naturalWidth/4,ih=pack.image.naturalHeight/4;
  if(!iw||!ih)return false;
  g.save();g.translate(x,y);if(a.facing<0)g.scale(-1,1);
@@ -34,8 +34,9 @@ function drawPainted(g,a,tick){
  g.restore();return true;
 }
 function draw(g,a,tick){
- if(!g||!a||a.phase==='idle'||!STYLE[a.job])return false;
+ if(!g||!a||!STYLE[a.job])return false;
  if(drawPainted(g,a,tick))return true;
+ if(a.phase==='idle')return false;
  const x=Number(a.x),y=Number(a.y);if(!Number.isFinite(x)||!Number.isFinite(y))return false;
  const s=STYLE[a.job],moving=a.phase==='walk'||a.phase==='return';
  const step=moving?Math.sin(tick*.28)*3:0,work=a.phase==='work',swing=work?Math.sin(tick*.32)*.65:0;

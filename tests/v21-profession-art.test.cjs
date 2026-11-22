@@ -12,7 +12,7 @@ test('all three existing professions render in walk, work and return',()=>{
   const {g}=mock();assert.equal(renderer.draw(g,{job,phase,x:180,y:320},120),true,job+' '+phase);
  }
 });
-test('idle or unknown professions do not draw',()=>{
+test('idle falls back when no painted atlas exists; unknown professions never draw',()=>{
  const renderer=context(),{g}=mock();
  assert.equal(renderer.draw(g,{job:'farm',phase:'idle',x:0,y:0},1),false);
  assert.equal(renderer.draw(g,{job:'imaginary',phase:'work',x:0,y:0},1),false);
@@ -24,4 +24,12 @@ test('visual art remains read-only, with job-specific tools and cargo',()=>{
  assert.match(source,/a\.job==='construction'/);
  assert.match(source,/a\.phase==='return'/);
  assert.doesNotMatch(source,/localStorage|indexedDB|\.food\s*[+\-]?=|\.stone\s*[+\-]?=/);
+});
+test('painted profession atlases are loaded only by v20 canary and displayed in the real V18 village map',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+ assert.match(html,/get\('v20'\)!=='1'\)return/,'normal play does not fetch the experimental profession atlases');
+ assert.match(html,/PetecoVisualFactoryV18\.get\(job\)/,'atlas paths come from the canonical asset catalog');
+ assert.match(html,/registerAtlas\(job,image,spec\.render\)/,'loaded atlas is registered with the existing renderer');
+ assert.match(html,/get\('v20'\)==='1'\)\);const sceneClean/,'v20 canary opens the same illustrated village scene');
+ assert.match(html,/if\(factoryV20&&window\.PetecoProfessionRendererV20&&new URLSearchParams\(location\.search\)\.get\('v20'\)==='1'\)/,'workers draw from controller snapshots only in the canary');
 });

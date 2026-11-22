@@ -1,0 +1,144 @@
+{
+  "job": "farm",
+  "asset": "farmer.png",
+  "sha256": "9a4e600a9fc14f8c2788571350751638ac0bc252f3281d83dee070095fc2aa98",
+  "width": 1120,
+  "height": 1400,
+  "channels": 4,
+  "columns": 4,
+  "rows": 4,
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "states": [
+    "idle",
+    "walk",
+    "work",
+    "carry"
+  ],
+  "stateRows": {
+    "idle": 0,
+    "walk": 1,
+    "work": 2,
+    "carry": 3
+  },
+  "framesPerState": 4,
+  "render": {
+    "width": 72,
+    "height": 90,
+    "anchor": "feet",
+    "feetOffsetY": 8,
+    "direction": "flip-on-facing"
+  },
+  "normalizedScale": 1.06774,
+  "frameGeometry": [
+    {
+      "width": 177,
+      "height": 325,
+      "left": 52,
+      "top": 18
+    },
+    {
+      "width": 177,
+      "height": 328,
+      "left": 332,
+      "top": 15
+    },
+    {
+      "width": 173,
+      "height": 321,
+      "left": 614,
+      "top": 22
+    },
+    {
+      "width": 164,
+      "height": 325,
+      "left": 898,
+      "top": 18
+    },
+    {
+      "width": 156,
+      "height": 331,
+      "left": 62,
+      "top": 362
+    },
+    {
+      "width": 147,
+      "height": 318,
+      "left": 347,
+      "top": 375
+    },
+    {
+      "width": 122,
+      "height": 319,
+      "left": 639,
+      "top": 374
+    },
+    {
+      "width": 187,
+      "height": 319,
+      "left": 887,
+      "top": 374
+    },
+    {
+      "width": 154,
+      "height": 320,
+      "left": 63,
+      "top": 723
+    },
+    {
+      "width": 174,
+      "height": 309,
+      "left": 333,
+      "top": 734
+    },
+    {
+      "width": 222,
+      "height": 262,
+      "left": 589,
+      "top": 781
+    },
+    {
+      "width": 172,
+      "height": 312,
+      "left": 894,
+      "top": 731
+    },
+    {
+      "width": 167,
+      "height": 326,
+      "left": 57,
+      "top": 1067
+    },
+    {
+      "width": 161,
+      "height": 327,
+      "left": 340,
+      "top": 1066
+    },
+    {
+      "width": 142,
+      "height": 326,
+      "left": 629,
+      "top": 1067
+    },
+    {
+      "width": 202,
+      "height": 327,
+      "left": 879,
+      "top": 1066
+    }
+  ],
+  "occupiedCells": 16,
+  "source": {
+    "file": "farmer-source.png",
+    "sha256": "7ed8b581692680fe6a6015d9902e92de8c47bad30ba638009629695b0acf01ff"
+  },
+  "tool": "OpenAI ChatGPT built-in image generation; provider model identifier was not exposed by the tool",
+  "reference": "No reference image. Style target was written in the prompt; no third-party assets were supplied.",
+  "provenance": "Generated for Reino Vivo on 2026-11-22 from this versioned specification. Source sheet retained at v20/art-source/farmer-source.png.",
+  "license": "OpenAI Terms of Use, checked 2026-11-22: as between user and OpenAI and to the extent permitted by law, user owns Output; no third-party asset layer was used. Output may be non-unique and no exclusivity or third-party non-infringement guarantee is implied. https://openai.com/policies/terms-of-use/",
+  "prompt": "Use case: illustration-story. Asset type: 4×4 animated spritesheet for a medieval 2D village game. A professional hand-painted game character with warm natural lighting, textured cloth/leather, soft painterly edges and a stable three-quarter side view, visually compatible with a polished illustrated lumberjack sprite.\nCreate a distinctive female FARMER with a light straw hat, moss-green blouse, ochre apron, dark trousers, a small hand hoe and vegetable basket. Her face, clothing and proportions must be consistent in all 16 cells.\nExact transparent sheet: 4 equal columns by 4 equal rows, no gaps, no labels, one full-body pose centered per cell, stable scale and foot baseline. Row 1 idle: four subtle breathing/blinking poses. Row 2 walk: four distinct sequential alternating-step walking poses, empty hands. Row 3 work: four sequential planting/harvesting poses, using ONLY a small hand hoe or sickle. Row 4 carry: four distinct sequential walking poses carrying a vegetable basket.\nNo lumberjack, no male bearded worker, no axe of any kind, no pickaxe, no timber, no hammer, no trees, no scenery, no text. Keep anatomy consistent; clear limb motion between successive frames. Clean natural transparent alpha edges, absolutely no colored halo, glow, watermark or background.",
+  "review": "generated atlas; frame sequence and runtime pose require visual review"
+}

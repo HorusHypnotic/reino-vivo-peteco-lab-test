@@ -27,5 +27,6 @@ assert.equal(m.position('forest',0).x,200);
 assert.equal(m.position('forest',1).x,118);
 assert.equal(m.route('construction').target.x,183);
 assert.equal(m.route('construction').target.y,311,'builder target aligns with the published wall worksite');
+assert.equal(new Set(['farm','quarry','construction'].map(job=>m.route(job).depot.x)).size,3,'three resting atlases have non-overlapping staging anchors at the shared depot frontage');
 assert.equal(m.route('unknown'),null);
 console.log('PASS V20 factory contracts and scene-map');

@@ -4,11 +4,12 @@ const root=path.join(__dirname,'..'),factoryFile=path.join(root,'v18/visual-fact
 test('visual factory registers recovered woodcutter and forest atlases with compatible frames',()=>{
  const box={};vm.runInNewContext(fs.readFileSync(factoryFile,'utf8'),box);const factory=box.PetecoVisualFactoryV18;
  const plain=value=>JSON.parse(JSON.stringify(value));
- assert.deepEqual(plain(factory.list()),['woodcutter','forest']);
+ assert.deepEqual(plain(factory.list()),['woodcutter','forest','farm','quarry','construction']);
  assert.deepEqual(plain(Object.keys(factory.get('woodcutter').states)),['idle','walk','work','carry']);
  assert.deepEqual(plain(Object.keys(factory.get('forest').states)),['tree','falling','stump','sapling']);
  assert.deepEqual(plain(factory.frameRect('woodcutter','work',3)),{x:841.5,y:701,width:280.5,height:350.5});
  assert.deepEqual(plain(factory.frameRect('forest','sapling')),{x:1629,y:0,width:543,height:724});
+ for(const job of ['farm','quarry','construction']){const spec=factory.get(job);assert.equal(spec.width,1120);assert.equal(spec.height,1400);assert.equal(spec.grid.columns,4);assert.equal(Object.keys(spec.states).length,4);assert.ok(spec.license);assert.match(spec.provenance,/art-manifests/);}
  assert.equal(factory.frameRect('woodcutter','unknown'),null);
 });
 test('production renderers consume factory frame metadata with legacy fallback intact',()=>{
@@ -25,5 +26,8 @@ test('asset validator decodes atlas integrity and confirms every frame is popula
  const output=execFileSync(process.execPath,[path.join(root,'tools/validate-visual-assets.cjs')],{encoding:'utf8'});
  assert.match(output,/PASS woodcutter 1122x1402 RGBA 4x4; 16 non-empty frames/);
  assert.match(output,/PASS forest 2172x724 RGBA 4x1; 4 non-empty frames/);
+ assert.match(output,/PASS farm 1120x1400 RGBA 4x4; 16 non-empty frames/);
+ assert.match(output,/PASS quarry 1120x1400 RGBA 4x4; 16 non-empty frames/);
+ assert.match(output,/PASS construction 1120x1400 RGBA 4x4; 16 non-empty frames/);
  assert.match(output,/PASS factory contact/);
 });

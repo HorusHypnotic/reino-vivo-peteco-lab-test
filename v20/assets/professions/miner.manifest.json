@@ -1,0 +1,144 @@
+{
+  "job": "quarry",
+  "asset": "miner.png",
+  "sha256": "f6d3d14b8b5b0ffa5905ff2c75dc9c8f74b93fc73fe87f948d1a2e6aeebc0b1e",
+  "width": 1120,
+  "height": 1400,
+  "channels": 4,
+  "columns": 4,
+  "rows": 4,
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "states": [
+    "idle",
+    "walk",
+    "work",
+    "carry"
+  ],
+  "stateRows": {
+    "idle": 0,
+    "walk": 1,
+    "work": 2,
+    "carry": 3
+  },
+  "framesPerState": 4,
+  "render": {
+    "width": 72,
+    "height": 90,
+    "anchor": "feet",
+    "feetOffsetY": 8,
+    "direction": "flip-on-facing"
+  },
+  "normalizedScale": 0.92201,
+  "frameGeometry": [
+    {
+      "width": 171,
+      "height": 319,
+      "left": 55,
+      "top": 24
+    },
+    {
+      "width": 176,
+      "height": 322,
+      "left": 332,
+      "top": 21
+    },
+    {
+      "width": 172,
+      "height": 316,
+      "left": 614,
+      "top": 27
+    },
+    {
+      "width": 172,
+      "height": 319,
+      "left": 894,
+      "top": 24
+    },
+    {
+      "width": 195,
+      "height": 321,
+      "left": 43,
+      "top": 372
+    },
+    {
+      "width": 141,
+      "height": 317,
+      "left": 350,
+      "top": 376
+    },
+    {
+      "width": 195,
+      "height": 319,
+      "left": 603,
+      "top": 374
+    },
+    {
+      "width": 166,
+      "height": 321,
+      "left": 897,
+      "top": 372
+    },
+    {
+      "width": 224,
+      "height": 318,
+      "left": 28,
+      "top": 725
+    },
+    {
+      "width": 235,
+      "height": 331,
+      "left": 303,
+      "top": 712
+    },
+    {
+      "width": 247,
+      "height": 308,
+      "left": 577,
+      "top": 735
+    },
+    {
+      "width": 232,
+      "height": 305,
+      "left": 864,
+      "top": 738
+    },
+    {
+      "width": 207,
+      "height": 320,
+      "left": 37,
+      "top": 1073
+    },
+    {
+      "width": 189,
+      "height": 323,
+      "left": 326,
+      "top": 1070
+    },
+    {
+      "width": 189,
+      "height": 318,
+      "left": 606,
+      "top": 1075
+    },
+    {
+      "width": 191,
+      "height": 320,
+      "left": 885,
+      "top": 1073
+    }
+  ],
+  "occupiedCells": 16,
+  "source": {
+    "file": "miner-source.png",
+    "sha256": "b91028b5af9aa0d92aa5227cb776df5de63a7524e731bdff463d5a2f3df05326"
+  },
+  "tool": "OpenAI ChatGPT built-in image generation; provider model identifier was not exposed by the tool",
+  "reference": "v18/assets/woodcutter-atlas-original.png SHA-256 ad8aea4d0c7606c472689d334a6b71ba240e658ac12ca306eb588eca19e75b0d; style and scale only, no lumberjack identity or pose copied by instruction.",
+  "provenance": "Generated for Reino Vivo on 2026-11-22 from this versioned specification. Source sheet retained at v20/art-source/miner-source.png.",
+  "license": "OpenAI Terms of Use, checked 2026-11-22: as between user and OpenAI and to the extent permitted by law, user owns Output; reference is original project artwork. Output may be non-unique and no exclusivity or third-party non-infringement guarantee is implied. https://openai.com/policies/terms-of-use/",
+  "prompt": "Use case: illustration-story. Asset type: one transparent 4×4 spritesheet, 16 frames at the exact 1122×1402 canvas proportions of Image 1. Image 1 is style/scale reference only—painted medieval 2D game illustration, not a source character.\nCreate a DISTINCT MINER, clearly not the lumberjack: stockier older woman with auburn braid, charcoal-blue work clothes, leather apron, wool cap with small lamp, pickaxe, ore sack. Same painterly texture, soft outlines, light and scale as Image 1.\nGrid: exactly four columns × four rows, equal cells, no labels or gutters. Full body centered in each cell; stable foot baseline and same proportions. Four rows top to bottom: idle 4 breathing poses; walk 4 sequential alternating-step poses empty handed; work 4 sequential mining poses holding ONLY a pickaxe, striking a rock out of frame; carry 4 sequential alternating-step poses with an ore sack.\nKeep the pickaxe strictly in work row. No axe, no wood, no logs, no basket, no crops, no other worker or scene. Fully transparent background, clean alpha edges with no colored fringe, no watermark. Distinct frame-to-frame movement, anatomically coherent, three-quarter side view.",
+  "review": "generated atlas; frame sequence and runtime pose require visual review"
+}

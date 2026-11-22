@@ -1,0 +1,144 @@
+{
+  "job": "construction",
+  "asset": "builder.png",
+  "sha256": "53305edcb4aefc6bf242a8322a9eabe7be2e16f76a89d629c83e9174fc4bc79e",
+  "width": 1120,
+  "height": 1400,
+  "channels": 4,
+  "columns": 4,
+  "rows": 4,
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "states": [
+    "idle",
+    "walk",
+    "work",
+    "carry"
+  ],
+  "stateRows": {
+    "idle": 0,
+    "walk": 1,
+    "work": 2,
+    "carry": 3
+  },
+  "framesPerState": 4,
+  "render": {
+    "width": 72,
+    "height": 90,
+    "anchor": "feet",
+    "feetOffsetY": 8,
+    "direction": "flip-on-facing"
+  },
+  "normalizedScale": 0.95665,
+  "frameGeometry": [
+    {
+      "width": 151,
+      "height": 315,
+      "left": 65,
+      "top": 28
+    },
+    {
+      "width": 153,
+      "height": 316,
+      "left": 344,
+      "top": 27
+    },
+    {
+      "width": 146,
+      "height": 314,
+      "left": 627,
+      "top": 29
+    },
+    {
+      "width": 147,
+      "height": 315,
+      "left": 907,
+      "top": 28
+    },
+    {
+      "width": 184,
+      "height": 312,
+      "left": 48,
+      "top": 381
+    },
+    {
+      "width": 116,
+      "height": 313,
+      "left": 362,
+      "top": 380
+    },
+    {
+      "width": 185,
+      "height": 310,
+      "left": 608,
+      "top": 383
+    },
+    {
+      "width": 170,
+      "height": 308,
+      "left": 895,
+      "top": 385
+    },
+    {
+      "width": 222,
+      "height": 315,
+      "left": 29,
+      "top": 728
+    },
+    {
+      "width": 213,
+      "height": 331,
+      "left": 314,
+      "top": 712
+    },
+    {
+      "width": 211,
+      "height": 300,
+      "left": 595,
+      "top": 743
+    },
+    {
+      "width": 225,
+      "height": 288,
+      "left": 868,
+      "top": 755
+    },
+    {
+      "width": 185,
+      "height": 320,
+      "left": 48,
+      "top": 1073
+    },
+    {
+      "width": 150,
+      "height": 319,
+      "left": 345,
+      "top": 1074
+    },
+    {
+      "width": 168,
+      "height": 318,
+      "left": 616,
+      "top": 1075
+    },
+    {
+      "width": 150,
+      "height": 318,
+      "left": 905,
+      "top": 1075
+    }
+  ],
+  "occupiedCells": 16,
+  "source": {
+    "file": "builder-source.png",
+    "sha256": "4cc073e70cf7ec42e8b50c01c1838a722f7fc346506fca9e8988e879b43e9ae9"
+  },
+  "tool": "OpenAI ChatGPT built-in image generation; provider model identifier was not exposed by the tool",
+  "reference": "v18/assets/woodcutter-atlas-original.png SHA-256 ad8aea4d0c7606c472689d334a6b71ba240e658ac12ca306eb588eca19e75b0d; style and scale only, no lumberjack identity or axe copied by instruction.",
+  "provenance": "Generated for Reino Vivo on 2026-11-22 from this versioned specification. Source sheet retained at v20/art-source/builder-source.png.",
+  "license": "OpenAI Terms of Use, checked 2026-11-22: as between user and OpenAI and to the extent permitted by law, user owns Output; reference is original project artwork. Output may be non-unique and no exclusivity or third-party non-infringement guarantee is implied. https://openai.com/policies/terms-of-use/",
+  "prompt": "Use case: illustration-story. Asset type: one transparent 4×4 spritesheet for an existing medieval settlement game. Image 1 is reference for the hand-painted soft-textured medieval game illustration, scale and lighting only.\nMake a visually distinct female BUILDER: short dark curly hair under a mustard work cap, brick-red tunic, sturdy leather tool belt, wooden mallet and small planks. Do not resemble or reuse the lumberjack from Image 1. Keep the painterly material detail, proportions and soft outlines consistent.\nExact layout: 4 columns × 4 rows, equal cells, no labels, no gutters. Same builder, full body, centered and same size in every cell; stable foot baseline; three-quarter side view. Rows: idle (4 subtly different breathing/looking poses); walk (4 sequential alternating-step poses, empty hands); work (4 sequential construction poses with a wooden mallet, hammering a small plank); carry (4 sequential alternating-step poses carrying one small stack of boards). Clearly different consecutive animation poses but stable anatomy and clothing.\nStrict prop constraints: mallet only in work row; boards only in carry row. No axe, pickaxe, mining gear, crops or basket. No other character or environment. Fully transparent background, clean neutral alpha edge, no red/yellow outline, no glow, no watermark.",
+  "review": "generated atlas; frame sequence and runtime pose require visual review"
+}
