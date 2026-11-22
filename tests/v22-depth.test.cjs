@@ -15,5 +15,5 @@ test('V22 orders by feet, preserves stable ties and never mutates simulation',()
 test('V22 is read-only and wired into the viewer',()=>{
  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
  assert.ok(html.includes('src="v22/depth.js"'));
- assert.ok(html.includes('PetecoV22Depth.order([{kind:'home',ref:h},...(v7Cargo?[{kind:'cargo',ref:v7Cargo}]:[]),...v7World.agents.map(agent=>({kind:'agent',ref:agent}))]'));
+ assert.ok(html.includes('PetecoV22Depth.order([{kind:'home',ref:h},...(typeof PetecoV27Forest!=='undefined'?PetecoV27Forest.TREES.map(tree=>({kind:'tree',ref:tree})):[]),...(v7Cargo?[{kind:'cargo',ref:v7Cargo}]:[]),...v7World.agents.map(agent=>({kind:'agent',ref:agent}))]'));
 });
