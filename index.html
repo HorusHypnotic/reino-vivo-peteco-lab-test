@@ -17,7 +17,10 @@ function tree(g,x,y,k=1,actor=null,tick=0){
    const sway=actor.phase==='cut'?Math.sin(tick*.65)*1.8:0;
    g.save();g.translate(sway,0);
    // V19 lifecycle windows are milliseconds, while the V17 scene tick is a frame counter.
-   const state=root.PetecoForestArtV19.draw(g,actor,im,Date.now(),{x,y,width:w,height:h});
+   const forestQa=new URLSearchParams(location.search).get('forestqa')==='1';
+   const states=['tree','falling','stump','sapling'];
+   const previewState=forestQa?states[Math.floor(Date.now()/1800)%states.length]:undefined;
+   const state=root.PetecoForestArtV19.draw(g,actor,im,Date.now(),{x,y,width:w,height:h,previewState});
    g.restore();return state;
   }
   g.drawImage(im,0,0,cell,im.naturalHeight,x-w/2,y-h,w,h);
@@ -182,7 +185,7 @@ function draw(g,s,t,actors){
  tree(g,35,379,1.3);
  // The main worksite uses the same illustrated forest atlas as the surrounding
  // trees. Keep the contact point fixed so the woodcutter's actions still align.
- tree(g,78,407,1.48);
+ tree(g,78,407,1.48,actors&&actors.woodcutter,t);
  // Neighboring trunks give the woodcutter a forest rather than one prop.
  tree(g,25,426,1.06);tree(g,122,379,.84);
  for(let i=0;i<5;i++){box(g,244+i*19,373,13,7,'#b4a75e');box(g,244+i*19,386,13,7,'#d4ba6c');}
@@ -634,17 +637,14 @@ function frame(){s.t++;woodcutterActivity.update(1/60);if(typeof warState!=="und
   g.fillStyle='#fff4c8';g.font='bold 10px sans-serif';
   g.fillText('QA FLORESTA: '+(forestAtlas&&forestAtlas.error?'ATLAS FALHOU':'ATLAS/RENDER PENDENTE'),12,468);g.restore();
  }
- if(forestAtlas&&forestAtlas.ready&&window.PetecoForestArtV19){
-  // Explicit QA query parameter previews the four existing atlas frames.
-  // No economy event, save data, or production state is changed.
-  const previewStates=['tree','falling','stump','sapling'];
-  const previewState=forestQa?previewStates[Math.floor(Date.now()/1800)%previewStates.length]:undefined;
-  const forestPhase=PetecoForestArtV19.draw(g,worker,forestAtlas.image,Date.now(),{x:78,y:407,width:62,height:83,previewState});
-  if(forestQa&&forestPhase){
-   g.save();g.fillStyle='#14271fdd';g.fillRect(7,454,205,20);
-   g.fillStyle='#fff4c8';g.font='bold 10px sans-serif';
-   g.fillText('QA FLORESTA V19: '+forestPhase.toUpperCase(),12,468);g.restore();
-  }
+ // V17 already draws the V19 forest in its scene, including the illustrated
+ // village path. Never paint a second tree over its own lifecycle.
+ if(forestQa&&forestAtlas&&forestAtlas.ready&&window.PetecoForestArtV19){
+  const states=['tree','falling','stump','sapling'];
+  const phase=states[Math.floor(Date.now()/1800)%states.length];
+  g.save();g.fillStyle='#14271fdd';g.fillRect(7,454,205,20);
+  g.fillStyle='#fff4c8';g.font='bold 10px sans-serif';
+  g.fillText('QA FLORESTA V19: '+phase.toUpperCase(),12,468);g.restore();
  }
  if(worker&&atlas&&atlas.ready&&window.PetecoWoodcutterRendererV18){
   // Translate V18 choreography to the actual V21 forestry worksite.
