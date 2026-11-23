@@ -146,6 +146,10 @@ function illustratedVillage(g,s,t,worker){
  const homes=Array.isArray(s.structures)?s.structures:[{stage:3,integrity:100},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0}];
  // Finished defensive walls belong behind the painted homes, not over their facades.
  completedWalls(g,s.projectCount);
+ // The active worksite also stays beneath house sprites and never masks their doors.
+ if(root.PetecoConstructionV20){
+  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:s.projectCount},t,{x:132,y:308,width:102,rowHeight:7,slots:4});
+ }
  if(root.PetecoV26Architecture&&root.PetecoV26Architecture.structureState){
   const layouts=[{x:75,y:302,width:54,height:50,slot:'northwest',index:1},{x:270,y:302,width:55,height:50,slot:'northeast',index:2},{x:180,y:430,width:72,height:65,slot:'south',index:0}];
   layouts.forEach(({slot,index,...layout})=>{
@@ -161,9 +165,6 @@ function illustratedVillage(g,s,t,worker){
   // Avoid painting a second geometric damage facade over the illustrated south house.
   const southAtlas=root.PetecoHouseAtlasV18;
   if(Number(s.damage)>0&&!(southAtlas&&southAtlas.ready&&root.PetecoStructureRendererV18))root.PetecoV26Architecture.structureState(g,{stage:3,integrity:100-Math.min(100,Number(s.damage)||0)},layouts[2],t);
- }
- if(root.PetecoConstructionV20){
-  root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:s.projectCount},t,{x:132,y:308,width:102,rowHeight:7,slots:4});
  }
  g.restore();return true;
 }
