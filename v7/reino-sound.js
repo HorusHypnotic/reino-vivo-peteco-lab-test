@@ -104,11 +104,11 @@ const Sound = (() => {
   const fanfare = [[294,0,0.2],[392,0.2,0.2],[440,0.4,0.2],[587,0.6,0.65]];
   const api = {
     unlock,
-    setMuted(value) { muted=Boolean(value); save('reino_muted',muted?'1':'0'); mix(); },
+    setMuted(value, persist = true) { muted=Boolean(value); if (persist) save('reino_muted',muted?'1':'0'); mix(); },
     isMuted:()=>muted,
     forceMute(value) { forcedMute=Boolean(value); mix(); },
-    setMusicVolume(value) { musicVolume=clamp(value); save('reino_music_volume',musicVolume); mix(); },
-    setEffectsVolume(value) { effectsVolume=clamp(value); save('reino_effects_volume',effectsVolume); mix(); },
+    setMusicVolume(value, persist = true) { musicVolume=clamp(value); if (persist) save('reino_music_volume',musicVolume); mix(); },
+    setEffectsVolume(value, persist = true) { effectsVolume=clamp(value); if (persist) save('reino_effects_volume',effectsVolume); mix(); },
     status() { const samples=new Float32Array(256); analyser?.getFloatTimeDomainData(samples); return {state:ctx?.state ?? 'locked',muted,forcedMute,musicVolume,effectsVolume,voices,musicLoop:musicSource?.loop ?? false,rms:Math.sqrt(samples.reduce((s,v)=>s+v*v,0)/samples.length)}; },
     sword:()=>effect('sword',[[2100,0,0.09,{noise:true,volume:0.2}],[880,0.02,0.12,{end:330,volume:0.1}]]),
     arrow:()=>effect('arrow',[[3400,0,0.16,{noise:true,volume:0.16}],[170,0.13,0.07,{volume:0.12}]]),
