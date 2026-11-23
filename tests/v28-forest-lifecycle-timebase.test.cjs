@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const start=html.indexOf('function tree(g,x,y,k=1,actor=null,tick=0)'),end=html.indexOf('function building(',start);
+assert.ok(start>=0&&end>start);
+const source=html.slice(start,end);
+assert.match(source,/PetecoForestArtV19\.draw\(g,actor,im,Date\.now\(\)/,'forest cycle must use milliseconds rather than V17 frame tick');
+const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'v19/forest-art.js'),'utf8'),ctx);
+const forest=ctx.PetecoForestArtV19;
+const confirmed={phase:'carry',cycle:11,ledger:{deliveryConfirmed:true}};
+assert.equal(forest.state(confirmed,10000),'falling');
+assert.equal(forest.state({phase:'idle',cycle:11,ledger:{deliveryConfirmed:true}},10100),'stump');
+assert.equal(forest.state({phase:'idle',cycle:11,ledger:{deliveryConfirmed:true}},11000),'sapling');
+assert.equal(forest.state({phase:'idle',cycle:11,ledger:{deliveryConfirmed:true}},12000),'tree');
+console.log('PASS: V19 forest timebase and confirmed-delivery visual lifecycle');

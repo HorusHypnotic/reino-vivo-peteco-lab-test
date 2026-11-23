@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const base=path.join(__dirname,'..'),context={};vm.createContext(context);
+vm.runInContext(fs.readFileSync(path.join(base,'v18/woodcutter-controller.js'),'utf8'),context);
+assert.equal(context.PetecoWoodcutterV18.TREE.x,118);
+assert.equal(context.PetecoWoodcutterV18.TREE.y,290);
+const html=fs.readFileSync(path.join(base,'index.html'),'utf8');
+const a=html.indexOf('function illustratedVillage('),b=html.indexOf('function draw(g,s,t,actors)',a);
+assert.ok(a>=0&&b>a);
+const scene=html.slice(a,b);
+assert.match(scene,/const forestTarget=\{x:78,y:407\}/,'the compact village worksite is placed clear of the northwest house');
+assert.match(scene,/tree\(g,forestTarget\.x,forestTarget\.y,1\.12,worker\|\|null,t\)/);
+assert.match(html,/const woodV21=\{\.\.\.worker,x:110\+\(worker\.x-200\)\*\(32\/82\),y:449\+\(worker\.y-404\)\*\(42\/114\),facing:/,'worker path maps the controller target to the visible forest worksite');
+console.log('PASS: V19 forest worksite and worker share the clear mapped V17 location');

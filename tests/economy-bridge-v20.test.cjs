@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const x={};for(const name of ['factory-core','economy-bridge'])vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/'+name+'.js'),'utf8'),x);
+const f=x.PetecoFactoryV20,b=x.PetecoEconomyBridgeV20;
+const start=b.capture({cycles:5,deliveries:2,sectors:{farm:0,quarry:0},project:0});
+const growing=b.capture({cycles:6,deliveries:2,sectors:{farm:7,quarry:2},project:0});
+assert.equal(b.diff(start,growing,f).length,2);
+assert.equal(b.diff(start,growing,f)[0].job,'farm');
+const delivered=b.capture({cycles:7,deliveries:3,sectors:{farm:0,quarry:0},project:0});
+assert.equal(b.diff(growing,delivered,f).length,0,'delivery reset is not new sector work');
+const building=b.capture({cycles:8,deliveries:3,sectors:{farm:4,quarry:2},project:5});
+assert.equal(b.diff(delivered,building,f).some(e=>e.job==='construction'),true);
+assert.equal(b.diff(building,building,f).length,0,'no duplicate cycle');
+assert.equal(f.queue(b.diff(delivered,building,f)).length,3);
+console.log('PASS V20 observed-economy event bridge');

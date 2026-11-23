@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const a=html.indexOf('function tree(g,x,y,k=1,actor=null,tick=0){'),b=html.indexOf('function building(',a);
+assert.ok(a>=0&&b>a);
+const tree=html.slice(a,b);
+assert.match(tree,/root\.PetecoForestAtlasV19/);
+assert.match(tree,/g\.drawImage\(im,0,0,cell,im\.naturalHeight/);
+assert.match(tree,/g\.save\(\);g\.translate\(x,y\)/,'procedural fallback preserved');
+const start=html.indexOf('function illustratedVillage('),end=html.indexOf('function draw(g,s,t,actors){',start);
+const scene=html.slice(start,end);
+assert.match(scene,/const forestTarget=\{x:78,y:407\}/,'illustrated main worksite is clear of the northwest house');
+assert.match(scene,/tree\(g,forestTarget\.x,forestTarget\.y,1\.12,worker\|\|null,t\)/,'illustrated main worksite uses forest atlas');
+assert.doesNotMatch(scene,/g\.translate\(78,407\)/,'old geometric duplicate removed');
+assert.match(html,/forestSpec\?forestSpec\.asset:"v19\/assets\/forest-cycle-atlas\.png"/,'clean atlas loads from the catalog with a compatibility fallback');
+console.log('PASS: V19 illustrated forest reused in V21 with original fallback and no duplicate tree');

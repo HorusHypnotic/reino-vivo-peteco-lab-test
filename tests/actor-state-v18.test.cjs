@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const sandbox={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v18/actor-state-machine.js'),'utf8'),sandbox);
+const a=sandbox.PetecoActorV18;assert.equal(a.states.length,6);assert.equal(a.frames.work,8);
+let w=a.transition({state:'idle',frame:0,elapsed:0},'walk');assert.equal(w.state,'walk');
+w=a.advance(w,.21);assert.equal(w.frame,2);
+w=a.transition(w,'work');assert.equal(w.frame,0);
+w=a.advance(w,.35);assert.equal(w.frame,3);
+const dead=a.transition(w,'dead');assert.equal(a.transition(dead,'walk').state,'dead');
+assert.equal(a.advance(dead,5).frame,5);
+assert.equal(a.jobState('woodcut','chop'),'work');assert.equal(a.jobState('woodcut','delivery'),'carry');
+assert.throws(()=>a.transition(w,'teleport'));
+console.log('PASS V18 actor state machine');

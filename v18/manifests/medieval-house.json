@@ -1,0 +1,34 @@
+{
+  "id": "medieval-house-v18",
+  "source": {
+    "asset": "v18/art-source/medieval-house-states-original.png",
+    "sha256": "46e3423bed91b646e3fa9a30f6abaac29c59e2d7de962498ed05271feaa0d211",
+    "dimensions": [2172, 724],
+    "format": "PNG RGBA",
+    "grid": [4, 1],
+    "states": ["foundation", "construction", "complete", "damaged"],
+    "provenance": "User-provided art supplied in the 2026-11-22 task. Original file retained unchanged; no upstream prompt or third-party credit accompanied it.",
+    "integration_authorization": "The user authorized integration into Reino Vivo in the task instruction."
+  },
+  "processing": {
+    "tool": "tools/prepare-house-atlas.cjs",
+    "png_row_filter": "Paeth (filter 4); lossless RGBA encoding",
+    "preserve_artwork": true,
+    "alpha_floor": 8,
+    "defringe": "For neutral near-white RGB edge pixels with alpha below 96, replace RGB with the mean nearest non-neutral core color within Chebyshev radius 1 then 2; preserve alpha.",
+    "remove_components": "Remove connected components under 1024 pixels only when they touch a 12-pixel frame boundary. This removed one 229-pixel clipped scaffold fragment from foundation frame 0.",
+    "normalize": "Keep source resolution; center each alpha silhouette horizontally and align its bottom to y=700 in the 543x724 cell.",
+    "output_dimensions": [2172, 724],
+    "output_grid": [4, 1],
+    "output_sha256": "110f97944b50a85ca732d48d9ab7559420159955bf7443cbdc37ca4f3ba3761e"
+  },
+  "render": {
+    "asset": "v18/assets/structures/medieval-house-atlas.png",
+    "cell": [543, 724],
+    "states": {"foundation": 0, "construction": 1, "complete": 2, "damaged": 3},
+    "draw_size": [94, 126],
+    "anchor": "feet; source baseline y=700",
+    "interaction": "Read-only projection of saved s.structures stage and integrity",
+    "fallback": "Existing V18 SVG house and V26 structure-state path remain available on load failure."
+  }
+}

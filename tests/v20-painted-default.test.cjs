@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.match(html,/get\('v20'\)==='0'\)return;var jobs=\['farm','quarry','construction'\]/);
+assert.doesNotMatch(html,/get\('v20'\)!=='1'\)return;var jobs=/);
+assert.match(html,/PetecoVisualFactoryV18\.get\(job\)/);
+assert.match(html,/PetecoProfessionRendererV20\.registerAtlas\(job,image,spec\.render\)/);
+assert.match(html,/get\('v20'\)!=='0'\)\{for\(const job of \['farm','quarry','construction'\]\)/);
+assert.match(html,/if\(factoryV20&&window\.PetecoProfessionRendererV20\)\{/);
+console.log('PASS: experimental painted atlases load by default; v20=0 remains an explicit opt-out');

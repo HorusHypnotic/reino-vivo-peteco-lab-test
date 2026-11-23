@@ -1,0 +1,21 @@
+// Run locally with: node tests/live-command-regression.cjs
+const assert=require('node:assert/strict');
+const F=require('../v7/factions.js'),C=require('../v7/civic.js'),D=require('../v7/delivery.js');
+let count=0;const check=(name,fn)=>{assert.ok(fn(),name);count++};
+const f=F.create();
+for(const uf of F.UF)check('!estado '+uf,()=>F.join(f,'viewer'+uf,'!estado '+uf).ok);
+for(const [i,country] of ['Portugal','Argentina','Japão','Chile','EUA'].entries())check('!pais '+country,()=>F.join(f,'visitor'+i,'!pais '+country).ok);
+for(const [i,command] of ['!estado XX','!pais Marte','!estado','atacar','!estado PA extra'].entries())check('invalid '+command,()=>!F.join(f,'bad'+i,command).ok);
+check('duplicate',()=>F.join(f,'viewerPA','!estado PA').reason==='already-member');
+check('faction locked',()=>F.join(f,'viewerPA','!estado SP').reason==='faction-locked');
+check('invalid username',()=>!F.join(f,'','!estado PA').ok);
+const civic=C.create(),economy=C.economyCreate(),delivery=D.create();
+for(const action of ['build','trade','defend'])check('collective '+action,()=>{const r=C.economyAct(economy,civic,f,'viewerPA',action);return r.ok&&D.enqueue(delivery,r.event).ok});
+check('USA civic action persists',()=>{const r=C.economyAct(economy,civic,f,'visitor4','build');return r.ok&&r.event.faction==='EXT-ESTADOS_UNIDOS'&&!!C.restore(JSON.stringify(civic));});
+check('not member',()=>!C.economyAct(economy,civic,f,'intruder','build').ok);
+check('invalid action',()=>!C.economyAct(economy,civic,f,'viewerPA','roubar').ok);
+for(let i=0;i<13;i++)D.step(delivery);
+check('delivery lifecycle',()=>delivery.jobs[0].status==='done');
+check('ranking',()=>C.ranking(civic)[0].total===5);
+check('restore',()=>!!F.restore(JSON.stringify(f))&&!!C.restore(JSON.stringify(civic))&&!!D.restore(JSON.stringify(delivery)));
+console.log('PASS '+count+'/'+count+' simulated viewer command and state tests');

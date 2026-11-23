@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../visual-qa/index.html'),'utf8');
+assert.match(html,/width="360" height="480"/);
+assert.match(html,/\['woodcutter','farm','quarry','construction'\]/);
+assert.match(html,/spec\.states\[state\.phase\]/);
+assert.match(html,/requestAnimationFrame\(paint\)/);
+assert.match(html,/Estados sintéticos/);
+assert.doesNotMatch(html,/localStorage|sessionStorage|fetch\(|save\(|\.start\(/);
+for(const p of ['v18/visual-factory.js','v20/profession-renderer.js','v18/woodcutter-renderer.js'])assert.ok(fs.existsSync(path.join(__dirname,'..',p)));
+console.log('PASS: isolated visual QA references existing assets, animated frames, no saves');

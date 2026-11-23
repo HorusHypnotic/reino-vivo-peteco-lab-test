@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const ctx={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/qa-runtime.js'),'utf8'),ctx);
+const qa=ctx.PetecoQAV20;
+const actor=(phase,x=100,y=200)=>({snapshot:()=>({phase,x,y,cycle:4})});
+const idle={farm:actor('idle'),quarry:actor('idle'),construction:actor('idle')};
+assert.equal(qa.inspect(idle,{phase:'vila',cycles:10},false).violations.length,0);
+assert.equal(qa.inspect({...idle,farm:actor('work')},{phase:'vila',cycles:11},false).active,1);
+assert.equal(qa.inspect({...idle,farm:actor('work')},{phase:'batalha',cycles:12},true).violations[0],'actor-active-during-war');
+assert.equal(qa.inspect({...idle,quarry:actor('walk',NaN)},{phase:'vila'},false).violations[0],'quarry');
+assert.equal(qa.inspect(null,{phase:'vila'},false).active,0);
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+assert.ok(html.includes('src="v20/qa-runtime.js"'));
+assert.ok(html.includes('window.PetecoV20Diagnostics=PetecoQAV20.inspect('));
+assert.ok(html.includes("get('v20')==='1'&&s.t%60===0"));
+console.log('PASS V20 read-only runtime diagnostics');

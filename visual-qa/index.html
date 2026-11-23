@@ -1,0 +1,18 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reino Vivo · QA visual isolado</title><style>body{background:#101923;color:#f5e8ce;font:15px system-ui;margin:0;padding:16px}main{max-width:740px;margin:auto}canvas{width:100%;max-width:360px;background:#345b46;border:2px solid #bc9a60;border-radius:10px;image-rendering:auto}button{padding:10px;border-radius:7px;background:#d9b77c;border:0;margin:4px}#status{white-space:pre-wrap;font:12px monospace}small{color:#b7c8c7}</style></head><body><main><h1>Reino Vivo · QA visual</h1><p>Prévia isolada da arte V18/V20. <strong>Estados sintéticos.</strong> Não executa economia, não lê nem altera salvamentos.</p><canvas id="scene" width="360" height="480" aria-label="Comparação de quatro profissões ilustradas"></canvas><div id="controls"><button data-state="idle">Repouso</button><button data-state="walk">Caminhada</button><button data-state="work">Trabalho</button><button data-state="carry">Transporte</button></div><pre id="status">Carregando...</pre><small>Abra via servidor HTTP(S) que sirva esta pasta junto com os arquivos do repositório. Não representa homologação Android ou LIVE.</small></main><script src="../v18/visual-factory.js"></script><script src="../v20/profession-renderer.js"></script><script src="../v18/woodcutter-renderer.js"></script><script>
+(function(){'use strict';
+const canvas=document.getElementById('scene'),g=canvas.getContext('2d'),status=document.getElementById('status');
+const jobs=['woodcutter','farm','quarry','construction'],images={},state={phase:'walk'},names={woodcutter:'Lenhador',farm:'Agricultora',quarry:'Mineradora',construction:'Construtora'};
+for(const job of jobs){const spec=PetecoVisualFactoryV18.get(job);const im=new Image();images[job]={im,ready:false,error:false};im.onload=()=>{images[job].ready=true;if(job!=='woodcutter')PetecoProfessionRendererV20.registerAtlas(job,im,spec.render)};im.onerror=()=>images[job].error=true;im.src='../'+spec.asset;}
+document.querySelectorAll('button[data-state]').forEach(b=>b.onclick=()=>state.phase=b.dataset.state);
+let frame=0;function paint(){frame++;g.clearRect(0,0,360,480);g.fillStyle='#456c52';g.fillRect(0,0,360,480);
+g.fillStyle='#709580';g.fillRect(0,300,360,180);g.fillStyle='#c1a77b';g.fillRect(0,400,360,32);
+g.fillStyle='#f4e5bc';g.font='bold 14px sans-serif';g.fillText('COMPARAÇÃO ARTÍSTICA · '+state.phase.toUpperCase(),15,26);
+for(let i=0;i<4;i++){const job=jobs[i],x=48+i*88,y=325,pack=images[job],spec=PetecoVisualFactoryV18.get(job);
+g.fillStyle='#e9ddb7';g.font='10px sans-serif';g.textAlign='center';g.fillText(names[job],x,355);
+if(pack.ready){const im=pack.im,cellW=im.naturalWidth/4,cellH=im.naturalHeight/4,row=spec.states[state.phase],col=state.phase==='idle'?Math.floor(frame/24)%4:Math.floor(frame/8)%4;
+g.drawImage(im,col*cellW,row*cellH,cellW,cellH,x-36,y-90,72,90);
+}else{g.fillStyle='#f5d090';g.fillText(pack.error?'ERRO':'...',x,y-40);}
+}g.textAlign='left';
+status.textContent=jobs.map(j=>j+': '+(images[j].error?'ERRO':images[j].ready?'PRONTO '+images[j].im.naturalWidth+'x'+images[j].im.naturalHeight:'carregando')).join('\n');
+requestAnimationFrame(paint);}requestAnimationFrame(paint);
+})();</script></body></html>

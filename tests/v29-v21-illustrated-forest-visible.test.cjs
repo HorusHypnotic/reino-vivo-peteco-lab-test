@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const start=html.indexOf('function tree(g,x,y,k=1,actor=null,tick=0)');
+const end=html.indexOf('function building(',start);
+assert.ok(start>=0&&end>start);
+const tree=html.slice(start,end);
+assert.match(tree,/PetecoForestArtV19\.draw\(g,actor,im,Date\.now\(\),\{x,y,width:w,height:h,previewState\}\)/);
+assert.match(html,/tree\(g,78,407,1\.48,actors&&actors\.woodcutter,t\)/);
+assert.match(html,/tree\(g,forestTarget\.x,forestTarget\.y,1\.12,worker\|\|null,t\)/);
+const v21=html.slice(html.indexOf('PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()})'),html.indexOf('// Existing V20 professions only appear'));
+assert.doesNotMatch(v21,/PetecoForestArtV19\.draw/,'do not duplicate the forest overlay');
+console.log('PASS: V17 active village and fallback use one V19 forest lifecycle, without duplicate overlay');
