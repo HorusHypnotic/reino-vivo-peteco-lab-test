@@ -2,7 +2,7 @@
 (function(root){'use strict';
 const JOBS=Object.freeze({
  forest:Object.freeze({actor:'woodcutter',target:'tree',actions:['walk','cut','carry','return'],source:'sectors.forest'}),
- farm:Object.freeze({actor:'farmer',target:'field',actions:['walk','plant','harvest','carry','return'],source:'sectors.farm'}),
+ farm:Object.freeze({actor:'farmer',target:'field',actions:['walk','work','plant','harvest','carry','return'],source:'sectors.farm'}),
  quarry:Object.freeze({actor:'miner',target:'rock',actions:['walk','mine','carry','return'],source:'sectors.quarry'}),
  construction:Object.freeze({actor:'builder',target:'project',actions:['walk','build','return'],source:'project'})
 });
