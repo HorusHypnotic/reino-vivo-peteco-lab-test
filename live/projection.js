@@ -1,3 +1,4 @@
+import {watchRelay} from './relay.js';
 import {openProjection} from './session.js';
 
 const displayIds = [
@@ -5,15 +6,20 @@ const displayIds = [
   'viewer-hero', 'viewer-mission', 'viewer-cue', 'viewer-bag',
 ];
 
-export function publishScene(canvas, render, audio) {
+export function publishScene(canvas, render, audio, relay) {
   const source = crypto.randomUUID();
   let sequence = 0;
   let lastSent = 0;
   let lastRequest = 0;
-  const send = openProjection(message => {
+  const fallback = openProjection(message => {
     if (message?.type !== 'request') return;
     lastRequest = performance.now();
     // The viewer's clock also keeps the stage moving when ADMIN is hidden.
+    if (document.hidden) render();
+  });
+
+  relay?.listen(() => {
+    lastRequest = performance.now();
     if (document.hidden) render();
   });
 
@@ -22,19 +28,21 @@ export function publishScene(canvas, render, audio) {
     if (!lastRequest || now - lastRequest > 2500 || now - lastSent < 80) return;
     lastSent = now;
     try {
-      send({
+      const frame = {
         type: 'frame', source, sequence: ++sequence,
         picture: canvas.toDataURL('image/webp', 0.92),
         labels: displayIds.map(id => document.getElementById(id).textContent),
         audio: audio(),
-      });
+      };
+      relay?.send(frame);
+      fallback(frame);
     } catch (error) {
       console.error('Falha na projeção da LIVE', error);
     }
   };
 }
 
-export function watchScene(canvas, onAudio, onDisconnect) {
+export function watchScene(canvas, onAudio, onDisconnect, useRelay = false) {
   const status = document.getElementById('stage-status');
   const ctx = canvas.getContext('2d');
   let source = null;
@@ -68,7 +76,8 @@ export function watchScene(canvas, onAudio, onDisconnect) {
     picture.src = frame.picture;
   }
 
-  const send = openProjection(frame => {
+  let lastRelay = -Infinity;
+  function receive(frame) {
     if (frame?.type !== 'frame' || typeof frame.source !== 'string'
       || !Number.isSafeInteger(frame.sequence) || frame.sequence < 1
       || !/^data:image\/(webp|png);base64,/.test(frame.picture)
@@ -83,6 +92,13 @@ export function watchScene(canvas, onAudio, onDisconnect) {
     lastFrame = performance.now();
     pending = frame;
     if (!drawing) drawNext();
+  }
+  const send = openProjection(frame => {
+    if (performance.now() - lastRelay > 1500) receive(frame);
+  });
+  if (useRelay) watchRelay(frame => {
+    lastRelay = performance.now();
+    receive(frame);
   });
 
   status.textContent = 'Aguardando a direção local';

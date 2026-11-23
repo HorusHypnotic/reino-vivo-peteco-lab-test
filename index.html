@@ -341,6 +341,7 @@ root.PetecoArtV17={draw,world};
 })();</script><script type="module">
 import {mode, isolateStage, previewStorage, withDirectionLock} from './live/session.js';
 import {publishScene, watchScene} from './live/projection.js';
+import {authorizeDirection} from './live/relay.js';
 import {offerImport} from './live/save-transfer.js';
 
 if (mode === 'direction') {
@@ -353,9 +354,12 @@ if (mode === 'direction') {
   main.inert = true;
   document.getElementById('faction-lab').inert = true;
   withDirectionLock(text => { status.textContent = text; }, async () => {
+    const relay = await authorizeDirection(status);
     status.textContent = 'ADMIN local · direção de cena';
     await offerImport(status);
-    await runVillage(window.document, window.localStorage);
+    if (!relay.active()) return;
+    await runVillage(window.document, window.localStorage, relay);
+    if (!relay.active()) return;
     main.inert = false;
     document.getElementById('faction-lab').inert = false;
   });
@@ -373,7 +377,7 @@ if (mode === 'direction') {
   await runVillage(sceneDocument, previewStorage());
 }
 
-async function runVillage(document, localStorage) {
+async function runVillage(document, localStorage, relay) {
 let drawingProjection = false;
 const isSpectatorComposition = () => drawingProjection || document.body.classList.contains('viewer');
 const parameters = mode === 'direction' ? new URLSearchParams(location.search) : new URLSearchParams();
@@ -442,7 +446,7 @@ if (mode === 'projection') {
     }
   }, () => {
     window.speechSynthesis?.cancel();
-  });
+  }, true);
   return;
 }
 document.getElementById('audio-scene-test').addEventListener('click',()=>{if(!audioEnabled){audioStatus.textContent='Ative voz e efeitos antes de testar os sons.';return;}Sound.unlock().then(()=>{const s=Sound.status();if(s.state!=='running'){audioStatus.textContent='⚠️ Motor de áudio '+s.state+' · toque novamente para liberar.';return;}Sound.construction();window.setTimeout(()=>Sound.follow(),700);window.setTimeout(()=>Sound.impact(),1400);audioStatus.textContent='🎼 Motor Reino Vivo: música em loop; efeitos serão tocados em sequência.';});});
@@ -858,8 +862,9 @@ const restored=restore();director.auto=true;worldMapEnabled=true;cameraMode=0;do
 let lastFrameAt = performance.now();
 const publish = mode === 'direction' ? publishScene(c, tick, () => ({
   enabled: audioEnabled, music: Number(ambientSlider.value), effects: Number(effectsSlider.value), cues: sceneCues,
-})) : null;
+}), relay) : null;
 function tick(now = performance.now()) {
+  if (relay && !relay.active()) return;
   const frames = Math.min(6, Math.floor((now - lastFrameAt) / (1000 / 60)));
   if (frames < 1) return;
   lastFrameAt = now - (now - lastFrameAt) % (1000 / 60);
