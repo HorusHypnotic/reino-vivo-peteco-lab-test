@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const ctx={};vm.createContext(ctx);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../v19/forest-art.js'),'utf8'),ctx);
+const art=ctx.PetecoForestArtV19;
+const carrying={phase:'carry',cycle:42,ledger:{deliveryConfirmed:true}};
+assert.equal(art.state(carrying,10000),'falling');
+assert.equal(art.state(carrying,10300),'stump','carrying must not freeze falling frame');
+assert.equal(art.state(carrying,10900),'sapling','carrying must not freeze stump frame');
+assert.equal(art.state(carrying,12000),'tree');
+const unconfirmed={phase:'carry',cycle:43,ledger:{deliveryConfirmed:false}};
+assert.equal(art.state(unconfirmed,13000),'tree','unconfirmed delivery cannot trigger a fall');
+console.log('PASS: confirmed tree advances through all states without depending on actor leaving carry');

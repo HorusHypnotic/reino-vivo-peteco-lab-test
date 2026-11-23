@@ -1,0 +1,32 @@
+{
+  "kind": "synthetic-renderer-evidence",
+  "createdAt": "2026-11-22",
+  "sourceScene": "v18/assets/village-scene.svg",
+  "renderer": "v20/profession-renderer.js",
+  "controllers": [
+    "v20/factory-core.js",
+    "v20/scene-map.js",
+    "v20/actor-controller.js"
+  ],
+  "eventsConfirmed": true,
+  "syntheticState": true,
+  "saveRead": false,
+  "saveWritten": false,
+  "browserHomologation": false,
+  "browserBlocker": "Executor loopback recusou conexão; Chromium de QA bloqueou file:///tmp/vila-pr17-current/index.html por política da organização.",
+  "frames": [
+    {
+      "file": "docs/evidence/profession-factory/three-profession-atlases.png",
+      "sha256": "3902cb3f495daad7a408dc20bdf291f272ebaf3b9b6769b07cc691bef8d70054"
+    },
+    {
+      "file": "docs/evidence/profession-factory/three-workers-confirmed-v20-scene.png",
+      "sha256": "a54a2b41f9a146476f0c2eb0f78e15ec225c6bf2d0446c40e2f52de692e6095c"
+    }
+  ],
+  "phases": {
+    "farm": "walk",
+    "quarry": "work",
+    "construction": "return"
+  }
+}

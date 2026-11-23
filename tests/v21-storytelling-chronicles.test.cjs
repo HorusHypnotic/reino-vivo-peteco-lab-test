@@ -14,5 +14,5 @@ test('chronicles are spectator-only, brief and battle-safe',()=>{
  assert.match(html,/until:s\.t\+360/);
  assert.match(html,/if\(!warOnScreen&&s\.phase==='vila'\)drawVillageChronicle\(\)/);
  const scene=html.slice(html.indexOf('// Storytelling is a read-only projection'),html.indexOf('let civicDeliveryScene=null;'));
- assert.doesNotMatch(scene,/localStorage|save\(|s\.wood\s*=|s\.project\s*=|s\.stone\s*=/);
+ assert.doesNotMatch(scene,/localStorage|(^|[^.\w])save\s*\(|s\.wood\s*=|s\.project\s*=|s\.stone\s*=/);
 });

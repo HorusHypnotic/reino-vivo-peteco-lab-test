@@ -20,7 +20,7 @@ const stages=[
 (async()=>{
  const scene=await loadImage(path.join(root,'v18/assets/village-scene.svg'));
  const wood=await loadImage(path.join(root,'v18/assets/woodcutter-atlas-original.png'));
- const forest=await loadImage(path.join(root,'v19/assets/forest-cycle-atlas.png'));
+ const forest=await loadImage(path.join(root,'v19/assets/forest-cycle-atlas-clean.png'));
  const manifest=[];let nextWallPixels=null;
  for(let i=0;i<stages.length;i++){
   const [name,state]=stages[i];g.clearRect(0,0,360,480);g.drawImage(scene,0,0,360,480);

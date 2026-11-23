@@ -1,0 +1,16 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const box={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v20/profession-renderer.js'),'utf8'),box);
+const r=box.PetecoProfessionRendererV20;
+const calls=[],g={save(){},restore(){},translate(){},scale(){},drawImage(...a){calls.push(a)},beginPath(){},ellipse(){},fill(){},moveTo(){},lineTo(){},closePath(){},stroke(){},rotate(){}};
+const image={complete:true,naturalWidth:1120,naturalHeight:1400};
+assert.equal(r.registerAtlas('farm',image,{width:72,height:90}),true);
+assert.equal(r.registerAtlas('unknown',image,{width:72,height:90}),false);
+assert.equal(r.draw(g,{job:'farm',phase:'work',x:100,y:200},16),true);
+assert.equal(calls.length,1);
+assert.deepEqual(Array.from(calls[0].slice(1,5)),[560,700,280,350]);
+assert.equal(r.draw(g,{job:'farm',phase:'idle',x:100,y:200},16),true,'painted idle frames are displayed and animate slowly');
+assert.equal(r.draw(g,{job:'farm',phase:'work',x:NaN,y:200},16),false);
+image.complete=false;assert.equal(r.draw(g,{job:'farm',phase:'work',x:100,y:200},16),true);
+assert.equal(calls.length,2,'fallback draws primitives, not incomplete atlas');
+console.log('PASS V20 painted atlas opt-in, frame geometry, invalid actor and fallback');

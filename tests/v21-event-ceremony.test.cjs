@@ -10,8 +10,8 @@ test('ceremony is triggered only by a confirmed wall completion chronicle',()=>{
  assert.match(html,/chronicle\('Obra pública concluída! Muralha '\+s\.projectCount\+'\.'/);
 });
 test('ceremony stays transient and never hides battles',()=>{
- assert.match(html,/if\(!warOnScreen&&s\.phase==='vila'\)drawVillageCeremony\(\)/);
+ assert.match(html,/if\(!warOnScreen&&s\.phase==='vila'\)\{drawCivicDeliveryScene\(\);drawVillageCeremony\(\);\}/);
  assert.match(html,/s\.t>=villageCeremony\.until/);
  const scene=html.slice(html.indexOf('function drawVillageCeremony(){'),html.indexOf('function focusEvent(message){'));
- assert.doesNotMatch(scene,/localStorage|save\(|s\.projectCount\s*\+\+|s\.wood\s*=/);
+ assert.doesNotMatch(scene,/localStorage|(^|[^.\w])save\s*\(|s\.projectCount\s*\+\+|s\.wood\s*=/);
 });

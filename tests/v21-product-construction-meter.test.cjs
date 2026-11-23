@@ -2,17 +2,23 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
-const scene=html.slice(html.indexOf('function draw(g,s,t){'),html.indexOf('// V17.4 territorial view:'));
-test('construction meter reads existing persisted project and goal',()=>{
- assert.match(scene,/const actualGoal=Math\.max\(1,Number\(s\.projectGoal\)\|\|30\)/);
- assert.match(scene,/const actualProgress=Math\.max\(0,Number\(s\.project\)\|\|0\)/);
- assert.match(scene,/const constructionFraction=Math\.min\(1,actualProgress\/actualGoal\)/);
- assert.match(scene,/g\.fillText\('OBRA '\+Math\.floor\(constructionFraction\*100\)\+'%'/);
+const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const construction=fs.readFileSync(path.join(root,'v20/construction-state.js'),'utf8');
+const sandbox={};vm.runInNewContext(construction,sandbox);
+const renderer=sandbox.PetecoConstructionV20;
+
+test('construction stages derive from persisted project and goal',()=>{
+ assert.equal(renderer.derive({project:0,projectGoal:30,projectCount:0}).phase,'idle');
+ assert.equal(renderer.derive({project:10,projectGoal:30,projectCount:0}).phase,'foundation');
+ assert.equal(renderer.derive({project:20,projectGoal:30,projectCount:0}).phase,'walls');
+ assert.equal(renderer.derive({project:29,projectGoal:30,projectCount:0}).phase,'finish');
+ assert.equal(renderer.derive({project:0,projectGoal:30,projectCount:1}).phase,'complete');
 });
-test('construction meter does not grant resources or persist fake work',()=>{
- const start=scene.indexOf('const actualGoal=');
- const end=scene.indexOf(' // Small workers are located along meaningful production routes.',start);
- assert.ok(start>=0&&end>start);
- assert.doesNotMatch(scene.slice(start,end),/save\(|localStorage|s\.project\s*=|s\.wood\s*=|s\.stone\s*=/);
+
+test('live scene passes saved construction fields into the shared renderer',()=>{
+ const scene=html.slice(html.indexOf('function illustratedVillage('),html.indexOf('// V17.4 territorial view:'));
+ assert.match(scene,/PetecoConstructionV20\.draw\(g,\{project:s\.project,projectGoal:s\.projectGoal,projectCount:s\.projectCount\}/);
+ assert.doesNotMatch(scene,/s\.(?:project|projectGoal|wood|stone)\s*(?:=|\+\+|--)/);
 });

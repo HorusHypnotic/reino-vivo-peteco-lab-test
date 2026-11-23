@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const tree=html.slice(html.indexOf('function tree(g,x,y,k=1,actor=null,tick=0)'),html.indexOf('function building('));
+assert.match(tree,/const atlas=root\.PetecoForestAtlasV19/);
+assert.match(tree,/if\(atlas&&atlas\.ready&&atlas\.image&&atlas\.image\.naturalWidth\)/);
+assert.doesNotMatch(tree,/PetecoWoodcutterAtlasV18/,'tree must not depend on worker atlas');
+const scene=html.slice(html.indexOf('PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()})'),html.indexOf('// Existing V20 professions only appear'));
+assert.match(scene,/if\(worker&&atlas&&atlas\.ready&&window\.PetecoWoodcutterRendererV18\)/);
+console.log('PASS: forest loading independent of woodcutter atlas');

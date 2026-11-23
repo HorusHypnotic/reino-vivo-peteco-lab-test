@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+const start=html.indexOf('function completedWalls(g,'),end=html.indexOf('// V17.4 territorial view:',start);
+assert.ok(start>0&&end>start,'V17 village scene must be present');
+const scene=html.slice(start,end);
+for(const label of ['MARCO DA VILA','MURALHAS ','OBRA '])assert.ok(!scene.includes("fillText('"+label),'do not draw duplicate labels over the village: '+label);
+assert.match(scene,/completedWalls\(g,s\.projectCount\)/);
+assert.match(scene,/projectSite\(g,/);
+assert.match(html,/PetecoProfessionRendererV20\.draw\(g,actor\.snapshot\(\),s\.t\)/);
+console.log('PASS: scene retains physical wall/project progress and worker renderer without overlapping labels');

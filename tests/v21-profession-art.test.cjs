@@ -12,7 +12,7 @@ test('all three existing professions render in walk, work and return',()=>{
   const {g}=mock();assert.equal(renderer.draw(g,{job,phase,x:180,y:320},120),true,job+' '+phase);
  }
 });
-test('idle or unknown professions do not draw',()=>{
+test('idle falls back when no painted atlas exists; unknown professions never draw',()=>{
  const renderer=context(),{g}=mock();
  assert.equal(renderer.draw(g,{job:'farm',phase:'idle',x:0,y:0},1),false);
  assert.equal(renderer.draw(g,{job:'imaginary',phase:'work',x:0,y:0},1),false);
@@ -24,4 +24,12 @@ test('visual art remains read-only, with job-specific tools and cargo',()=>{
  assert.match(source,/a\.job==='construction'/);
  assert.match(source,/a\.phase==='return'/);
  assert.doesNotMatch(source,/localStorage|indexedDB|\.food\s*[+\-]?=|\.stone\s*[+\-]?=/);
+});
+test('painted profession atlases load by default and draw in the canonical V21 village',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+ assert.match(html,/get\('v20'\)==='0'\)return/,'explicit fallback opt-out remains available');
+ assert.match(html,/PetecoVisualFactoryV18\.get\(job\)/,'atlas paths come from the canonical asset catalog');
+ assert.match(html,/registerAtlas\(job,image,spec\.render\)/,'loaded atlas is registered with the existing renderer');
+ assert.match(html,/PetecoProfessionRendererV20\.draw\(g,actor\.snapshot\(\),s\.t\)/,'workers draw from existing controller snapshots');
+ assert.match(html,/village-environment\.svg/,'canonical illustrated environment is loaded');
 });
