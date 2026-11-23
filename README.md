@@ -22,6 +22,6 @@ O Node escuta apenas em `127.0.0.1`. A direção é exclusiva e grava no perfil 
 
 - `node --test` executa as regressões, incluindo o contrato HTTP do relay e a jornada salva e reaberta a cada etapa.
 - `node tools/qa-live-admin.cjs` verifica projeção, formatos, migração e fallback no Chromium.
-- `node tools/qa-journey.cjs` verifica a sessão em dois processos Chromium, em tempo real, com capturas e o registro final. Os scripts de navegador aceitam `PETECO_PLAYWRIGHT_MODULE`, `PETECO_CHROMIUM`, `PETECO_QA_FONT` e `PETECO_QA_OUTPUT`.
+- `node tools/qa-journey.cjs` verifica a sessão em dois processos Chromium, em tempo real, com capturas e o registro final. Com `--resume-only`, o mesmo script testa a recarga do ADMIN e o relógio do relay com o ADMIN em segundo plano simulado. Os scripts de navegador aceitam `PETECO_PLAYWRIGHT_MODULE`, `PETECO_CHROMIUM`, `PETECO_QA_FONT` e `PETECO_QA_OUTPUT`.
 
 A PR desta jornada é experimental. O endereço público continua pela publicação oficial.

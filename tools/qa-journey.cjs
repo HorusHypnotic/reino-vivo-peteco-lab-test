@@ -9,7 +9,8 @@ const path = require('node:path');
 const {chromium} = require(process.env.PETECO_PLAYWRIGHT_MODULE || 'playwright');
 
 const key = 'peteco-v36-journey-v1';
-const output = process.env.PETECO_QA_OUTPUT || 'qa/evidence/journey';
+const resumeOnly = process.argv.includes('--resume-only');
+const output = process.env.PETECO_QA_OUTPUT || (resumeOnly ? 'qa/evidence/journey/retomada' : 'qa/evidence/journey');
 
 async function run() {
   await fs.mkdir(output, {recursive: true});
@@ -105,7 +106,35 @@ async function run() {
       console.log(visible);
     }
 
-    await observe('Entrada', '01-entrada.png');
+    await observe('Entrada', resumeOnly ? null : '01-entrada.png');
+    if (resumeOnly) {
+      await admin.waitForFunction(key => JSON.parse(localStorage.getItem(key)).elapsed >= 2, key);
+      const before = await admin.evaluate(key => JSON.parse(localStorage.getItem(key)), key);
+      await admin.reload();
+      await claim(admin);
+      await observe('Entrada');
+      const after = await admin.evaluate(key => JSON.parse(localStorage.getItem(key)), key);
+      assert.equal(after.id, before.id);
+      assert.equal(after.economy.seq, before.economy.seq);
+      assert.ok(after.elapsed >= before.elapsed);
+      await admin.evaluate(() => Object.defineProperty(document, 'hidden', {configurable: true, value: true}));
+      await observe('Profissões', 'admin-em-segundo-plano.png', 30000);
+      const second = await admin.evaluate(key => JSON.parse(localStorage.getItem(key)), key);
+      assert.equal(second.economy.players.bento.profession, 'carreteiro');
+      assert.equal(second.journal.filter(entry => entry.chapter === 'Entrada').length, 1);
+      await admin.evaluate(() => Object.defineProperty(document, 'hidden', {configurable: true, value: false}));
+      await admin.getByRole('button', {name: 'Controlar ações'}).click();
+      await admin.getByRole('button', {name: 'Primeira missão', exact: true}).click({timeout: 35000});
+      await observe('Primeira missão', 'missao-manual.png', 10000);
+      const manual = await admin.evaluate(key => JSON.parse(localStorage.getItem(key)), key);
+      assert.equal(manual.automatic, false);
+      assert.equal(manual.journal.at(-1).chapter, 'Primeira missão');
+      assert.deepEqual(await live.evaluate(() => Object.keys(localStorage)), []);
+      assert.deepEqual(errors, []);
+      await fs.writeFile(path.join(output, 'retomada.json'), JSON.stringify({runtime: source.version(), before, after, second, manual, timeline}, null, 2));
+      console.log('PASS: ADMIN reload, checkpoint, document.hidden, server clock, manual action, isolated LIVE.');
+      return;
+    }
     await observe('Plantio', '02-plantio.png');
     await live.reload();
     await observe('Plantio');
@@ -114,7 +143,10 @@ async function run() {
     await observe('Pagamento', '04-pagamento.png');
     await observe('Defesa', '05-defesa.png');
     await observe('Consequências');
-    await observe('Próxima missão', '06-nova-missao.png');
+    await live.waitForFunction(() => document.querySelector('#viewer-cue').textContent.includes('fortificações'));
+    await live.waitForTimeout(1500);
+    await live.screenshot({path: path.join(output, '06-territorio.png')});
+    await observe('Próxima missão', '07-nova-missao.png');
     const snapshot = await admin.evaluate(key => JSON.parse(localStorage.getItem(key)), key);
     assert.equal(snapshot.elapsed, 900);
     assert.equal(snapshot.running, false);
