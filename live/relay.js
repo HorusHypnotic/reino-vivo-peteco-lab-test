@@ -77,6 +77,13 @@ function createDirectionRelay(token, status) {
 
   return {
     active: () => !stopped && Date.now() - lastHeartbeat < 25000,
+    openEdge: async () => {
+      if (stopped) return false;
+      const response = await post('open-edge', token);
+      if (response.status === 403) stop();
+      if (!response.ok) throw new Error('Não foi possível abrir o Edge (HTTP ' + response.status + ').');
+      return true;
+    },
     listen: handler => { listeners = handler; },
     send(frame) {
       if (stopped || sending || !viewers) return;

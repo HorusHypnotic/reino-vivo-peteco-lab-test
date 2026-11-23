@@ -1,6 +1,7 @@
 'use strict';
 
 const {randomBytes, timingSafeEqual} = require('node:crypto');
+const {execFile} = require('node:child_process');
 
 const prefix = '/__live/';
 const maxFrame = 768 * 1024;
@@ -10,7 +11,7 @@ function createRelay(origin) {
   const code = randomBytes(8).toString('hex');
   const viewers = new Set();
   const clocks = new Set();
-  let author, latest, nextFrame = 0, nextClaim = 0;
+  let author, latest, nextFrame = 0, nextClaim = 0, nextEdgeLaunch = 0;
 
   function authorized(value, expected) {
     const candidate = Buffer.from(value || '');
@@ -62,6 +63,17 @@ function createRelay(origin) {
       return response.writeHead(200, {'Content-Type': 'application/json'}).end(JSON.stringify({token: author.token}));
     }
     if (!author || now >= author.expires || !authorized(credential, author.token)) return response.writeHead(403).end();
+    if (pathname === prefix + 'open-edge') {
+      if (process.platform !== 'win32') return response.writeHead(501).end();
+      if (now < nextEdgeLaunch) return response.writeHead(429).end();
+      nextEdgeLaunch = now + 2000;
+      // Fixed executable and fixed loopback URL: no client-controlled shell arguments.
+      execFile('cmd.exe', ['/d', '/s', '/c', 'start', '""', 'msedge.exe', origin + '/'],
+        {windowsHide: true, timeout: 5000}, error => {
+          if (!response.writableEnded) response.writeHead(error ? 503 : 204).end();
+        });
+      return;
+    }
     if (pathname === prefix + 'release') {
       author = latest = undefined;
       return response.writeHead(204).end();
