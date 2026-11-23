@@ -3,11 +3,13 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const {createRelay, prefix} = require('./live-relay.cjs');
 
 const root = path.resolve(__dirname, '..');
 const port = Number(process.env.PETECO_LIVE_PORT || 8787);
 const host = '127.0.0.1';
 const address = `${host}:${port}`;
+const relay = createRelay('http://' + address);
 const contentTypes = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp'};
 
 http.createServer((request, response) => {
@@ -19,7 +21,7 @@ http.createServer((request, response) => {
   const directNavigation = request.headers['sec-fetch-mode'] === 'navigate'
     && request.headers['sec-fetch-dest'] === 'document' && request.headers['sec-fetch-user'] === '?1';
   if (request.headers.host !== address || (crossSite && !directNavigation)
-      || !['GET', 'HEAD'].includes(request.method)) {
+     ) {
     response.writeHead(403).end();
     return;
   }
@@ -27,6 +29,14 @@ http.createServer((request, response) => {
   let pathname;
   try { pathname = decodeURIComponent(new URL(request.url, `http://${address}`).pathname); }
   catch { response.writeHead(400).end(); return; }
+  if (pathname.startsWith(prefix)) {
+    relay.handle(request, response, pathname).catch(() => {
+      if (!response.headersSent) response.writeHead(400);
+      response.end();
+    });
+    return;
+  }
+  if (!['GET', 'HEAD'].includes(request.method)) return response.writeHead(403).end();
   if (pathname === '/admin') {
     response.writeHead(302, {Location: '/admin/'}).end();
     return;
@@ -52,5 +62,5 @@ http.createServer((request, response) => {
     response.writeHead(404).end();
   }
 }).listen(port, host, () => {
-  console.log(`LIVE  http://${address}/\nADMIN http://${address}/admin/`);
+  console.log(`LIVE  http://${address}/\nADMIN http://${address}/admin/\nCódigo ADMIN: ${relay.code}`);
 });

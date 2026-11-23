@@ -1,0 +1,553 @@
+{
+  "runtime": "140.0.7339.16",
+  "startupMs": 661,
+  "timeline": [
+    {
+      "chapter": "Entrada",
+      "visible": "0:00 / 15:00 · Entrada",
+      "elapsedMs": 254
+    },
+    {
+      "chapter": "Plantio",
+      "visible": "3:15 / 15:00 · Plantio",
+      "elapsedMs": 195224
+    },
+    {
+      "chapter": "Plantio",
+      "visible": "3:15 / 15:00 · Plantio",
+      "elapsedMs": 195367
+    },
+    {
+      "chapter": "Colheita",
+      "visible": "6:20 / 15:00 · Colheita",
+      "elapsedMs": 380055
+    },
+    {
+      "chapter": "Transporte",
+      "visible": "9:10 / 15:00 · Transporte",
+      "elapsedMs": 550232
+    },
+    {
+      "chapter": "Pagamento",
+      "visible": "10:35 / 15:00 · Pagamento",
+      "elapsedMs": 635132
+    },
+    {
+      "chapter": "Defesa",
+      "visible": "12:01 / 15:00 · Defesa",
+      "elapsedMs": 721305
+    },
+    {
+      "chapter": "Consequências",
+      "visible": "13:10 / 15:00 · Consequências",
+      "elapsedMs": 790142
+    },
+    {
+      "chapter": "Próxima missão",
+      "visible": "15:00 / 15:00 · Próxima missão",
+      "elapsedMs": 900266
+    }
+  ],
+  "snapshot": {
+    "version": 1,
+    "id": "0d36da77-1449-4d60-919d-949f3034359a",
+    "economy": {
+      "version": 2,
+      "cycle": 6,
+      "players": {
+        "aurora": {
+          "coins": 115,
+          "inventory": {
+            "enxada": 1
+          },
+          "profession": "agricultor",
+          "lastWorkedCycle": 0
+        },
+        "bento": {
+          "coins": 180,
+          "inventory": {
+            "carroca": 1
+          },
+          "profession": "carreteiro"
+        }
+      },
+      "lots": {
+        "01": {
+          "id": "01",
+          "fertility": 75,
+          "owner": "aurora",
+          "registered": true,
+          "crop": null,
+          "readyAt": null,
+          "stock": {
+            "trigo": 0
+          }
+        },
+        "02": {
+          "id": "02",
+          "fertility": 85,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "03": {
+          "id": "03",
+          "fertility": 92,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "04": {
+          "id": "04",
+          "fertility": 60,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "05": {
+          "id": "05",
+          "fertility": 65,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "06": {
+          "id": "06",
+          "fertility": 78,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        }
+      },
+      "cooperative": {
+        "id": "coop-vila",
+        "name": "Cooperativa da Vila",
+        "members": {
+          "aurora": true,
+          "bento": true
+        },
+        "treasury": 5,
+        "reserved": 0,
+        "warehouse": {
+          "trigo": 6
+        },
+        "ledger": [
+          {
+            "seq": 14,
+            "type": "contribution",
+            "id": "aurora",
+            "amount": 25
+          },
+          {
+            "seq": 15,
+            "type": "contribution",
+            "id": "bento",
+            "amount": 25
+          },
+          {
+            "seq": 16,
+            "type": "purchase-reserved",
+            "contractId": "c16",
+            "amount": 45
+          },
+          {
+            "seq": 20,
+            "type": "settlement",
+            "contractId": "c16",
+            "amount": 45
+          }
+        ]
+      },
+      "contracts": {
+        "c16": {
+          "id": "c16",
+          "seller": "aurora",
+          "lotId": "01",
+          "crop": "trigo",
+          "amount": 8,
+          "status": "delivered",
+          "price": 40,
+          "transport": 5,
+          "cooperative": "coop-vila",
+          "paid": true
+        }
+      },
+      "shipments": {
+        "c16": {
+          "carrier": "bento",
+          "arrival": 6
+        }
+      },
+      "events": [
+        {
+          "seq": 1,
+          "cycle": 0,
+          "type": "joined",
+          "id": "aurora",
+          "profession": "agricultor"
+        },
+        {
+          "seq": 2,
+          "cycle": 0,
+          "type": "joined",
+          "id": "bento",
+          "profession": "carreteiro"
+        },
+        {
+          "seq": 3,
+          "cycle": 0,
+          "type": "wage-earned",
+          "id": "aurora",
+          "amount": 10
+        },
+        {
+          "seq": 4,
+          "cycle": 0,
+          "type": "purchased",
+          "id": "aurora",
+          "lotId": "01",
+          "price": 100
+        },
+        {
+          "seq": 5,
+          "cycle": 0,
+          "type": "registered",
+          "id": "aurora",
+          "lotId": "01",
+          "fee": 10
+        },
+        {
+          "seq": 6,
+          "cycle": 0,
+          "type": "planted",
+          "id": "aurora",
+          "lotId": "01",
+          "crop": "trigo",
+          "readyAt": 4
+        },
+        {
+          "seq": 7,
+          "cycle": 1,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 8,
+          "cycle": 2,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 9,
+          "cycle": 3,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 10,
+          "cycle": 4,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 11,
+          "cycle": 4,
+          "type": "harvested",
+          "id": "aurora",
+          "lotId": "01",
+          "crop": "trigo",
+          "amount": 8
+        },
+        {
+          "seq": 12,
+          "cycle": 4,
+          "type": "cooperative-founded",
+          "id": "aurora",
+          "cooperative": "coop-vila",
+          "name": "Cooperativa da Vila"
+        },
+        {
+          "seq": 13,
+          "cycle": 4,
+          "type": "cooperative-joined",
+          "id": "bento",
+          "cooperative": "coop-vila"
+        },
+        {
+          "seq": 14,
+          "cycle": 4,
+          "type": "contributed",
+          "id": "aurora",
+          "amount": 25,
+          "treasury": 25
+        },
+        {
+          "seq": 15,
+          "cycle": 4,
+          "type": "contributed",
+          "id": "bento",
+          "amount": 25,
+          "treasury": 50
+        },
+        {
+          "seq": 16,
+          "cycle": 4,
+          "type": "contracted",
+          "id": "aurora",
+          "contractId": "c16",
+          "crop": "trigo",
+          "amount": 8,
+          "cooperative": "coop-vila",
+          "price": 40,
+          "total": 45
+        },
+        {
+          "seq": 17,
+          "cycle": 4,
+          "type": "dispatched",
+          "contractId": "c16",
+          "carrier": "bento",
+          "arrival": 6
+        },
+        {
+          "seq": 18,
+          "cycle": 5,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 19,
+          "cycle": 6,
+          "type": "advanced",
+          "cycles": 1
+        },
+        {
+          "seq": 20,
+          "cycle": 6,
+          "type": "delivered",
+          "contractId": "c16",
+          "seller": "aurora",
+          "carrier": "bento",
+          "amount": 8,
+          "crop": "trigo",
+          "paid": 45
+        }
+      ],
+      "seq": 20
+    },
+    "elapsed": 900,
+    "step": 23,
+    "automatic": true,
+    "running": false,
+    "contract": "c16",
+    "journal": [
+      {
+        "step": 0,
+        "at": 0,
+        "chapter": "Entrada",
+        "message": "Aurora chega à vila como agricultora.",
+        "economySeq": 1,
+        "war": null
+      },
+      {
+        "step": 1,
+        "at": 20,
+        "chapter": "Profissões",
+        "message": "Bento assume as entregas da vila.",
+        "economySeq": 2,
+        "war": null
+      },
+      {
+        "step": 2,
+        "at": 45,
+        "chapter": "Primeira missão",
+        "message": "Missão: colher trigo e abastecer a cooperativa.",
+        "economySeq": 2,
+        "war": null
+      },
+      {
+        "step": 3,
+        "at": 80,
+        "chapter": "Trabalho",
+        "message": "Aurora trabalhou no campo e recebeu 10 moedas.",
+        "economySeq": 3,
+        "war": null
+      },
+      {
+        "step": 4,
+        "at": 115,
+        "chapter": "Propriedade",
+        "message": "Aurora comprou o lote 01 por 100 moedas.",
+        "economySeq": 4,
+        "war": null
+      },
+      {
+        "step": 5,
+        "at": 155,
+        "chapter": "Registro",
+        "message": "O lote 01 foi regularizado por 10 moedas.",
+        "economySeq": 5,
+        "war": null
+      },
+      {
+        "step": 6,
+        "at": 195,
+        "chapter": "Plantio",
+        "message": "Aurora plantou trigo. A lavoura precisa de quatro ciclos.",
+        "economySeq": 6,
+        "war": null
+      },
+      {
+        "step": 7,
+        "at": 235,
+        "chapter": "Cultivo",
+        "message": "Trigo · ciclo 1/4.",
+        "economySeq": 7,
+        "war": null
+      },
+      {
+        "step": 8,
+        "at": 270,
+        "chapter": "Cultivo",
+        "message": "Trigo · ciclo 2/4.",
+        "economySeq": 8,
+        "war": null
+      },
+      {
+        "step": 9,
+        "at": 305,
+        "chapter": "Cultivo",
+        "message": "Trigo · ciclo 3/4.",
+        "economySeq": 9,
+        "war": null
+      },
+      {
+        "step": 10,
+        "at": 340,
+        "chapter": "Cultivo",
+        "message": "Trigo · ciclo 4/4.",
+        "economySeq": 10,
+        "war": null
+      },
+      {
+        "step": 11,
+        "at": 380,
+        "chapter": "Colheita",
+        "message": "O lote 01 produziu 8 sacas de trigo.",
+        "economySeq": 11,
+        "war": null
+      },
+      {
+        "step": 12,
+        "at": 425,
+        "chapter": "Cooperativa",
+        "message": "Aurora fundou a Cooperativa da Vila e Bento se associou.",
+        "economySeq": 13,
+        "war": null
+      },
+      {
+        "step": 13,
+        "at": 465,
+        "chapter": "Caixa coletivo",
+        "message": "Cada associado aportou 25 moedas para financiar a primeira compra.",
+        "economySeq": 15,
+        "war": null
+      },
+      {
+        "step": 14,
+        "at": 510,
+        "chapter": "Contrato",
+        "message": "A cooperativa reservou 45 moedas pela produção e pelo frete.",
+        "economySeq": 16,
+        "war": null
+      },
+      {
+        "step": 15,
+        "at": 550,
+        "chapter": "Transporte",
+        "message": "Bento partiu com 8 sacas rumo à cooperativa.",
+        "economySeq": 17,
+        "war": null
+      },
+      {
+        "step": 16,
+        "at": 580,
+        "chapter": "Estrada",
+        "message": "A carroça chegou à metade do trajeto.",
+        "economySeq": 18,
+        "war": null
+      },
+      {
+        "step": 17,
+        "at": 610,
+        "chapter": "Chegada",
+        "message": "A carroça chegou ao armazém da cooperativa.",
+        "economySeq": 19,
+        "war": null
+      },
+      {
+        "step": 18,
+        "at": 635,
+        "chapter": "Pagamento",
+        "message": "Trigo entregue. Aurora recebeu 40 moedas e Bento, 5.",
+        "economySeq": 20,
+        "war": null
+      },
+      {
+        "step": 19,
+        "at": 700,
+        "chapter": "Ameaça",
+        "message": "Batedores avistaram tropas na estrada do trigo.",
+        "economySeq": 20,
+        "war": null
+      },
+      {
+        "step": 20,
+        "at": 721,
+        "chapter": "Defesa",
+        "message": "A guarda recebeu 2 sacas do armazém e montou a defesa da passagem.",
+        "economySeq": 20,
+        "war": {
+          "round": 1,
+          "hpA": 100,
+          "hpB": 100,
+          "guardA": 12,
+          "guardB": 0
+        }
+      },
+      {
+        "step": 21,
+        "at": 790,
+        "chapter": "Consequências",
+        "message": "BR-AM venceu o cerco e agora tem 1 fortificações.",
+        "economySeq": 20,
+        "war": {
+          "winner": "BR-AM",
+          "loser": "BR-PA",
+          "rounds": 20,
+          "journeyId": "0d36da77-1449-4d60-919d-949f3034359a",
+          "journeyDefended": true,
+          "fortifications": 1
+        }
+      },
+      {
+        "step": 22,
+        "at": 900,
+        "chapter": "Próxima missão",
+        "message": "Nova missão: reconstruir a passagem e abastecer o próximo comboio.",
+        "economySeq": 20,
+        "war": null
+      }
+    ]
+  }
+}

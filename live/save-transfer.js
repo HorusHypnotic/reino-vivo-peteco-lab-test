@@ -1,4 +1,5 @@
 const keys = [
+  'peteco-v36-journey-v1',
   'reino_muted', 'reino_music_volume', 'reino_effects_volume',
   'peteco-lab-vila-v2', 'peteco-lab-v7-life-experiment', 'peteco-lab-v7-narrative',
   'peteco-lab-anomalies-v1', 'peteco-lab-audio-enabled-v1', 'peteco-lab-civic-economy-v1',

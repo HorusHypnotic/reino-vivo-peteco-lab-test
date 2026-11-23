@@ -11,7 +11,7 @@ const {chromium} = require(process.env.PETECO_PLAYWRIGHT_MODULE || 'playwright')
 
 const root = path.resolve(__dirname, '..');
 const evidence = path.resolve(process.env.PETECO_QA_OUTPUT || path.join(root, 'qa/evidence/live-admin'));
-const mime = {'.html': 'text/html', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png'};
+const mime = {'.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png'};
 const seed = {v: 2, wood: 777, food: 120, stone: 100, level: 6, cycles: 6, people: 8,
   sectors: {forest: 2, farm: 2, quarry: 2, workshop: 2}, deliveries: 6};
 
@@ -45,7 +45,16 @@ async function qa() {
   const errors = [];
   let browser;
   try {
-    await once(local.stdout, 'data');
+    const [startup] = await once(local.stdout, 'data');
+    const code = String(startup).match(/Código ADMIN: ([a-f0-9]+)/)[1];
+    async function claim(page) {
+      const input = page.getByLabel('Código ADMIN');
+      await input.evaluate((field, value) => {
+        field.value = value;
+        field.form.requestSubmit();
+      }, code);
+      await input.waitFor({state: 'detached'});
+    }
     browser = await chromium.launch({
       executablePath: process.env.PETECO_CHROMIUM, args: ['--no-sandbox'],
       ignoreDefaultArgs: ['--mute-audio'],
@@ -114,6 +123,7 @@ async function qa() {
     await admin.setViewportSize({width: 1280, height: 800});
     const territory = fs.existsSync(path.join(root, 'v36/territory-ui.js'));
     await admin.goto(localUrl + '/admin/' + (territory ? '?territory=1' : ''));
+    await claim(admin);
     await admin.locator('input[type=file]').setInputFiles(backup);
     await admin.getByRole('button', {name: 'Importar', exact: true}).click();
     await admin.locator('[data-fake=join]').click();
@@ -168,25 +178,30 @@ async function qa() {
     assert.equal(await standby.locator('main').evaluate(node => node.inert), true);
     assert.equal(await standby.evaluate(async () => (await navigator.locks.query()).held.filter(x => x.name === 'peteco-village-author-v1').length), 1);
     await admin.close();
+    await claim(standby);
     await standby.locator('[data-fake=join]').click({timeout: 10000, trial: true});
     await live.waitForFunction(visitor => document.querySelector('#viewer-hero').textContent === visitor, visitor);
     await standby.close();
     await live.waitForFunction(() => document.getElementById('viewer-cue').textContent === 'Reconectando à direção local');
     const restored = await context.newPage();
     await restored.goto(localUrl + '/admin/');
+    await claim(restored);
     await live.waitForFunction(visitor => document.querySelector('#viewer-hero').textContent === visitor, visitor);
     await live.reload();
     await live.waitForFunction(visitor => document.querySelector('#viewer-hero').textContent === visitor, visitor);
     assert.equal(await restored.evaluate(() => JSON.parse(localStorage.getItem('peteco-lab-vila-v2')).court.length), 1);
     assert.ok(await restored.evaluate(() => JSON.parse(localStorage.getItem('peteco-lab-faction-war-v1')).active));
 
+    await restored.close();
     const fallback = await browser.newContext({viewport: {width: 360, height: 640}});
     fallback.setDefaultTimeout(10000);
+    await fallback.route('**/__live/events', route => route.abort());
     await fallback.addInitScript(() => { window.BroadcastChannel = undefined; });
     const failedOver = await fallback.newPage();
     await failedOver.goto(localUrl + '/');
     const fallbackAdmin = await fallback.newPage();
     await fallbackAdmin.goto(localUrl + '/admin/');
+    await claim(fallbackAdmin);
     await fallbackAdmin.getByRole('button', {name: 'Começar vila'}).click();
     await fallbackAdmin.locator('[data-fake=join]').click();
     await failedOver.waitForFunction(() => !document.querySelector('#viewer-hero').textContent.includes('Aguardando'));
