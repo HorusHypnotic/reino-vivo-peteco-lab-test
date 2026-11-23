@@ -143,7 +143,7 @@ async function run() {
     await observe('Pagamento', '04-pagamento.png');
     await observe('Defesa', '05-defesa.png');
     await observe('Consequências');
-    await live.waitForFunction(() => document.querySelector('#viewer-cue').textContent.includes('fortificações'));
+    await live.waitForFunction(() => document.querySelector('#viewer-cue').textContent.includes('fortifica'));
     await live.waitForTimeout(1500);
     await live.screenshot({path: path.join(output, '06-territorio.png')});
     await observe('Próxima missão', '07-nova-missao.png');

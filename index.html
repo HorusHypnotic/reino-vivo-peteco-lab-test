@@ -678,11 +678,12 @@ const settlementStops=settlementPairs.flatMap((pair,i)=>pair.map((id,j)=>({id,bi
 let collectiveCue=null;function showCollectiveCue(id,action,user){if(!settlementStops.some(stop=>stop.id===id))return;collectiveCue={id,action,user:String(user).slice(0,20),until:s.t+240};effectSound(action);}
 function drawSettlements(i,x,y){const pair=settlementPairs[i];for(let j=0;j<2;j++){const id=pair[j],sx=x+25,sy=y+(j===0?105:490),stock=typeof tradeState!=='undefined'?tradeState.villages[id]?.stock:null;g.save();rect(sx,sy,315,43,'#102c3bdf');g.fillStyle='#ffdf9b';g.font='bold 17px system-ui';g.fillText('🏘️ '+id+' · '+(j===0?'Vila Alta':'Vila Baixa'),sx+9,sy+20,290);g.font='12px system-ui';g.fillStyle='#e6f3e9';g.fillText(stock?'🪵'+stock.wood+' 🌾'+stock.food+' 🪨'+stock.stone:'Assentamento fictício',sx+9,sy+36,290);const built=typeof laborState!=='undefined'?(laborState.villages[id]?.homes||0):0;const homes=5+(i*3+j*4)%6+Math.min(5,built);const latestBuild=typeof laborState!=='undefined'?laborState.events.slice().reverse().find(e=>e.id===id&&e.action==='home'):null;const buildingNow=!!latestBuild&&laborState.round-latestBuild.round<=2;const warMarks=typeof warTerritory!=='undefined'?warTerritory.factions[id]:null;for(let h=0;h<homes;h++){const bx=sx+12+(h%5)*57,by=sy+76+Math.floor(h/5)*64;rect(bx,by,27,23,['#bfa782','#d8c09b','#9dc1c5','#d9c3a2','#d6b68c'][i]);rect(bx-3,by-8,33,9,['#73543f','#a77e4b','#668d9d','#347e90','#bb8c58'][i]);rect(bx+10,by+12,7,11,'#50463e');if(warMarks&&h<warMarks.ruins){rect(bx-4,by+14,36,10,'#58504a');rect(bx+3,by+6,17,9,'#6a625b');g.fillStyle='#e1b9a2';g.font='10px system-ui';g.fillText('✕',bx+8,by+4);}if(buildingNow&&h===homes-1){g.strokeStyle='#ffe7a0';g.lineWidth=3;g.strokeRect(bx-5,by-13,37,40);g.fillStyle='#ffe7a0';g.font='bold 11px system-ui';g.fillText('⚒',bx+6,by-18);}}
 // V11.0: each settlement's civic life is driven by its own simulated stock and time.
-if(warMarks&&(warMarks.ruins||warMarks.fortifications)){rect(sx+5,sy+47,305,22,'#2d2830e8');g.fillStyle='#ffdfa5';g.font='bold 12px system-ui';g.fillText('⚔️ Cerco · ruínas '+warMarks.ruins+' · muralhas '+warMarks.fortifications,sx+12,sy+62,294);for(let k=0;k<Math.min(5,warMarks.fortifications);k++)rect(sx+230+k*13,sy+72,11,19,'#b8b0a0');}
+const showWarMarks=Boolean(warMarks&&(warMarks.ruins||warMarks.fortifications));
+if(showWarMarks){rect(sx+5,sy+47,305,22,'#2d2830e8');g.fillStyle='#ffdfa5';g.font='bold 12px system-ui';g.fillText('⚔️ Cerco · ruínas '+warMarks.ruins+' · muralhas '+warMarks.fortifications,sx+12,sy+62,294);for(let k=0;k<Math.min(5,warMarks.fortifications);k++)rect(sx+230+k*13,sy+72,11,19,'#b8b0a0');}
 const food=stock?stock.food:20,wood=stock?stock.wood:20,stone=stock?stock.stone:15;
 const prosperity=Math.min(3,Math.floor((wood+food+stone)/55));
 const profession=wood>=food&&wood>=stone?'LENHADORES':food>=stone?'AGRICULTORES':'PEDREIROS';
-g.fillStyle='#e9f1d6';g.font='bold 11px system-ui';g.fillText(buildingNow?'⚒ NOVA CASA · '+id:profession+' · '+(food<10?'ABASTECIMENTO CRÍTICO':'ATIVOS')+' · 🏠+'+built,sx+12,sy+62,285);
+if(!showWarMarks){g.fillStyle='#e9f1d6';g.font='bold 11px system-ui';g.fillText(buildingNow?'⚒ NOVA CASA · '+id:profession+' · '+(food<10?'ABASTECIMENTO CRÍTICO':'ATIVOS')+' · 🏠+'+built,sx+12,sy+62,285);}
 
 const px=sx+18,py=sy+220;
 rect(px,py,278,8,'#b8a37c');rect(px+126,sy+54,10,238,'#b8a37c');
@@ -710,6 +711,7 @@ director.x+=(targetX-director.x)*.065;
 director.y+=(targetY-director.y)*.065;
 director.zoom+=(targetZoom-director.zoom)*.065;
 const center=[director.x,director.y],zoom=director.zoom;
+const captionStop=active&&settlementStops.find(item=>item.x===active.x&&item.y===active.y)||stop;
 g.save();rect(0,0,360,480,'#1b3a4c');g.beginPath();g.rect(0,30,360,450);g.clip();
 g.translate(180,250);g.scale(zoom,zoom);g.translate(-center[0],-center[1]);
 const biomes=[['VALE FLORESTAL','#3f7850','#1d513b'],['SERTÃO SECO','#b9a06d','#796b47'],['PLANALTO GELADO','#b5d3db','#7798a4'],['COSTA DAS MARÉS','#498aa5','#2b657e'],['DUNAS DO SUL','#d8b67b','#b68c55']];
@@ -720,7 +722,7 @@ else{rect(x,y,w,h,'#172a36a0');g.fillStyle='#fff';g.font='bold 28px system-ui';g
 if(active)drawSettlements(i,x,y);g.restore();rect(x+8,y+8,w-16,58,'#172e36e8');g.fillStyle='#fff2ce';g.font='bold 27px system-ui';g.fillText(biomes[i][0],x+20,y+47);
 }
 g.strokeStyle='#f0d69b';g.lineWidth=13;g.setLineDash([28,18]);g.beginPath();g.moveTo(100,550);for(let i=1;i<5;i++)g.lineTo(100+i*390,550+(i%2)*75);g.stroke();g.setLineDash([]);v7WorldOverlay();g.restore();
-rect(5,34,350,36,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 12px system-ui';g.fillText('🎥 '+(director.auto?(collective?'AÇÃO · '+collective.id: 'AUTO · '+stop.id+' · '+biomes[stop.biome][0]):cameraNames[mode])+' · '+unlocked*2+' vilas',13,56,330);g.fillStyle='#f0d89b';g.font='bold 10px system-ui';g.fillText('MAPA V12.8',265,87,88);
+rect(5,34,350,36,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 12px system-ui';g.fillText('🎥 '+(director.auto?(collective?'AÇÃO · '+collective.id: 'AUTO · '+captionStop.id+' · '+biomes[captionStop.biome][0]):cameraNames[mode])+' · '+unlocked*2+' vilas',13,56,330);g.fillStyle='#f0d89b';g.font='bold 10px system-ui';g.fillText('MAPA V12.8',265,87,88);
 if(collective&&!active){const label=collectiveCue.action==='build'?'🏠 CONSTRUÇÃO':collectiveCue.action==='trade'?'🛒 COMÉRCIO':'🛡️ DEFESA';rect(10,390,340,43,'#172e38e8');g.fillStyle='#ffe7a0';g.font='bold 13px system-ui';g.fillText(label+' · '+collective.id,18,407,324);g.font='11px system-ui';g.fillText('@'+collectiveCue.user+' participou · destaque temporário',18,422,324);}
 rect(5,443,350,32,'#172e38e8');g.fillStyle='#fff0c6';g.font='bold 11px system-ui';const v7Last=v7World&&v7World.events.length?v7World.events[v7World.events.length-1]:null;const v7Summary=v7Announcement&&v7World&&v7World.tick-v7Announcement.tick<12?v7Announcement.line:v7Last?('V7 · '+(v7Last.kind==='storm'?'Tempestade interrompe expedições':v7Last.kind==='care-shortage'?'Enfermaria sem insumos':v7Last.kind==='harvest'?'Colheita abasteceu a vila':v7Last.kind==='medicine-stocked'?'Remédios recebidos':v7Last.kind==='injury'?'Construtor ferido · obra suspensa':v7Last.kind==='care'?'Morador em tratamento':v7Last.kind==='recovered'?'Construtor recuperado':v7Last.kind==='house-damaged'?'Casa danificada pela tempestade':v7Last.kind==='repair'?'Construtor reparando a casa':v7Last.kind==='weather-clear'?'Estrada liberada após temporal':v7Last.kind==='gather'?'Lenhador coletando':v7Last.kind==='deliver'?'Madeira no depósito':v7Last.kind==='dispatch'?'Carregamento em trânsito':v7Last.kind==='delivery-confirmed'?'Entrega confirmada na obra':v7Last.kind==='order-complete'?'Materiais recebidos na obra':v7Last.kind==='build'?'Casa em construção':v7Last.kind==='occupy'?'Casa ocupada':v7Last.kind==='trade'?'Comércio ativo':'Vila trabalhando')):'Explorando região '+(sweep+1);g.fillText(director.auto?'AUTO · '+(active?active.label:v7Summary):'Mapa 1950 × 970 · câmera '+cameraNames[mode],12,462,332);
 }
@@ -922,7 +924,8 @@ if (mode === 'direction') {
         if (!result) return {ok: false};
         const region = warFaction(result.winner);
         return {ok: true, war: {...result, fortifications: region.fortifications},
-          message: result.winner + ' venceu o cerco e agora tem ' + region.fortifications + ' fortificações.'};
+          message: result.winner + ' venceu o cerco e agora tem ' + region.fortifications
+            + (region.fortifications === 1 ? ' fortificação.' : ' fortificações.')};
       },
     }),
     onConfirm(entry) {
