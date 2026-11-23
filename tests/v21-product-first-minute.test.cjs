@@ -12,7 +12,8 @@ test('first-minute village identifies activity through illustrated sectors witho
 });
 test('worksite labels are scene-only and leave economy untouched',()=>{
  assert.doesNotMatch(scene,/localStorage|s\.food\s*=|s\.wood\s*=|s\.stone\s*=|s\.project\s*=/);
- assert.ok(scene.indexOf('tree(g,78,407,1,worker||null,t)')>=0);
+ assert.ok(scene.includes('const forestTarget={x:78,y:407}'));
+ assert.ok(scene.includes('tree(g,forestTarget.x,forestTarget.y,1.12,worker||null,t)'));
  assert.ok(scene.indexOf('cropField(g,322,390')>=0);
 });
 test('idle residents stay bounded and economic actors own purposeful movement',()=>{

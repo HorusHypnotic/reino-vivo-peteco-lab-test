@@ -4,7 +4,7 @@ const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 const a=html.indexOf('function illustratedVillage('),b=html.indexOf('function draw(g,s,t,actors)',a);
 assert.ok(a>=0&&b>a);
 const scene=html.slice(a,b);
-assert.match(scene,/\['northwest','northeast','south'\]/);
+for(const slot of ["slot:'northwest'","slot:'northeast'","slot:'south'"])assert.ok(scene.includes(slot));
 assert.match(scene,/root\.PetecoStructureRendererV18\.draw\(g,status,houseAtlas\.image,layout\)/);
 assert.doesNotMatch(scene,/slot==='northwest'&&houseAtlas/,'all structure slots should use painted state atlas');
 assert.match(scene,/homes\[index\]/,'painted stages must follow persisted structure state');

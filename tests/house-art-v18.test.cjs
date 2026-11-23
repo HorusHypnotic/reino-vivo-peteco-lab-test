@@ -45,10 +45,10 @@ test('house renderer maps persisted stage and integrity to painted states withou
 
 test('canonical V21 draws one illustrated house in the real village and keeps existing fallback and other house slots',()=>{
  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
- assert.match(html,/slot==='northwest'&&houseAtlas&&houseAtlas\.ready&&root\.PetecoStructureRendererV18/);
- assert.match(html,/root\.PetecoStructureRendererV18\.draw\(g,status,houseAtlas\.image,layout\)/);
- assert.match(html,/if\(status\.stage===3&&status\.integrity>=70&&frame&&frame\.ready\)g\.drawImage/);
- assert.match(html,/painted house atlas/);
+ const scene=html.slice(html.indexOf('function illustratedVillage('),html.indexOf('function draw(g,s,t,actors){'));
+ for(const slot of ["slot:'northwest'","slot:'northeast'","slot:'south'"])assert.ok(scene.includes(slot),`painted slot ${slot}`);
+ assert.match(scene,/houseAtlas&&houseAtlas\.ready&&root\.PetecoStructureRendererV18&&root\.PetecoStructureRendererV18\.draw\(g,status,houseAtlas\.image,layout\)/);
+ assert.match(scene,/if\(painted\)return/);
  assert.match(html,/Visual asset failed: illustrated house atlas/);
- assert.match(html,/root\.PetecoV26Architecture\.structureState\(g,status,layout,t\)/);
+ assert.match(scene,/root\.PetecoV26Architecture\.structureState\(g,status,layout,t\)/);
 });

@@ -4,7 +4,7 @@ const controller={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../v
 test('V34 actual V21 renderer keeps one visible trunk aligned with the V18 woodcutter',()=>{
  const start=html.indexOf('else if(worldMapEnabled&&!eventCloseup)');const end=html.indexOf('}else if(eventCloseup',start);const branch=html.slice(start,end);
  assert.ok(start>0&&end>start);assert.ok(branch.includes('PetecoArtV17.draw(g,s,s.t,{woodcutter:woodcutterActivity.snapshot()})'));
- assert.ok(branch.includes('V34: PetecoArtV17 already renders the real trunk at (78,407).'));
+ assert.ok(branch.includes("const woodV21={...worker,x:110+(worker.x-200)*(32/82),y:449+(worker.y-404)*(42/114),facing:worker.phase==='cut'?1:worker.facing}"));
  assert.ok(!branch.includes('PetecoV27Forest.draw(g,{x:100,y:407,size:.64}'),'the duplicate overlay removed by V34 must stay absent');
  assert.ok(branch.includes('g.translate(woodV21.x,woodV21.y);g.scale(.52,.52)'));
  assert.ok(branch.includes("facing:worker.phase==='cut'?1:worker.facing"));
