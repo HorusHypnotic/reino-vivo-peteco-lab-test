@@ -144,6 +144,8 @@ function illustratedVillage(g,s,t,worker){
  cropField(g,322,390,s.sectors&&s.sectors.farm,t);
  quarryFace(g,328,345,s.stone,t);
  const homes=Array.isArray(s.structures)?s.structures:[{stage:3,integrity:100},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0},{stage:s.level>=2?3:0,integrity:s.level>=2?100:0}];
+ // Finished defensive walls belong behind the painted homes, not over their facades.
+ completedWalls(g,s.projectCount);
  if(root.PetecoV26Architecture&&root.PetecoV26Architecture.structureState){
   const layouts=[{x:75,y:302,width:54,height:50,slot:'northwest',index:1},{x:270,y:302,width:55,height:50,slot:'northeast',index:2},{x:180,y:430,width:72,height:65,slot:'south',index:0}];
   layouts.forEach(({slot,index,...layout})=>{
@@ -163,7 +165,6 @@ function illustratedVillage(g,s,t,worker){
  if(root.PetecoConstructionV20){
   root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:s.projectCount},t,{x:132,y:308,width:102,rowHeight:7,slots:4});
  }
- completedWalls(g,s.projectCount);
  g.restore();return true;
 }
 function draw(g,s,t,actors){
