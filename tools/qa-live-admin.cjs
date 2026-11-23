@@ -55,6 +55,24 @@ async function qa() {
     const localUrl = 'http://127.0.0.1:' + localPort;
     const context = await browser.newContext({viewport: {width: 360, height: 640}});
     context.setDefaultTimeout(10000);
+    if (process.env.PETECO_QA_FONT) {
+      // Optional fixture for Linux runners without a system font service.
+      const font = fs.readFileSync(process.env.PETECO_QA_FONT).toString('base64');
+      await context.addInitScript(async font => {
+        const family = 'PetecoQAFallback';
+        const face = new FontFace(family, `url(data:font/ttf;base64,${font})`);
+        document.fonts.add(await face.load());
+        if (!document.head) await new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve, {once: true}));
+        const style = document.createElement('style');
+        style.textContent = 'body,button,input,select{font-family:PetecoQAFallback!important}';
+        document.head.append(style);
+        const descriptor = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'font');
+        Object.defineProperty(CanvasRenderingContext2D.prototype, 'font', {
+          ...descriptor,
+          set(value) { descriptor.set.call(this, value.replace(/system-ui|sans-serif|monospace|serif/g, family)); },
+        });
+      }, font);
+    }
     const fixture = 'peteco-lab-vila-v2';
     await context.addInitScript(({publicUrl, fixture, seed}) => {
       if (location.origin === publicUrl && !localStorage.getItem(fixture)) {
@@ -122,6 +140,11 @@ async function qa() {
     await admin.evaluate(() => window.scrollTo(0, 0));
     await admin.screenshot({path: path.join(evidence, 'admin-desktop.png')});
 
+    await live.waitForFunction(() => {
+      const ticker = document.querySelector('.spectator-ticker').getBoundingClientRect();
+      const line = document.querySelector('.spectator-ticker span').getBoundingClientRect();
+      return line.left < ticker.right && line.right > ticker.left;
+    });
     await live.screenshot({path: path.join(evidence, 'live-360x640.png')});
     await live.setViewportSize({width: 1080, height: 1920});
     await stage(live);
