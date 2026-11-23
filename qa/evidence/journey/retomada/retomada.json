@@ -1,0 +1,481 @@
+{
+  "runtime": "140.0.7339.16",
+  "before": {
+    "version": 1,
+    "id": "15b786b8-5b5f-402e-888b-a2167ecc8cd0",
+    "economy": {
+      "version": 2,
+      "cycle": 0,
+      "players": {
+        "aurora": {
+          "coins": 200,
+          "inventory": {
+            "enxada": 1
+          },
+          "profession": "agricultor"
+        }
+      },
+      "lots": {
+        "01": {
+          "id": "01",
+          "fertility": 75,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "02": {
+          "id": "02",
+          "fertility": 85,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "03": {
+          "id": "03",
+          "fertility": 92,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "04": {
+          "id": "04",
+          "fertility": 60,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "05": {
+          "id": "05",
+          "fertility": 65,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "06": {
+          "id": "06",
+          "fertility": 78,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        }
+      },
+      "cooperative": null,
+      "contracts": {},
+      "shipments": {},
+      "events": [
+        {
+          "seq": 1,
+          "cycle": 0,
+          "type": "joined",
+          "id": "aurora",
+          "profession": "agricultor"
+        }
+      ],
+      "seq": 1
+    },
+    "elapsed": 2.0166999999999993,
+    "step": 1,
+    "automatic": true,
+    "running": true,
+    "contract": null,
+    "journal": [
+      {
+        "step": 0,
+        "at": 0,
+        "chapter": "Entrada",
+        "message": "Aurora chega à vila como agricultora.",
+        "economySeq": 1,
+        "war": null
+      }
+    ]
+  },
+  "after": {
+    "version": 1,
+    "id": "15b786b8-5b5f-402e-888b-a2167ecc8cd0",
+    "economy": {
+      "version": 2,
+      "cycle": 0,
+      "players": {
+        "aurora": {
+          "coins": 200,
+          "inventory": {
+            "enxada": 1
+          },
+          "profession": "agricultor"
+        }
+      },
+      "lots": {
+        "01": {
+          "id": "01",
+          "fertility": 75,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "02": {
+          "id": "02",
+          "fertility": 85,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "03": {
+          "id": "03",
+          "fertility": 92,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "04": {
+          "id": "04",
+          "fertility": 60,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "05": {
+          "id": "05",
+          "fertility": 65,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "06": {
+          "id": "06",
+          "fertility": 78,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        }
+      },
+      "cooperative": null,
+      "contracts": {},
+      "shipments": {},
+      "events": [
+        {
+          "seq": 1,
+          "cycle": 0,
+          "type": "joined",
+          "id": "aurora",
+          "profession": "agricultor"
+        }
+      ],
+      "seq": 1
+    },
+    "elapsed": 2.0166999999999993,
+    "step": 1,
+    "automatic": true,
+    "running": true,
+    "contract": null,
+    "journal": [
+      {
+        "step": 0,
+        "at": 0,
+        "chapter": "Entrada",
+        "message": "Aurora chega à vila como agricultora.",
+        "economySeq": 1,
+        "war": null
+      }
+    ]
+  },
+  "second": {
+    "version": 1,
+    "id": "15b786b8-5b5f-402e-888b-a2167ecc8cd0",
+    "economy": {
+      "version": 2,
+      "cycle": 0,
+      "players": {
+        "aurora": {
+          "coins": 200,
+          "inventory": {
+            "enxada": 1
+          },
+          "profession": "agricultor"
+        },
+        "bento": {
+          "coins": 200,
+          "inventory": {
+            "carroca": 1
+          },
+          "profession": "carreteiro"
+        }
+      },
+      "lots": {
+        "01": {
+          "id": "01",
+          "fertility": 75,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "02": {
+          "id": "02",
+          "fertility": 85,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "03": {
+          "id": "03",
+          "fertility": 92,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "04": {
+          "id": "04",
+          "fertility": 60,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "05": {
+          "id": "05",
+          "fertility": 65,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "06": {
+          "id": "06",
+          "fertility": 78,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        }
+      },
+      "cooperative": null,
+      "contracts": {},
+      "shipments": {},
+      "events": [
+        {
+          "seq": 1,
+          "cycle": 0,
+          "type": "joined",
+          "id": "aurora",
+          "profession": "agricultor"
+        },
+        {
+          "seq": 2,
+          "cycle": 0,
+          "type": "joined",
+          "id": "bento",
+          "profession": "carreteiro"
+        }
+      ],
+      "seq": 2
+    },
+    "elapsed": 20.018099999999894,
+    "step": 2,
+    "automatic": true,
+    "running": true,
+    "contract": null,
+    "journal": [
+      {
+        "step": 0,
+        "at": 0,
+        "chapter": "Entrada",
+        "message": "Aurora chega à vila como agricultora.",
+        "economySeq": 1,
+        "war": null
+      },
+      {
+        "step": 1,
+        "at": 20,
+        "chapter": "Profissões",
+        "message": "Bento assume as entregas da vila.",
+        "economySeq": 2,
+        "war": null
+      }
+    ]
+  },
+  "manual": {
+    "version": 1,
+    "id": "15b786b8-5b5f-402e-888b-a2167ecc8cd0",
+    "economy": {
+      "version": 2,
+      "cycle": 0,
+      "players": {
+        "aurora": {
+          "coins": 200,
+          "inventory": {
+            "enxada": 1
+          },
+          "profession": "agricultor"
+        },
+        "bento": {
+          "coins": 200,
+          "inventory": {
+            "carroca": 1
+          },
+          "profession": "carreteiro"
+        }
+      },
+      "lots": {
+        "01": {
+          "id": "01",
+          "fertility": 75,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "02": {
+          "id": "02",
+          "fertility": 85,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "03": {
+          "id": "03",
+          "fertility": 92,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "04": {
+          "id": "04",
+          "fertility": 60,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "05": {
+          "id": "05",
+          "fertility": 65,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        },
+        "06": {
+          "id": "06",
+          "fertility": 78,
+          "owner": null,
+          "registered": false,
+          "crop": null,
+          "readyAt": null,
+          "stock": {}
+        }
+      },
+      "cooperative": null,
+      "contracts": {},
+      "shipments": {},
+      "events": [
+        {
+          "seq": 1,
+          "cycle": 0,
+          "type": "joined",
+          "id": "aurora",
+          "profession": "agricultor"
+        },
+        {
+          "seq": 2,
+          "cycle": 0,
+          "type": "joined",
+          "id": "bento",
+          "profession": "carreteiro"
+        }
+      ],
+      "seq": 2
+    },
+    "elapsed": 45.13160000000041,
+    "step": 3,
+    "automatic": false,
+    "running": true,
+    "contract": null,
+    "journal": [
+      {
+        "step": 0,
+        "at": 0,
+        "chapter": "Entrada",
+        "message": "Aurora chega à vila como agricultora.",
+        "economySeq": 1,
+        "war": null
+      },
+      {
+        "step": 1,
+        "at": 20,
+        "chapter": "Profissões",
+        "message": "Bento assume as entregas da vila.",
+        "economySeq": 2,
+        "war": null
+      },
+      {
+        "step": 2,
+        "at": 45,
+        "chapter": "Primeira missão",
+        "message": "Missão: colher trigo e abastecer a cooperativa.",
+        "economySeq": 2,
+        "war": null
+      }
+    ]
+  },
+  "timeline": [
+    {
+      "chapter": "Entrada",
+      "visible": "0:00 / 15:00 · Entrada",
+      "elapsedMs": 255
+    },
+    {
+      "chapter": "Entrada",
+      "visible": "0:02 / 15:00 · Entrada",
+      "elapsedMs": 2301
+    },
+    {
+      "chapter": "Profissões",
+      "visible": "0:20 / 15:00 · Profissões",
+      "elapsedMs": 20469
+    },
+    {
+      "chapter": "Primeira missão",
+      "visible": "0:45 / 15:00 · Primeira missão",
+      "elapsedMs": 45684
+    }
+  ]
+}
