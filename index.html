@@ -150,13 +150,15 @@ function illustratedVillage(g,s,t,worker){
    const status=homes[index]||{stage:0,integrity:0},frame=root.PetecoV18Houses&&root.PetecoV18Houses[slot];
    const houseAtlas=root.PetecoHouseAtlasV18;
    const painted=houseAtlas&&houseAtlas.ready&&root.PetecoStructureRendererV18&&root.PetecoStructureRendererV18.draw(g,status,houseAtlas.image,layout);
-   if(painted)return;
+   if(painted)return; // Atlas already encodes damage and construction.
    if(status.stage===3&&status.integrity>=70&&frame&&frame.ready)g.drawImage(frame.image,0,0,360,480);
    else if(status.stage===3&&status.integrity>=70)building(g,layout.x,layout.y,layout.width,layout.height-12,'#875744');
    else construction(g,layout.x,layout.y,layout.width,status.stage,status.integrity,t);
    root.PetecoV26Architecture.structureState(g,status,layout,t);
   });
-  if(Number(s.damage)>0)root.PetecoV26Architecture.structureState(g,{stage:3,integrity:100-Math.min(100,Number(s.damage)||0)},layouts[2],t);
+  // Avoid painting a second geometric damage facade over the illustrated south house.
+  const southAtlas=root.PetecoHouseAtlasV18;
+  if(Number(s.damage)>0&&!(southAtlas&&southAtlas.ready&&root.PetecoStructureRendererV18))root.PetecoV26Architecture.structureState(g,{stage:3,integrity:100-Math.min(100,Number(s.damage)||0)},layouts[2],t);
  }
  if(root.PetecoConstructionV20){
   root.PetecoConstructionV20.draw(g,{project:s.project,projectGoal:s.projectGoal,projectCount:s.projectCount},t,{x:132,y:308,width:102,rowHeight:7,slots:4});
