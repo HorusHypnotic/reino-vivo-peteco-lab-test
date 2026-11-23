@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const economy = require('../v36/economy-core.js');
 
 test('the 15-minute journey resumes through each checkpoint and settles the shipment once', async () => {
-  const {advanceJourney, chapters, createJourney, restoreJourney, DURATION} = await import('../v36/journey.mjs');
+  const {advanceJourney, chapters, createJourney, journeyBrief, restoreJourney, DURATION} = await import('../v36/journey.mjs');
   let state = createJourney(economy, false);
   const war = {
     start: () => ({ok: true}),
@@ -19,6 +19,7 @@ test('the 15-minute journey resumes through each checkpoint and settles the ship
     assert.equal(advanceJourney(state, economy, index, war), null, chapter);
     state = restoreJourney(JSON.stringify(state), economy);
     if (chapter === 'Transporte') assert.equal(state.economy.players.bento.inventory.trigo, 8);
+    if (chapter === 'Chegada') assert.match(journeyBrief(state).mission, /no armazém · aguardando conferência/);
     if (chapter === 'Pagamento') assert.equal(state.economy.cooperative.warehouse.trigo, 8);
   }
   assert.equal(state.elapsed, DURATION);

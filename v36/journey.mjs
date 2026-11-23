@@ -103,7 +103,11 @@ export function journeyBrief(state) {
   let property = field.registered ? 'Lote 01 registrado' : field.owner ? 'Lote 01 comprado' : 'Lote 01 livre';
   if (field.crop) property += ' · trigo ' + (4 - Math.max(0, field.readyAt - economy.cycle)) + '/4';
   if (field.stock.trigo) property += ' · ' + field.stock.trigo + ' sacas colhidas';
-  if (contract?.status === 'in-transit') property = 'Carroça · ' + economy.players[carrier].inventory.trigo + ' sacas em trânsito';
+  if (contract?.status === 'in-transit') {
+    const arrived = economy.cycle >= (economy.shipments[state.contract]?.arrival ?? Infinity);
+    property = 'Carroça · ' + economy.players[carrier].inventory.trigo
+      + (arrived ? ' sacas no armazém · aguardando conferência' : ' sacas em trânsito');
+  }
   return {
     title: minutes + ':' + seconds + ' / 15:00 · ' + (latest?.chapter ?? 'Entrada'),
     mission: next ? 'Missão · ' + next[1] + ' · ' + property : 'Missão · Reconstruir a passagem',
